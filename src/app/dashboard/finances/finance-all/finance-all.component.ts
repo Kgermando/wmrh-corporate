@@ -22,6 +22,7 @@ import { PersonnelModel } from 'src/app/personnels/models/personnel-model';
 import { FinanceService } from '../finance.service';
 import { ReglageService } from 'src/app/preferences/reglages/reglage.service';
 import { PreferenceModel } from 'src/app/preferences/reglages/models/reglage-model';
+import { CorporateModel } from 'src/app/preferences/corporates/models/corporate.model';
 
 export type ChartOptionAllocations = {
   series: ApexAxisChartSeries;
@@ -68,6 +69,7 @@ export type ChartOptionNetApayerIPRCNSS = {
   styleUrls: ['./finance-all.component.scss']
 })
 export class FinanceAllComponent implements OnInit{
+    @Input('corporate') corporate: CorporateModel;
     @Input('start_date') start_date: any;
     @Input('end_date') end_date: any;
 isLoading = false;
@@ -131,9 +133,9 @@ isLoading = false;
         this.getStatutPaie();
         this.getNetAPayerCCNSSQPO();
         this.getTotal();
-        this.reglageService.preference(this.currentUser.code_entreprise).subscribe(res => {
-            this.preference = res; 
-            this.financeService.totalRBIAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+        this.reglageService.preference(this.corporate.code_corporate).subscribe(res => {
+            this.preference = res;
+            this.financeService.totalRBIAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
                 res =>  {
                     this.totalRBIList = res;
                     this.totalRBIList.map((item: any) => this.totalRBI = parseFloat(item.total));
@@ -156,7 +158,7 @@ isLoading = false;
 
 
   getAllocations() {
-    this.dashAllService.allocationALl(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.dashAllService.allocationALl(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res => {
             this.allocationList = res;
             this.chartOptionAllocations = {
@@ -281,7 +283,7 @@ isLoading = false;
    }
 
    getStatutPaie() {
-    this.dashAllService.statutPaieAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.dashAllService.statutPaieAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res => {
             this.statutPaieList = res; 
             this.chartOptionsSTatutPaie = {
@@ -327,7 +329,7 @@ isLoading = false;
    }
 
    getNetAPayerCCNSSQPO() {
-    this.financeService.depensePayEALl(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.financeService.depensePayEALl(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res => {
             this.depensePayEList = res;
             this.chartOptionNetApayerIPRCNSS = {
@@ -410,43 +412,43 @@ isLoading = false;
    }
 
    getTotal() {
-    this.dashAllService.primesAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.dashAllService.primesAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res =>  {
             this.primesList = res;
             this.primesList.map((item: any) => this.primes = parseFloat(item.total));
         }
     );
-    this.dashAllService.primeAncienneteAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.dashAllService.primeAncienneteAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res =>  {
             this.primeAncienneteList = res;
             this.primeAncienneteList.map((item: any) => this.primeAnciennete = parseFloat(item.total));
         }
     );
-    this.dashAllService.penaliteAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.dashAllService.penaliteAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res =>  {
             this.penaliteList = res;
             this.penaliteList.map((item: any) => this.penalite = parseFloat(item.total));
         }
     );
-    this.dashAllService.avanceSalaireAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.dashAllService.avanceSalaireAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res =>  {
             this.avanceSalaireList = res;
             this.avanceSalaireList.map((item: any) => this.avanceSalaire = parseFloat(item.total));
         }
     );
-    this.dashAllService.presEntrepriseAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.dashAllService.presEntrepriseAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res =>  {
             this.presEntrepriseList = res;
             this.presEntrepriseList.map((item: any) => this.presEntreprise = parseFloat(item.total));
         }
     );
-    this.dashAllService.heureSuppAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.dashAllService.heureSuppAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res =>  {
             this.heureSuppList = res;
             this.heureSuppList.map((item: any) => this.heureSupp = parseFloat(item.total));
         }
     );
-    this.dashAllService.syndicatAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.dashAllService.syndicatAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res =>  {
             this.syndicatList = res;
             this.syndicatList.map((item: any) => this.syndicat = parseFloat(item.total));

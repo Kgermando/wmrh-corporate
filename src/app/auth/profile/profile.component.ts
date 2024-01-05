@@ -311,7 +311,7 @@ export class UpdateInfoDialogBox implements OnInit{
     //     this.currentUser = user;
     //     // this.formGroup.patchValue(user);
     //     this.formGroup.patchValue({ 
-    //       email: this.capitalizeTest(this.currentUser.email),
+    //       email: this.capitalizeText(this.currentUser.email),
     //       telephone: this.currentUser.telephone,
     //       signature: this.currentUser.matricule, 
     //       update_created: new Date()
@@ -321,7 +321,7 @@ export class UpdateInfoDialogBox implements OnInit{
 
     this.personnelService.get(parseInt(this.data['id'])).subscribe(item => {
       this.formGroup.patchValue({
-        email: this.capitalizeTest(item.email),
+        email: this.capitalizeText(item.email),
         telephone: item.telephone,
         signature: item.matricule, 
         update_created: new Date(),
@@ -347,7 +347,7 @@ export class UpdateInfoDialogBox implements OnInit{
   } 
 
 
-  capitalizeTest(text: string): string {
+  capitalizeText(text: string): string {
     return (text && text[0].toUpperCase() + text.slice(1).toLowerCase()) || text;
   }
 

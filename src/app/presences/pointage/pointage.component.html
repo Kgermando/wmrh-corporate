@@ -9,61 +9,63 @@
     <mat-card-header>
         <div>
             <h4 class="mb-0">Pointage</h4>
-            <p class="position-relative" *ngIf="currentUser.site_locations">
+            <!-- <p class="position-relative" *ngIf="currentUser.site_locations">
                 Site: {{ currentUser.site_locations.site_location }}
-            </p>
+            </p> -->
+        </div>
+        <div class="">  
+            <div class="flex-wrap d-flex align-items-center justify-content-end">
+                
+                <a routerLink="/layouts/presences/registre-presences">
+                    <div class="pointage">
+                        <div class="box-present">P</div>
+                        <div class="box-value">{{numberP}}</div>
+                    </div>
+                    <div class="pointage">
+                        <div class="box-absence-sans-autorisation">A</div>
+                        <div class="box-value">{{numberA}}</div>
+                    </div>
+                    <div class="pointage">
+                        <div class="box-absence-autorisee">AA</div>
+                        <div class="box-value">{{numberAA}}</div>
+                    </div>
+                    <div class="pointage">
+                        <div class="box-absent-maladie">AM</div>
+                        <div class="box-value">{{numberAM}}</div>
+                    </div>
+                    <div class="pointage">
+                        <div class="box-conge-circonstanciel">CC</div>
+                        <div class="box-value">{{numberCC}}</div>
+                    </div>
+                    <div class="pointage">
+                        <div class="box-conge-annuel">CA</div>
+                        <div class="box-value">{{numberCA}}</div>
+                    </div>
+                    <div class="pointage">
+                        <div class="box-suspension">S</div>
+                        <div class="box-value">{{numberS}}</div>
+                    </div>
+                    <div class="pointage">
+                        <div class="box-service-off">O</div>
+                        <div class="box-value">{{numberO}}</div>
+                    </div>
+                    <div class="pointage">
+                        <div class="box-mission">M</div>
+                        <div class="box-value">{{numberM}}</div>
+                    </div>
+                </a>
+            </div>
         </div>
         
-        <div class="flex-wrap d-flex align-items-center justify-content-space-between">
-            
-            <div class="pointage">
-                <h4>Stats: </h4>
-            </div>
-            <a routerLink="/layouts/presences/registre-presences">
-                <div class="pointage">
-                    <div class="box-present">P</div>
-                    <div class="box-value">{{numberP}}</div>
-                </div>
-                <div class="pointage">
-                    <div class="box-absence-sans-autorisation">A</div>
-                    <div class="box-value">{{numberA}}</div>
-                </div>
-                <div class="pointage">
-                    <div class="box-absence-autorisee">AA</div>
-                    <div class="box-value">{{numberAA}}</div>
-                </div>
-                <div class="pointage">
-                    <div class="box-absent-maladie">AM</div>
-                    <div class="box-value">{{numberAM}}</div>
-                </div>
-                <div class="pointage">
-                    <div class="box-conge-circonstanciel">CC</div>
-                    <div class="box-value">{{numberCC}}</div>
-                </div>
-                <div class="pointage">
-                    <div class="box-conge-annuel">CA</div>
-                    <div class="box-value">{{numberCA}}</div>
-                </div>
-                <div class="pointage">
-                    <div class="box-suspension">S</div>
-                    <div class="box-value">{{numberS}}</div>
-                </div>
-                <div class="pointage">
-                    <div class="box-service-off">O</div>
-                    <div class="box-value">{{numberO}}</div>
-                </div>
-                <div class="pointage">
-                    <div class="box-mission">M</div>
-                    <div class="box-value">{{numberM}}</div>
-                </div>
-            </a>
-        </div>
     </mat-card-header>
-    <mat-card-content *ngIf="currentUser.site_locations">
-        <form class="tagus-search-box mb-25">
-            <input type="text" class="input-search border-radius" placeholder="Recherche par identifiant..." (keyup)="applyFilter($event)">
-            <button type="submit"><i class="ri-search-line"></i></button>
-        </form>
+    <mat-card-content>
+        <div class="mb-25">
+            <form class="tagus-search-box">
+                <input type="text" class="input-search border-radius" placeholder="Recherche par identifiant..." 
+                    (keyup)="applyFilter($event)">
+                <button type="submit"><i class="ri-search-line"></i></button>
+            </form>
+        </div>
         <div class="instructors-list d-flex flex-wrap">
             <div class="list-item" *ngFor="let item of personnelFilter">
                 <a [routerLink]="['/layouts/presences/pointage', item.matricule]" 
@@ -77,16 +79,17 @@
                                 <span class="d-block muted-color">{{ item.prenom }} {{ item.nom }}</span>
                             </div>
                         </div>
-                        <app-presence-pointage [item]="item"></app-presence-pointage>
+                        <app-presence-pointage [item]="item" [code_entreprise]="this.currentUser.code_entreprise">
+                        </app-presence-pointage>
                     </div>
                 </a>
             </div>
         </div>
     </mat-card-content>
-    <p class="text-center mt-20" *ngIf="!currentUser.site_locations">
+    <!-- <p class="text-center mt-20" *ngIf="!currentUser.site_locations">
         Ajoutez un site de travail en cliquant ici >
         <a routerLink="/layouts/preferences/site-location" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
             Sites de travail
         </a>
-    </p>
+    </p> -->
 </mat-card>

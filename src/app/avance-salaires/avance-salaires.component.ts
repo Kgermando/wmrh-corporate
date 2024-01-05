@@ -1,22 +1,21 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CustomizerSettingsService } from '../customizer-settings/customizer-settings.service';
 import { AuthService } from '../auth/auth.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { AvanceSalaireModel } from './models/avance-salaire-model';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PersonnelModel } from '../personnels/models/personnel-model';
-import { AvanceSalaireService } from './avance-salaire.service';
-import { ReglageService } from '../preferences/reglages/reglage.service';
-import { PreferenceModel } from '../preferences/reglages/models/reglage-model';
+import { AvanceSalaireService } from './avance-salaire.service'; 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ToastrService } from 'ngx-toastr';
-import { PersonnelService } from '../personnels/personnel.service';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr'; 
 import { monnaieDataList } from '../shared/tools/monnaie-list';
+import { CorporateService } from '../preferences/corporates/corporate.service';
+import { CorporateModel } from '../preferences/corporates/models/corporate.model';
 
 @Component({
   selector: 'app-avance-salaires',
@@ -38,15 +37,15 @@ export class AvanceSalairesComponent implements OnInit {
   isLoading = false;
   currentUser: PersonnelModel | any;
 
-  preference: PreferenceModel;
+  corporate: CorporateModel; 
  
   constructor(
       private _liveAnnouncer: LiveAnnouncer,
       public themeService: CustomizerSettingsService,
       private router: Router,
-      private authService: AuthService,
+      private route: ActivatedRoute,
+      private corporateService: CorporateService,
       private avanceSalaireService: AvanceSalaireService,
-      private reglageService: ReglageService,
       public dialog: MatDialog,
   ) {} 
   toggleTheme() {
@@ -55,30 +54,27 @@ export class AvanceSalairesComponent implements OnInit {
 
 
   ngOnInit() { 
-        this.isLoading = true;
-        this.authService.user().subscribe({
-            next: (user) => {
-                this.currentUser = user;
-                this.avanceSalaireService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-                    this.ELEMENT_DATA = res; 
-                    this.dataSource = new MatTableDataSource<AvanceSalaireModel>(this.ELEMENT_DATA);
-                    this.dataSource.sort = this.sort;
-                    this.dataSource.paginator = this.paginator;
-                }, );
-                this.reglageService.preference(this.currentUser.code_entreprise).subscribe(res => {
-                  this.preference = res;
-                });
-              this.isLoading = false;
-            },
-            error: (error) => {
-              this.isLoading = false;
-              this.router.navigate(['/auth/login']);
-              console.log(error);
-            }
-          }); 
-      
+    this.route.params.subscribe(routeParams => { 
+      this.avanceSalaireService.refreshDataList$.subscribe(() => {
+        this.loadData(routeParams['id']);
+      })
+      this.loadData(routeParams['id']);
+    });
     }
 
+  public loadData(id: any): void {
+    this.isLoading = true;
+    this.corporateService.getOne(Number(id)).subscribe(res => {
+      this.corporate = res;
+      this.avanceSalaireService.getAllByCorporate(this.corporate.id).subscribe((avances_salaires) => {
+        this.ELEMENT_DATA = avances_salaires;  
+        this.dataSource = new MatTableDataSource<AvanceSalaireModel>(this.ELEMENT_DATA);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.isLoading = false;
+      });
+    });
+  }
  
   applyFilter(event: Event) {
       const filterValue = (event.target as HTMLInputElement).value;
@@ -97,12 +93,16 @@ export class AvanceSalairesComponent implements OnInit {
   detail(id: number) {
     this.router.navigate(['/layouts/salaires/avance-salaire', id, 'detail'])
   }
+ 
 
-  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, corporate: any): void {
     this.dialog.open(AvanceSalaireAddDialogBox, {
       width: '600px',
       enterAnimationDuration,
-      exitAnimationDuration, 
+      exitAnimationDuration,
+      data: {
+        corporate: corporate
+      }
     }); 
   } 
 
@@ -126,13 +126,13 @@ export class AvanceSalaireAddDialogBox implements OnInit {
 
   monnaieList = monnaieDataList;
 
-  constructor( 
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
       public dialogRef: MatDialogRef<AvanceSalaireAddDialogBox>,
       private formBuilder: FormBuilder,
       private router: Router,
       private authService: AuthService, 
       private toastr: ToastrService,
-      private personnelService: PersonnelService,
       private avanceSalaireService: AvanceSalaireService,
   ) {}
   
@@ -142,9 +142,7 @@ export class AvanceSalaireAddDialogBox implements OnInit {
     this.authService.user().subscribe({
       next: (user) => {
         this.currentUser = user;
-        this.personnelService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-          this.personneList = res;
-        });
+        this.personneList = this.data.corporate.personnels;
       },
       error: (error) => {
         this.router.navigate(['/auth/login']);
@@ -176,7 +174,8 @@ export class AvanceSalaireAddDialogBox implements OnInit {
           created: new Date(),
           update_created: new Date(),
           entreprise: this.currentUser.entreprise,
-          code_entreprise: this.currentUser.code_entreprise
+          code_entreprise: this.data.corporate.code_corporate,
+          corporate: this.data.corporate.id
         };
         this.avanceSalaireService.create(body).subscribe({
           next: () => {

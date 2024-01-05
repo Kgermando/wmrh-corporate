@@ -13,6 +13,8 @@ import { SalaireExportXLSXDialogBox } from '../releve-paie/releve-paie.component
 import { MatDialog } from '@angular/material/dialog';
 import { ReleveSalaireModel } from '../models/releve-salaire-model';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { CorporateModel } from 'src/app/preferences/corporates/models/corporate.model';
+import { CorporateService } from 'src/app/preferences/corporates/corporate.service';
 
 @Component({
   selector: 'app-statuts-paie',
@@ -20,7 +22,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./statuts-paie.component.scss']
 })
 export class StatutsPaieComponent implements OnInit {
-  displayedColumns: string[] = [ 'services', 'statut', 'matricule', 'fullname', 'departements', 'site_locations', 'created'];
+  displayedColumns: string[] = [ 'site_locations', 'statut', 'matricule', 'fullname', 'departements', 'created'];
   
   ELEMENT_DATA: ReleveSalaireModel[] = [];
   
@@ -31,11 +33,11 @@ export class StatutsPaieComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator; 
 
   isLoading = false;
+  isLoad = false;
   currentUser: PersonnelModel | any;
 
-  fardeList: any[] = [];
-  entrepriseList: any[] = [];
-  dateFarde: any; 
+  classerList: any[] = [];
+  corporateList: CorporateModel[] = []; 
 
   mois = '';
   dateNow = new Date();
@@ -43,6 +45,8 @@ export class StatutsPaieComponent implements OnInit {
   dateYear = 0; 
 
   formGroup!: FormGroup;
+
+  corporate: CorporateModel;
   
  
   constructor(
@@ -51,6 +55,7 @@ export class StatutsPaieComponent implements OnInit {
       public themeService: CustomizerSettingsService,
       private router: Router,
       private authService: AuthService,
+      private corporateService: CorporateService,
       private salaireService: SalaireService, 
       public dialog: MatDialog,
   ) {}
@@ -67,14 +72,11 @@ export class StatutsPaieComponent implements OnInit {
 
     this.authService.user().subscribe({
         next: (user) => {
-            this.currentUser = user;
-            this.salaireService.listeService(this.currentUser.code_entreprise).subscribe(entreprise => {
-              this.entrepriseList = entreprise;
-              this.salaireService.farde(this.currentUser.code_entreprise).subscribe(farde => {
-                this.fardeList = farde;
-                this.isLoading = false;
-              });
-            });
+          this.currentUser = user;
+          this.corporateService.getAll(this.currentUser.code_entreprise).subscribe(value => {
+            this.corporateList = value; 
+            this.isLoading = false;
+          });
         },
         error: (error) => {
           this.isLoading = false;
@@ -84,59 +86,81 @@ export class StatutsPaieComponent implements OnInit {
       });
   }
 
-  toggleTheme() {
-      this.themeService.toggleTheme();
-  } 
- 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  onChangeCorporate(event: any) {
+    this.isLoad = true;
+    this.corporate = event.value; 
+    this.salaireService.classer(this.currentUser.code_entreprise, this.corporate.id).subscribe(classer => {
+      this.classerList = classer;
+      this.isLoad = false;
+    });
+
+    console.log('corporate', this.corporate);
   }
 
-  /** Announce the change in sort state for assistive technology. */
-    announceSortChange(sortState: Sort) { 
-      if (sortState.direction) {
-          this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-      } else {
-          this._liveAnnouncer.announce('Sorting cleared');
+  onChangeClasser(event: any) {
+    this.isLoad = true;
+    var month = event.value.month;
+    var year = event.value.year;
+    this.salaireService.statutPaie(
+      this.currentUser.code_entreprise,
+      this.corporate.code_corporate, month, year).subscribe(res => { 
+        this.ELEMENT_DATA = res;
+        this.dataSource = new MatTableDataSource<ReleveSalaireModel>(this.ELEMENT_DATA);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator; 
+        this.isLoad = false;
       }
+    ); 
+    // this.onFilter(); 
   }
 
-  onFilter() {
-    var body = {
-      entreprise:  this.formGroup.value.entreprise,
-      classeur:  this.formGroup.value.classeur,
-    };
+  // onFilter() {
+  //   var body = {
+  //     entreprise:  this.formGroup.value.entreprise,
+  //     classeur:  this.formGroup.value.classeur,
+  //   };
     
-    if (body.classeur.month == undefined && body.classeur.year == undefined) { 
-      var date = new Date();
-      var month = date.getMonth() + 1;
-      var year = date.getFullYear(); 
-      this.salaireService.statutPaie(this.currentUser.code_entreprise, body.entreprise, 
-        month.toString(), year.toString()).subscribe(res => { 
-          this.ELEMENT_DATA = res;
-          this.dataSource = new MatTableDataSource<ReleveSalaireModel>(this.ELEMENT_DATA);
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator; 
-        }
-      );
-    }
-    if (body.classeur.month != undefined && body.classeur.year != undefined) { 
-      this.salaireService.statutPaie(this.currentUser.code_entreprise, body.entreprise, 
-        body.classeur.month, body.classeur.year).subscribe(res => { 
-          this.ELEMENT_DATA = res;
-          this.dataSource = new MatTableDataSource<ReleveSalaireModel>(this.ELEMENT_DATA);
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator; 
-        }
-      );
-    } 
-  } 
+  //   if (body.classeur.month == undefined && body.classeur.year == undefined) { 
+  //     var date = new Date();
+  //     var month = date.getMonth() + 1;
+  //     var year = date.getFullYear(); 
+  //     this.salaireService.statutPaie(this.currentUser.code_entreprise, body.entreprise, 
+  //         month.toString(), year.toString()).subscribe(res => {
+  //         this.ELEMENT_DATA = res;
+  //         this.dataSource = new MatTableDataSource<ReleveSalaireModel>(this.ELEMENT_DATA);
+  //         this.dataSource.sort = this.sort;
+  //         this.dataSource.paginator = this.paginator;
+  //       }
+  //     );
+  //   }
+  //   if (body.classeur.month != undefined && body.classeur.year != undefined) { 
+  //     this.salaireService.statutPaie(this.currentUser.code_entreprise, body.entreprise, 
+  //       body.classeur.month, body.classeur.year).subscribe(res => { 
+  //         this.ELEMENT_DATA = res;
+  //         this.dataSource = new MatTableDataSource<ReleveSalaireModel>(this.ELEMENT_DATA);
+  //         this.dataSource.sort = this.sort;
+  //         this.dataSource.paginator = this.paginator; 
+  //       }
+  //     );
+  //   } 
+  // }  
 
-  onChangeFarde(event: any) {
-    this.onFilter();
-    console.log('Filter', 'ok');
-  }
+
+
+applyFilter(event: Event) {
+  const filterValue = (event.target as HTMLInputElement).value;
+  this.dataSource.filter = filterValue.trim().toLowerCase();
+}
+
+/** Announce the change in sort state for assistive technology. */
+  announceSortChange(sortState: Sort) { 
+    if (sortState.direction) {
+        this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+        this._liveAnnouncer.announce('Sorting cleared');
+    }
+}
 
  
  
@@ -146,6 +170,12 @@ export class StatutsPaieComponent implements OnInit {
       enterAnimationDuration,
       exitAnimationDuration, 
     }); 
+  } 
+
+
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
   } 
 
 }

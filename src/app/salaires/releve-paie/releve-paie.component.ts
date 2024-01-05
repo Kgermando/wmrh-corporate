@@ -9,6 +9,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ReleveSalaireModel } from '../models/releve-salaire-model';
+import { CorporateService } from 'src/app/preferences/corporates/corporate.service';
+import { CorporateModel } from 'src/app/preferences/corporates/models/corporate.model';
 
 @Component({
   selector: 'app-releve-paie',
@@ -20,11 +22,13 @@ export class RelevePaieComponent implements OnInit {
   releveList: ReleveSalaireModel[] = [];
 
   isLoading = false;
+  isLoad = false;
   currentUser: PersonnelModel | any;
 
-  entrepriseList: any[] = []; 
-  fardeList: any[] = []; 
-  dateFarde: any;
+  corporateList: CorporateModel[] = []; 
+  corporate: CorporateModel;
+  classerList: any[] = []; 
+  dateClasser: any;
   dateNow = new Date();
   dateMonth = 0;
   dateYear: any; 
@@ -51,6 +55,7 @@ export class RelevePaieComponent implements OnInit {
       private formBuilder: FormBuilder,
       private router: Router,
       private authService: AuthService,
+      private corporateService: CorporateService,
       private salaireService: SalaireService, 
       public dialog: MatDialog,
   ) {}
@@ -71,12 +76,9 @@ export class RelevePaieComponent implements OnInit {
     this.authService.user().subscribe({
       next: (user) => {
         this.currentUser = user;
-        this.salaireService.listeService(this.currentUser.code_entreprise).subscribe(entreprise => {
-          this.entrepriseList = entreprise;
-          this.salaireService.fardeDisponible(this.currentUser.code_entreprise).subscribe(farde => {
-            this.fardeList = farde;
-            this.isLoading = false;
-          });
+        this.corporateService.getAll(this.currentUser.code_entreprise).subscribe(value => {
+          this.corporateList = value;
+          this.isLoading = false;
         });
       },
       error: (error) => {
@@ -86,6 +88,75 @@ export class RelevePaieComponent implements OnInit {
       }
     });
   }
+
+  onChangeCorporate(event: any) {
+    this.isLoad = true;
+    this.corporate = event.value; 
+    this.salaireService.classerDisponible(this.currentUser.code_entreprise, this.corporate.id).subscribe(classer => {
+      this.classerList = classer;
+      this.isLoad = false;
+    });
+  }
+
+  onChangeClasser(event: any) {
+    this.isLoad = true;
+    var month = event.value.month;
+    var year = event.value.year; 
+    this.salaireService.relevePaie(this.currentUser.code_entreprise, this.corporate.code_corporate, month, year).subscribe(res => {
+      this.releveList = res;
+
+      this.salaireService.netAPayerTotal(this.currentUser.code_entreprise, this.corporate.code_corporate, month, year).subscribe(
+        net_a_payer => {
+          var net_a_payE = net_a_payer;
+          net_a_payE.map((item: any) => this.net_a_payer = parseFloat(item.sum));  
+        }
+      );
+      this.salaireService.iprTotal(this.currentUser.code_entreprise, this.corporate.code_corporate, month, year).subscribe(
+        ipr => {
+          var iprs = ipr;
+          iprs.map((item: any) => this.ipr = parseFloat(item.sum));
+        }
+      );
+      this.salaireService.cnssQPOTotal(this.currentUser.code_entreprise, this.corporate.code_corporate, month, year).subscribe(
+        cnss => {
+          var cnssQPO = cnss; 
+          cnssQPO.map((item: any) => this.cnss = parseFloat(item.sum));
+        }
+      );
+      this.salaireService.rbiTotal(this.currentUser.code_entreprise, this.corporate.code_corporate, month, year).subscribe(
+        rbi => {
+          var rbis = rbi; 
+          rbis.map((item: any) => this.rbi_total = parseFloat(item.sum));
+        }
+      );
+      this.salaireService.heureSuppTotal(this.currentUser.code_entreprise, this.corporate.code_corporate, month, year).subscribe(
+        heure_supp => {
+          var heure_supps = heure_supp;
+          heure_supps.map((item: any) => this.heure_supp_total = parseFloat(item.sum));  
+        }
+      );
+      this.salaireService.primeTotal(this.currentUser.code_entreprise, this.corporate.code_corporate, month, year).subscribe(
+        prime => {
+          var primes = prime;
+          primes.map((item: any) => this.prime_total = parseFloat(item.sum));
+        }
+      );
+      this.salaireService.penalitesTotal(this.currentUser.code_entreprise, this.corporate.code_corporate, month, year).subscribe(
+        penalites => {
+          var penalitess = penalites; 
+          penalitess.map((item: any) => this.penalite_total = parseFloat(item.sum));
+        }
+      );
+      this.salaireService.syndicatTotal(this.currentUser.code_entreprise, this.corporate.code_corporate, month, year).subscribe(
+        syndicat => {
+          var syndicats = syndicat; 
+          syndicats.map((item: any) => this.syndicat_total = parseFloat(item.sum));
+        }
+      ); 
+    });
+    this.isLoad = false;
+  } 
+ 
 
   onFilter() {
     var body = {
@@ -103,10 +174,10 @@ export class RelevePaieComponent implements OnInit {
       var year = date.getFullYear(); 
       this.salaireService.relevePaie(this.currentUser.code_entreprise, body.entreprise, month.toString(), year.toString()).subscribe(res => {
         this.releveList = res;
-        var datePaieList = this.fardeList.filter((v) => v.month == month.toString() && v.year == year.toString());
-        this.dateFarde = datePaieList[datePaieList.length-1];
-        this.dateMonth = new Date(this.dateFarde).getMonth();
-          this.dateYear =  new Date(this.dateFarde).getFullYear();
+        var datePaieList = this.classerList.filter((v) => v.month == month.toString() && v.year == year.toString());
+        this.dateClasser = datePaieList[datePaieList.length-1];
+        this.dateMonth = new Date(this.dateClasser).getMonth();
+          this.dateYear =  new Date(this.dateClasser).getFullYear();
         if (this.dateMonth === 1) {
             this.mois = 'Janvier';
         } else if(this.dateMonth === 2) {
@@ -240,11 +311,6 @@ export class RelevePaieComponent implements OnInit {
   } 
 
 
-  onChangeFarde(event: any) {
-    this.onFilter();
-    console.log('Filter', 'ok');
-  }
- 
 
 
   openExportDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
@@ -273,7 +339,7 @@ export class SalaireExportXLSXDialogBox implements OnInit {
   // });
   dateRange!: FormGroup;
 
-  fardeList: any[] = [];
+  classerList: any[] = [];
 
   constructor( 
       public dialogRef: MatDialogRef<SalaireExportXLSXDialogBox>,

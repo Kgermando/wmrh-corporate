@@ -14,12 +14,13 @@
                 [attr.aria-expanded]="accordionItem.expanded"
                 [attr.aria-controls]="'accordion-body-' + index"
             >
-                <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
+                <div class="example-accordion-item-header" 
+                    (click)="accordionItem.toggle()"  (click)="view(corporate.id, item.id)">
                     {{ item.name_horaire }}
                     <!-- <span class="example-accordion-item-description">
                         Click to {{ accordionItem.expanded ? 'close' : 'open' }}
                     </span> -->
-                    <span> 
+                    <span>
                         <button mat-icon-button color="accent" 
                          (click)="edit(item.id)"
                             *ngIf="currentUser.permission === 'U' || 

@@ -463,6 +463,35 @@
                                 <mat-icon>edit</mat-icon>
                             </button>
                         </li>
+                        <li>
+                            <span class="fw-semibold">Prise en Compte paiement N<sup>+1</sup> : </span> 
+                            <span class="gray-color" *ngIf="preference.pris_en_compte_mois_plus_1">OUI</span>
+                            <span class="gray-color" *ngIf="!preference.pris_en_compte_mois_plus_1">NON</span>
+                            <button mat-icon-button color="warn" 
+                                    (click)="openEditDialog('300ms', '100ms', 
+                                    'Prise en Compte paiement ce mois', 
+                                    preference.pris_en_compte_mois_plus_1)" 
+                                    *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Delai d'édition du bulletin: </span>
+                            <span class="gray-color">{{ preference.delai_edit_bulletin }} jours</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Delai édition du bulletin', preference.delai_edit_bulletin)" 
+                                *ngIf="currentUser.permission === 'U' || 
+                                    currentUser.permission === 'RU' ||
+                                    currentUser.permission === 'CRU' ||
+                                    currentUser.permission === 'RUD' ||
+                                    currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
                     </ul>   
                 </mat-card-content>
             </mat-card>

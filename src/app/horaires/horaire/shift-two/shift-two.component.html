@@ -1,0 +1,23 @@
+<div class="row"> 
+    <div class="col-lg-6 col-md-6 col-sm-6"> 
+        <div class="tagus-form-group">
+            <mat-calendar [dateClass]="dateClass2"></mat-calendar>
+        </div> 
+    </div>  
+    <div class="col-lg-6 col-md-6 col-sm-6 personal-info-card">
+        <div class="d-md-flex align-items-center justify-content-space-between">
+            <h4>{{horaire.time_2}}</h4>
+            <!-- <button mat-icon-button color="primary" 
+                (click)="openEditDialog('300ms', '100ms', horaire.personnel_shift_2, 2, horaire.time_2)">
+                <mat-icon>group</mat-icon>
+            </button> -->
+        </div>
+        <div class="wraps">
+            <ul class="list ps-0 mb-0" *ngFor="let personne of horaire.personnel_shift_2">
+                <li>
+                    {{ personne }}
+                </li>
+            </ul>  
+        </div>
+    </div>
+</div>

@@ -16,11 +16,11 @@
         <div class="mat-elevation-z8 tagus-mat-table">
             <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
                
-                <ng-container matColumnDef="service">
+                <ng-container matColumnDef="corporate_name">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Entreprise</th>
                     <td mat-cell *matCellDef="let element">
                         <a [routerLink]="['/layouts/personnels/hors-usages', element.id, 'view']">
-                            {{element.service }}
+                            {{element.corporate_name }}
                         </a>
                     </td>
                 </ng-container>

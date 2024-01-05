@@ -506,6 +506,28 @@
                 </mat-form-field>
             </div> 
         </div>
+        <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="data['reglage'] == 'Prise en Compte paiement ce mois'">
+            <div class="tagus-form-group">
+                <label class="d-block mb-12 fw-semibold gray-color">{{data['reglage']}} </label> 
+                <div class="tagus-form-group">
+                    <mat-checkbox class="example-margin"  id="pris_en_compte_mois_plus_1" 
+                    formControlName="pris_en_compte_mois_plus_1">Prise en Compte paiement pour ce mois </mat-checkbox>
+                </div>
+            </div> 
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="data['reglage'] == 'Delai édition du bulletin'">
+            <div class="tagus-form-group">
+                <label class="d-block mb-12 fw-semibold gray-color">{{data['reglage']}} </label>
+                <mat-form-field appearance="fill">
+                    <i class="ri-edit-2-line"></i>
+                    <mat-label>Modifier {{data['reglage']}}</mat-label>
+                    <input matInput type="number" formControlName="delai_edit_bulletin" name="{{data['reglage']}}">
+                    <mat-error *ngIf="formGroup.controls['delai_edit_bulletin'].hasError('required')">
+                        Ce champs est obligatoire
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div> 
     </div>
     <div class="d-flex justify-content-center" *ngIf="isLoading">
         <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>

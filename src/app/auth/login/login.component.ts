@@ -40,20 +40,23 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.form.valid) {
       this.isLoading = true;  
-      var mat = this.form.value.matricule;
-      var code = mat.split("-");
-      var code_entreprise = code[code.length - 1];
+      // var mat = this.form.value.matricule;
+      // var code = mat.split("-");
+      // var code_entreprise = code[code.length - 1];
+      // var code_entreprise = code[1];
       var body = {
         matricule: this.form.value.matricule.toLowerCase(),
-        password: this.form.value.password,
-        code_entreprise: code_entreprise
+        password: this.form.value.password
       };
       this.authService.login(body).subscribe({
           next: (res) => { 
             let user: PersonnelModel = res; 
             let roleList = JSON.stringify(user.roles);
             localStorage.removeItem('roles');
-            localStorage.setItem('roles', roleList); 
+            localStorage.setItem('roles', roleList);
+            // let corporateList = JSON.stringify(user.corporate_view);
+            // localStorage.removeItem('corporates');
+            // localStorage.setItem('corporates', corporateList);
             if (user.statut_personnel) {
               if (user.roles[0] === 'Dashboard') { 
                 this.router.navigate(['/layouts/dashboard']);  

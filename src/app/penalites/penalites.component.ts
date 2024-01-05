@@ -1,22 +1,21 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router'; 
+import { ActivatedRoute, Router } from '@angular/router'; 
 import { LiveAnnouncer } from '@angular/cdk/a11y'; 
 import { SelectionModel } from '@angular/cdk/collections'; 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr'; 
-import { AuthService } from 'src/app/auth/auth.service';
-import { PersonnelService } from 'src/app/personnels/personnel.service'; 
+import { AuthService } from 'src/app/auth/auth.service'; 
 import { PersonnelModel } from 'src/app/personnels/models/personnel-model'; 
-import { PreferenceModel } from 'src/app/preferences/reglages/models/reglage-model';
 import { CustomizerSettingsService } from 'src/app/customizer-settings/customizer-settings.service';
-import { ReglageService } from 'src/app/preferences/reglages/reglage.service';
 import { PenaliteModel } from './models/penalite-model';
 import { PenaliteService } from './penalite.service';
 import { monnaieDataList } from '../shared/tools/monnaie-list';
+import { CorporateModel } from '../preferences/corporates/models/corporate.model';
+import { CorporateService } from '../preferences/corporates/corporate.service';
 
 
 @Component({
@@ -35,15 +34,15 @@ export class PenalitesComponent implements OnInit {
   isLoading = false;
   currentUser: PersonnelModel | any;
 
-  preference: PreferenceModel;
+  corporate: CorporateModel; 
   
   constructor(
       private _liveAnnouncer: LiveAnnouncer,
       public themeService: CustomizerSettingsService,
-      private router: Router,
-      private authService: AuthService,
+      private router: Router, 
+      private route: ActivatedRoute,
+      private corporateService: CorporateService,
       private penaliteService: PenaliteService,
-      private reglageService: ReglageService,
       public dialog: MatDialog,
   ) {
   } 
@@ -56,27 +55,26 @@ export class PenalitesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator; 
 
   ngOnInit() { 
-        this.isLoading = true;
-        this.authService.user().subscribe({
-            next: (user) => {
-                this.currentUser = user;
-                this.penaliteService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-                  this.ELEMENT_DATA = res; 
-                  this.dataSource = new MatTableDataSource<PenaliteModel>(this.ELEMENT_DATA);
-                  this.dataSource.sort = this.sort;
-                  this.dataSource.paginator = this.paginator;
-                });
-                this.reglageService.preference(this.currentUser.code_entreprise).subscribe(res => {
-                  this.preference = res;
-                });
-              this.isLoading = false;  
-            },
-            error: (error) => {
-              this.isLoading = false;
-              this.router.navigate(['/auth/login']);
-              console.log(error);
-            }
+    this.route.params.subscribe(routeParams => { 
+      this.penaliteService.refreshDataList$.subscribe(() => {
+        this.loadData(routeParams['id']);
+      })
+      this.loadData(routeParams['id']);
+    });
+  }
+
+    public loadData(id: any): void {
+      this.isLoading = true;
+      this.corporateService.getOne(Number(id)).subscribe(res => {
+        this.corporate = res;
+        this.penaliteService.getAllByCorporate(this.corporate.id).subscribe((penalites) => {
+          this.ELEMENT_DATA = penalites;  
+          this.dataSource = new MatTableDataSource<PenaliteModel>(this.ELEMENT_DATA);
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.isLoading = false;
         });
+      });
     }
 
  
@@ -98,11 +96,14 @@ export class PenalitesComponent implements OnInit {
     this.router.navigate(['/layouts/salaires/penalites', id, 'detail'])
   }
 
-  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, corporate: any): void {
     this.dialog.open(PenaliteAddDialogBox, {
       width: '600px', 
       enterAnimationDuration,
       exitAnimationDuration, 
+      data: {
+        corporate: corporate
+      }
     }); 
   } 
 }
@@ -126,12 +127,12 @@ export class PenaliteAddDialogBox implements OnInit {
   monnaieList = monnaieDataList;
 
   constructor( 
+    @Inject(MAT_DIALOG_DATA) public data: any,
       public dialogRef: MatDialogRef<PenaliteAddDialogBox>,
       private formBuilder: FormBuilder,
       private router: Router,
       private authService: AuthService, 
-      private toastr: ToastrService,
-      private personnelService: PersonnelService,
+      private toastr: ToastrService, 
       private penaliteService: PenaliteService,
   ) {}
   
@@ -141,9 +142,7 @@ export class PenaliteAddDialogBox implements OnInit {
     this.authService.user().subscribe({
       next: (user) => {
         this.currentUser = user;
-        this.personnelService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-          this.personneList = res;
-        });
+        this.personneList = this.data.corporate.personnels;
       },
       error: (error) => {
         this.router.navigate(['/auth/login']);
@@ -173,7 +172,8 @@ export class PenaliteAddDialogBox implements OnInit {
           created: new Date(),
           update_created: new Date(),
           entreprise: this.currentUser.entreprise,
-          code_entreprise: this.currentUser.code_entreprise
+          code_entreprise: this.data.corporate.code_corporate,
+          corporate: this.data.corporate.id
         };
         this.penaliteService.create(body).subscribe({
           next: () => {

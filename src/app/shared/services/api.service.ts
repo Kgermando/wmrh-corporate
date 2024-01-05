@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +10,19 @@ export abstract class ApiService {
 
   constructor(protected http: HttpClient) { }
 
-  preference(code_entreprise: string): Observable<any> {
-    // let headers: HttpHeaders = new HttpHeaders();
-    // headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-    // headers.append('Authorization', token);
+  private _refreshDataList$ = new Subject<void>();
+
+  private _refreshData$ = new Subject<void>();
+
+  get refreshDataList$() {
+    return this._refreshDataList$;
+  }
+
+  get refreshData$() {
+    return this._refreshData$;
+  }
+
+  preference(code_entreprise: string): Observable<any> { 
     return this.http.get(`${this.endpoint}/preference/${code_entreprise}`);
   }
 
@@ -43,14 +52,23 @@ export abstract class ApiService {
   }
 
   create(data: any): Observable<any> {
-    return this.http.post(this.endpoint, data);
+    return this.http.post(this.endpoint, data).pipe(tap(() => {
+      this._refreshDataList$.next();
+      this._refreshData$.next();
+    }));
   }
 
   update(id: number, data: any): Observable<any> {
-    return this.http.put(`${this.endpoint}/${id}`, data);
+    return this.http.put(`${this.endpoint}/${id}`, data).pipe(tap(() => {
+      this._refreshDataList$.next();
+      this._refreshData$.next();
+    }));
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.endpoint}/${id}`);
-  } 
+    return this.http.delete<void>(`${this.endpoint}/${id}`).pipe(tap(() => {
+      this._refreshDataList$.next();
+      this._refreshData$.next();
+    }));
+  }
 }

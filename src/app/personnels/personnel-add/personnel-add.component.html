@@ -1,7 +1,10 @@
 
-<mat-card class="create-project-card tagus-card mb-25">
+<mat-card class="create-project-card tagus-card mb-25 box">
     <mat-card-header>
-        <h4 class="mb-0">Nouvel employé</h4>
+        <div *ngIf="corporate">
+            <h6 class="mb-0">{{corporate.corporate_name}}</h6>
+            <h4 class="mb-0">Nouvel employé</h4>
+        </div>
     </mat-card-header>
     <mat-card-content>
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
@@ -109,6 +112,7 @@
                     </div> 
                 </div> 
             </div>
+            
             <div class="d-flex justify-content-center" *ngIf="isLoading">
                 <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
             </div>

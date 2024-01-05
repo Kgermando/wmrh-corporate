@@ -19,7 +19,6 @@ export class PointageViewComponent implements OnInit {
     private route: ActivatedRoute,
     private personnelService: PersonnelService
     ) {}
-
  
   ngOnInit(): void {
     this.isLoading = true;

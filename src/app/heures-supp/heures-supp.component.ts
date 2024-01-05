@@ -1,19 +1,20 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router'; 
+import { ActivatedRoute, Router } from '@angular/router'; 
 import { LiveAnnouncer } from '@angular/cdk/a11y'; 
 import { SelectionModel } from '@angular/cdk/collections'; 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr'; 
-import { AuthService } from 'src/app/auth/auth.service';
-import { PersonnelService } from 'src/app/personnels/personnel.service'; 
+import { AuthService } from 'src/app/auth/auth.service'; 
 import { PersonnelModel } from 'src/app/personnels/models/personnel-model';  
 import { CustomizerSettingsService } from 'src/app/customizer-settings/customizer-settings.service'; 
 import { HeureSuppModel } from './models/heure-supp-model';
 import { HeureSuppService } from './heure-supp.service';
+import { CorporateModel } from '../preferences/corporates/models/corporate.model';
+import { CorporateService } from '../preferences/corporates/corporate.service';
 
 @Component({
   selector: 'app-heures-supp',
@@ -32,14 +33,16 @@ export class HeuresSuppComponent implements OnInit {
 
 
   isLoading = false;
-  currentUser: PersonnelModel | any; 
+  currentUser: PersonnelModel | any;
+  corporate: CorporateModel;
  
   constructor(
       private _liveAnnouncer: LiveAnnouncer,
       public themeService: CustomizerSettingsService,
-      private router: Router,
-      private authService: AuthService,
-      private heureSuppService: HeureSuppService, 
+      private router: Router, 
+      private route: ActivatedRoute,
+      private corporateService: CorporateService,
+      private heureSuppService: HeureSuppService,
       public dialog: MatDialog,
   ) {} 
   toggleTheme() {
@@ -48,26 +51,27 @@ export class HeuresSuppComponent implements OnInit {
 
 
   ngOnInit() { 
-        this.isLoading = true;
-        this.authService.user().subscribe({
-            next: (user) => {
-                this.currentUser = user;
-                this.heureSuppService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-                  this.ELEMENT_DATA = res; 
-                  this.dataSource = new MatTableDataSource<HeureSuppModel>(this.ELEMENT_DATA);
-                  this.dataSource.sort = this.sort;
-                  this.dataSource.paginator = this.paginator; 
-              }); 
-              this.isLoading = false;
-            },
-            error: (error) => {
-              this.isLoading = false;
-              this.router.navigate(['/auth/login']);
-              console.log(error);
-            }
-          });
-    }
+    this.route.params.subscribe(routeParams => { 
+      this.heureSuppService.refreshDataList$.subscribe(() => {
+        this.loadData(routeParams['id']);
+      })
+      this.loadData(routeParams['id']);
+    });
+  }
 
+  public loadData(id: any): void {
+    this.isLoading = true;
+    this.corporateService.getOne(Number(id)).subscribe(res => {
+      this.corporate = res;
+      this.heureSuppService.getAllByCorporate(this.corporate.id).subscribe((heures_supp) => {
+        this.ELEMENT_DATA = heures_supp; 
+        this.dataSource = new MatTableDataSource<HeureSuppModel>(this.ELEMENT_DATA);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator; 
+        this.isLoading = false;
+      });
+    });
+  }
  
   applyFilter(event: Event) {
       const filterValue = (event.target as HTMLInputElement).value;
@@ -87,13 +91,16 @@ export class HeuresSuppComponent implements OnInit {
     this.router.navigate(['/layouts/presences/heures-supp', id, 'detail'])
   }
 
-  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, corporate: any): void {
     this.dialog.open(HeureSuppAddDialogBox, {
       width: '600px',
       enterAnimationDuration,
-      exitAnimationDuration, 
+      exitAnimationDuration,
+      data: {
+        corporate: corporate
+      }
     }); 
-  } 
+  }
 }
 
 
@@ -113,24 +120,21 @@ export class HeureSuppAddDialogBox implements OnInit {
   personneList: PersonnelModel[] = [];
 
   constructor( 
+    @Inject(MAT_DIALOG_DATA) public data: any,
       public dialogRef: MatDialogRef<HeureSuppAddDialogBox>,
       private formBuilder: FormBuilder,
       private router: Router,
       private authService: AuthService, 
-      private toastr: ToastrService,
-      private personnelService: PersonnelService,
+      private toastr: ToastrService, 
       private heureSuppService: HeureSuppService,
   ) {}
-  
 
 
   ngOnInit(): void {
     this.authService.user().subscribe({
       next: (user) => {
         this.currentUser = user;
-        this.personnelService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-          this.personneList = res;
-        });
+        this.personneList = this.data.corporate.personnels;
       },
       error: (error) => {
         this.router.navigate(['/auth/login']);
@@ -158,7 +162,8 @@ export class HeureSuppAddDialogBox implements OnInit {
           created: new Date(),
           update_created: new Date(),
           entreprise: this.currentUser.entreprise,
-          code_entreprise: this.currentUser.code_entreprise
+          code_entreprise: this.data.corporate.code_corporate,
+          corporate: this.data.corporate.id
         };
         this.heureSuppService.create(body).subscribe({
           next: () => {

@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { HoraireService } from '../horaire.service';
 import { PersonnelModel } from 'src/app/personnels/models/personnel-model';
-import { HoraireModel } from '../models/horaire-model';
+import { HoraireModel } from '../models/horaire.model';
 import { CustomizerSettingsService } from 'src/app/customizer-settings/customizer-settings.service';
 import { ToastrService } from 'ngx-toastr';
+import { CorporateModel } from 'src/app/preferences/corporates/models/corporate.model';
 
 @Component({
   selector: 'app-horaire-view',
@@ -13,10 +14,9 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class HoraireViewComponent {
   @Input('currentUser') currentUser: PersonnelModel;
+  @Input('corporate') corporate: CorporateModel;
   @Input('horaireList') horaireList: HoraireModel[];
-
-  // isLoading = false; 
-
+ 
   constructor(
     public themeService: CustomizerSettingsService,
     private router: Router, 
@@ -26,10 +26,13 @@ export class HoraireViewComponent {
 
 
   edit(id: number): void {
-    this.router.navigate(['/layouts/horaires', id, 'horaire-edit']);
+    this.router.navigate(['/layouts/presences/horaires', id, 'horaire-edit']);
   }
 
-
+  view(id: number, horaire_id: number): void {
+    this.router.navigate(['/layouts/presences', id, 'horaires', horaire_id, 'calendar']);
+  }
+ 
   delete(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet enregistrement ?')) {
       this.horairervice

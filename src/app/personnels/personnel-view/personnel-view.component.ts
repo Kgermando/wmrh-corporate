@@ -37,7 +37,6 @@ export class PersonnelViewComponent implements OnInit {
             this.personne = res;
             this.isLoading = false;
           });
-          
         },
         error: (error) => {
           this.isLoading = false;
@@ -59,7 +58,7 @@ export class PersonnelViewComponent implements OnInit {
         this.personnelService.update(this.personne.id, personnel).subscribe({
               next: () => {
               this.toastr.info('Mise en corbeil avec succès!', 'Success!');
-              this.router.navigate(['/layouts/personnels/personnel-list']);
+              this.router.navigate(['/layouts/personnels', this.personne.corporates.id, 'personnel-list']);
             },
             error: err => {
               this.toastr.error('Une erreur s\'est produite!', 'Oupss!');

@@ -12,14 +12,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PersonnelService } from 'src/app/personnels/personnel.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { formatDate } from '@angular/common'; 
+import { NotifyService } from 'src/app/notify/notify.service';
 
 import jsPDF from "jspdf";
 // import html2canvas from 'html2canvas'; 
-
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { formatDate } from '@angular/common'; 
-import { NotifyService } from 'src/app/notify/notify.service';
+
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
  
 
@@ -63,6 +64,7 @@ export class FichePaieComponent implements OnInit {
   penalites = 0;
   avance_slaire = 0;
   prise_en_charge_frais_bancaire = 0; 
+  pres_entreprise = 0;
   net_a_payer = 0;
 
 
@@ -102,8 +104,7 @@ export class FichePaieComponent implements OnInit {
     }
 
 
-    ngOnInit(): void {
-      this.isLoading = true;
+    ngOnInit(): void { 
       this.formGroup = this._formBuilder.group({
         alloc_logement: ['', Validators.required],
         alloc_transport: ['', Validators.required],
@@ -122,10 +123,12 @@ export class FichePaieComponent implements OnInit {
         penalites: ['', Validators.required],
         avance_slaire: ['', Validators.required],
         prise_en_charge_frais_bancaire: ['', Validators.required],
+        pres_entreprise: ['', Validators.required],
         net_a_payer: ['', Validators.required],
         statut: this.isPublie ? 'Disponible' : 'Traitement',  
       });
 
+      this.isLoading = true;
       this.authService.user().subscribe({
         next: (user) => {
           this.currentUser = user;
@@ -162,7 +165,7 @@ export class FichePaieComponent implements OnInit {
               } else {
                   ''
               }
-            this.reglageService.preference(this.currentUser.code_entreprise).subscribe(reglage => {
+            this.reglageService.preference(this.salaire.personnel.corporates.code_corporate).subscribe(reglage => {
               this.preference = reglage;
               this.formGroup.patchValue({
                 alloc_logement: parseFloat(this.salaire.alloc_logement),
@@ -181,6 +184,7 @@ export class FichePaieComponent implements OnInit {
                 penalites: parseFloat(this.salaire.penalites),  // Sanctions sur le salaire net à payer
                 avance_slaire: parseFloat(this.salaire.avance_slaire),
                 prise_en_charge_frais_bancaire:  parseFloat(this.salaire.prise_en_charge_frais_bancaire),
+                pres_entreprise: parseFloat(this.salaire.pres_entreprise),
                 net_a_payer: parseFloat(this.salaire.net_a_payer),
                 statut: this.isPublie ? 'Disponible' : 'Traitement',
                 signature: this.currentUser.matricule,
@@ -189,11 +193,10 @@ export class FichePaieComponent implements OnInit {
                 code_entreprise: this.currentUser.code_entreprise
               });
             });
-
+            
             this.onChanges();
-           
-          });
-          this.isLoading = false;
+            this.isLoading = false;
+          }); 
         },
         error: (error) => {
           this.isLoading = false;
@@ -351,7 +354,14 @@ export class FichePaieComponent implements OnInit {
         this.prise_en_charge_frais_bancaire = parseFloat(this.salaire.personnel.frais_bancaire);
       }
 
-      var deductions = this.ipr + this.penalites + this.avance_slaire + this.syndicat;
+      this.penalites = +val.penalites;
+      this.avance_slaire = +val.avance_slaire;
+      this.syndicat = +val.syndicat;
+      this.pres_entreprise = +val.pres_entreprise;
+      
+      var deductions = this.ipr + this.penalites + this.avance_slaire + this.syndicat + this.pres_entreprise;
+
+      console.log('penalites', this.penalites)
 
       var avantageSocials = +this.alloc_logement + +this.alloc_familliale  +  +val.primes +
         +this.prime_anciennete + +this.heure_supplementaire_monnaie + 
@@ -389,7 +399,7 @@ export class FichePaieComponent implements OnInit {
           avance_slaire: this.avance_slaire,
           prise_en_charge_frais_bancaire: this.prise_en_charge_frais_bancaire,
           net_a_payer: this.net_a_payer,
-          statut: this.isPublie ? 'Disponible' : 'Traitement', 
+          statut: this.isPublie ? 'Disponible' : 'Traitement',
           signature: this.currentUser.matricule, 
           update_created: new Date(),
         });
@@ -499,7 +509,7 @@ export class FichePaieComponent implements OnInit {
                 .delete(id)
                 .subscribe(() => { 
                   this.toastr.info('Supprimé avec succès!', 'Supprimée!');
-                  this.router.navigate(['/layouts/salaires/liste-paiements']);
+                  this.router.navigate(['/layouts/salaires', this.salaire.personnel.corporates.id, 'liste-paiements']);
                 }); 
               }
             })

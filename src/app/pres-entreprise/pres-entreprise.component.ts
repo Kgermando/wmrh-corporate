@@ -1,22 +1,22 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { PresentrepriseModel } from './models/pres-entreprise-model';
+import { PresEntrepriseModel } from './models/pres-entreprise-model';
 import { PersonnelModel } from '../personnels/models/personnel-model';
-import { PreferenceModel } from '../preferences/reglages/models/reglage-model';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CustomizerSettingsService } from '../customizer-settings/customizer-settings.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { PresEntrepriseService } from './pres-entreprise.service';
 import { ReglageService } from '../preferences/reglages/reglage.service';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { PersonnelService } from '../personnels/personnel.service';
 import { monnaieDataList } from '../shared/tools/monnaie-list';
+import { CorporateService } from '../preferences/corporates/corporate.service';
+import { CorporateModel } from '../preferences/corporates/models/corporate.model';
 
 @Component({
   selector: 'app-pres-entreprise',
@@ -26,15 +26,17 @@ import { monnaieDataList } from '../shared/tools/monnaie-list';
 export class PresEntrepriseComponent implements OnInit {
   displayedColumns: string[] = ['matricule','fullname', 'intitule', 'date_limit', 'created', 'id'];
   
-  ELEMENT_DATA: PresentrepriseModel[] = [];
+  ELEMENT_DATA: PresEntrepriseModel[] = [];
   
-  dataSource = new MatTableDataSource<PresentrepriseModel>(this.ELEMENT_DATA);
-  selection = new SelectionModel<PresentrepriseModel>(true, []);
+  dataSource = new MatTableDataSource<PresEntrepriseModel>(this.ELEMENT_DATA);
+  selection = new SelectionModel<PresEntrepriseModel>(true, []);
 
   isLoading = false;
   currentUser: PersonnelModel | any;
 
-  preference: PreferenceModel;
+  corporate: CorporateModel;
+
+  // preference: PreferenceModel;
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -42,10 +44,10 @@ export class PresEntrepriseComponent implements OnInit {
   constructor(
       private _liveAnnouncer: LiveAnnouncer,
       public themeService: CustomizerSettingsService,
-      private router: Router,
-      private authService: AuthService,
+      private router: Router, 
+      private route: ActivatedRoute,
+      private corporateService: CorporateService,
       private presEntrepriseService: PresEntrepriseService,
-      private reglageService: ReglageService,
       public dialog: MatDialog,
   ) {}
 
@@ -54,28 +56,26 @@ export class PresEntrepriseComponent implements OnInit {
   } 
 
   ngOnInit() { 
-        this.isLoading = true;
-        this.authService.user().subscribe({
-            next: (user) => {
-                this.currentUser = user;
-                this.presEntrepriseService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-                  this.ELEMENT_DATA = res; 
-                  this.dataSource = new MatTableDataSource<PresentrepriseModel>(this.ELEMENT_DATA);
-                  this.dataSource.sort = this.sort;
-                  this.dataSource.paginator = this.paginator; 
-              });
-              this.reglageService.preference(this.currentUser.code_entreprise).subscribe(res => {
-                this.preference = res; 
-              });
-              this.isLoading = false;
-            },
-            error: (error) => {
-              this.isLoading = false;
-              this.router.navigate(['/auth/login']);
-              console.log(error);
-            }
-          }); 
-        
+    this.route.params.subscribe(routeParams => { 
+      this.presEntrepriseService.refreshDataList$.subscribe(() => {
+        this.loadData(routeParams['id']);
+      })
+      this.loadData(routeParams['id']);
+    });
+  }
+
+    public loadData(id: any): void {
+      this.isLoading = true;
+      this.corporateService.getOne(Number(id)).subscribe(res => {
+        this.corporate = res;
+        this.presEntrepriseService.getAllByCorporate(this.corporate.id).subscribe((pres_entreprises) => {
+          this.ELEMENT_DATA = pres_entreprises;  
+          this.dataSource = new MatTableDataSource<PresEntrepriseModel>(this.ELEMENT_DATA);
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.isLoading = false;
+        }); 
+      });
     }
 
  
@@ -99,12 +99,15 @@ export class PresEntrepriseComponent implements OnInit {
 
  
 
-  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, corporate: any): void {
     this.dialog.open(PresEntrepriseAddDialogBox, {
       width: '600px',
       height: '100%',
       enterAnimationDuration,
       exitAnimationDuration, 
+      data: {
+        corporate: corporate
+      }
     }); 
   } 
 }
@@ -127,12 +130,12 @@ export class PresEntrepriseAddDialogBox implements OnInit {
   monnaieList = monnaieDataList;
 
   constructor( 
+    @Inject(MAT_DIALOG_DATA) public data: any,
       public dialogRef: MatDialogRef<PresEntrepriseAddDialogBox>,
       private formBuilder: FormBuilder,
       private router: Router,
       private authService: AuthService, 
-      private toastr: ToastrService,
-      private personnelService: PersonnelService,
+      private toastr: ToastrService, 
       private presEntrepriseService: PresEntrepriseService,
   ) {}
   
@@ -142,9 +145,7 @@ export class PresEntrepriseAddDialogBox implements OnInit {
     this.authService.user().subscribe({
       next: (user) => {
         this.currentUser = user;
-        this.personnelService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-          this.personneList = res;
-        });
+        this.personneList = this.data.corporate.personnels;
       },
       error: (error) => {
         this.router.navigate(['/auth/login']);
@@ -180,7 +181,8 @@ export class PresEntrepriseAddDialogBox implements OnInit {
           created: new Date(),
           update_created: new Date(),
           entreprise: this.currentUser.entreprise,
-          code_entreprise: this.currentUser.code_entreprise
+          code_entreprise: this.data.corporate.code_corporate,
+          corporate: this.data.corporate.id
         };
         this.presEntrepriseService.create(body).subscribe({
           next: () => {

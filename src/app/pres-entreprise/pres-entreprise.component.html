@@ -1,9 +1,13 @@
  
 <mat-card class="mb-25 tagus-card" [class.component-dark-theme]="themeService.isDark()">
-    <mat-card-header>
-        <h4 class="mb-0">Prêt entreprise</h4>
+    <mat-card-header *ngIf="corporate">
         <div>
-            <button mat-flat-button class="default-btn text-soft-primary" (click)="openEditDialog('300ms', '100ms')">
+            <h6 class="mb-0">{{corporate.corporate_name}}</h6>
+            <h4 class="mb-0">Prêt entreprise</h4>
+        </div> 
+        
+        <div>
+            <button mat-flat-button class="default-btn text-soft-primary" (click)="openEditDialog('300ms', '100ms', corporate)">
                 <i class="ri-add-fill"></i> Nouveau près
             </button>
             <button mat-icon-button class="tagus">
@@ -45,7 +49,7 @@
                 <ng-container matColumnDef="date_limit">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Echeance</th>
                     <td mat-cell *matCellDef="let element"> 
-                        <!-- <app-prime-filter [element]="element" [preference]="preference"></app-prime-filter>  -->
+                        <!-- <app-prime-filter [element]="element"></app-prime-filter>  -->
                         {{element.date_limit | date: 'dd/MM/yyyy'}}
                     </td>
                 </ng-container>

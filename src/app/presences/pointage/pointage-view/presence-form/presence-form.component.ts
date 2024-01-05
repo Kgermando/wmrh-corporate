@@ -96,7 +96,8 @@ export class PresenceFormComponent {
         this.currentUser = user;
         this.presenceService.getLastItem(this.personne.code_entreprise, this.personne.matricule).subscribe((res: ApointementModel[]) => {
           this.apointementLastItem = res;
-          this.apointementItem = this.apointementLastItem[0]; 
+          this.apointementItem = this.apointementLastItem[0];
+          console.log('apointementItem', this.personne.code_entreprise, this.personne.matricule)
           if(this.apointementItem != null) {
             const dateToday = new Date();
             const day = dateToday.getDate();
@@ -239,20 +240,21 @@ export class PresenceFormComponent {
     try {
       if (this.formGroup.valid) {
         this.isLoadingForm = true;
-        var body = { 
+        var body = {
           matricule: this.personne.matricule,
-          apointement: this.formGroup.value.apointement, 
-          prestation: this.isPresence ? this.formGroup.value.prestation: 0,
+          apointement: this.formGroup.value.apointement,
+          prestation: this.isPresence ? this.formGroup.value.prestation : 0,
           observation: this.formGroup.value.observation,
           date_entree: new Date(),
           date_sortie: this.isAbsense ? this.formGroup.value.date_sortie : new Date(),
-          site_location: this.currentUser.site_locations.site_location,
+          site_location: this.personne.site_locations.site_location,
           signature: this.currentUser.matricule,
           created: new Date(),
           update_created: new Date(),
-          entreprise: this.currentUser.entreprise,
-          code_entreprise: this.currentUser.code_entreprise,
-          personnel: this.personne.id
+          entreprise: this.personne.entreprise,
+          code_entreprise: this.personne.corporates.code_corporate,
+          personnel: this.personne.id,
+          corporate: this.personne.corporates.id
         };
         this.presenceService.create(body).subscribe({
           next: (res) => { 
@@ -261,7 +263,7 @@ export class PresenceFormComponent {
             if(res['apointement'] === 'S') {
               this.openEditDialog('300ms', '100ms', this.personne.id);
             } 
-            this.router.navigate(['/layouts/presences/pointage']);
+            this.router.navigate(['/layouts/presences',this.personne.corporates.id , 'pointage']);
             this.isLoadingForm = false;
           },
           error: (err) => {

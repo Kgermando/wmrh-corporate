@@ -219,6 +219,16 @@ export const reglagesGuard: CanActivateFn = (route, state) => {
   return access;  
 };
 
+export const entrepriseGuard: CanActivateFn = (route, state) => {
+  let roles = localStorage.getItem('roles');
+  let roleList = JSON.parse(roles!) 
+  let access = false; 
+  if (roleList.includes('Entreprises')) { 
+    access = true;
+  }
+  return access;
+};
+
 export const departementsGuard: CanActivateFn = (route, state) => {
   let roles = localStorage.getItem('roles');
   let roleList = JSON.parse(roles!) 

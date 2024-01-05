@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { PersonnelModel } from 'src/app/personnels/models/personnel-model';
 import { DepartementModel } from '../model/departement-model';
 import { CustomizerSettingsService } from 'src/app/customizer-settings/customizer-settings.service';
@@ -17,7 +17,7 @@ import { MatPaginator } from '@angular/material/paginator';
   templateUrl: './dep-view.component.html',
   styleUrls: ['./dep-view.component.scss']
 })
-export class DepViewComponent implements AfterViewInit {
+export class DepViewComponent implements OnInit {
   isLoading = false; 
   
   item: DepartementModel; 
@@ -42,10 +42,11 @@ export class DepViewComponent implements AfterViewInit {
       private authService: AuthService,
     private departementService: DepartementService, 
     private _liveAnnouncer: LiveAnnouncer, 
-    private toastr: ToastrService) {} 
-  
-      ngAfterViewInit() { 
-          this.isLoading = true;
+    private toastr: ToastrService) {}
+
+
+  ngOnInit(): void {
+    this.isLoading = true;
           let id = this.route.snapshot.paramMap.get('id');
           this.authService.user().subscribe({
               next: () => {
@@ -65,9 +66,7 @@ export class DepViewComponent implements AfterViewInit {
                 console.log(error);
               }
             }); 
-        
-      }
-  
+  } 
    
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;

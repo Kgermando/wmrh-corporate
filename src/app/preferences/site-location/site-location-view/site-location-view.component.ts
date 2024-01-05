@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { PersonnelModel } from 'src/app/personnels/models/personnel-model'; 
 import { CustomizerSettingsService } from 'src/app/customizer-settings/customizer-settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,7 +17,7 @@ import { SiteLocationModel } from '../models/site-location-model';
   templateUrl: './site-location-view.component.html',
   styleUrls: ['./site-location-view.component.scss']
 })
-export class SiteLocationViewComponent implements AfterViewInit {
+export class SiteLocationViewComponent implements OnInit {
   isLoading = false;
 
   currentUser: PersonnelModel | any;
@@ -45,31 +45,31 @@ export class SiteLocationViewComponent implements AfterViewInit {
     private siteLocationService: SiteLocationService, 
     private _liveAnnouncer: LiveAnnouncer, 
     private toastr: ToastrService) {} 
-  
-      ngAfterViewInit() { 
-          this.isLoading = true;
-          let id = this.route.snapshot.paramMap.get('id');
-          this.authService.user().subscribe({
-              next: () => {
-                this.siteLocationService.get(Number(id)).subscribe(res => {
-                  this.item = res; 
-                  this.ELEMENT_DATA = this.item.personnels; 
-                  this.total = this.item.personnels.length;
-                  this.dataSource = new MatTableDataSource<PersonnelModel>(this.ELEMENT_DATA);
-                  this.dataSource.sort = this.sort;
-                  this.dataSource.paginator = this.paginator;
-                });  
-                this.isLoading = false;
-              },
-              error: (error) => {
-                this.isLoading = false;
-                this.router.navigate(['/auth/login']);
-                console.log(error);
-              }
-            }); 
-         
-      }
-  
+
+
+  ngOnInit(): void {
+    this.isLoading = true;
+    let id = this.route.snapshot.paramMap.get('id');
+    this.authService.user().subscribe({
+        next: () => {
+          this.siteLocationService.get(Number(id)).subscribe(res => {
+            this.item = res; 
+            this.ELEMENT_DATA = this.item.personnels; 
+            this.total = this.item.personnels.length;
+            this.dataSource = new MatTableDataSource<PersonnelModel>(this.ELEMENT_DATA);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+          });  
+          this.isLoading = false;
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.router.navigate(['/auth/login']);
+          console.log(error);
+        }
+      }); 
+  }
+ 
    
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;

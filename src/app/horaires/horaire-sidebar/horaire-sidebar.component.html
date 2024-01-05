@@ -1,0 +1,45 @@
+<mat-card
+    class="mb-25 file-manager-box tagus-card"
+    [class.component-dark-theme]="themeService.isDark()"
+    *ngIf="corporate"
+>
+    <mat-card-header>
+        <div>
+            <h6 class="mb-0">{{corporate.corporate_name}}</h6>
+            <h4 class="mb-0">Horaire</h4>
+        </div>
+        <button mat-icon-button color="primary" 
+            (click)="openAddEventDialog('300ms', '100ms', corporate)"
+                matTooltip="Ajouter un horaire"
+                class="mat-icon">
+                    <mat-icon>add</mat-icon>
+            </button>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="search-box position-relative">
+            <input type="text" class="input-search d-block" 
+                placeholder="Search here.."
+                [(ngModel)]="searchText">
+            <button type="submit"><i class="ri-search-line"></i></button>
+        </div>
+        <div class="d-flex justify-content-center mt-25" *ngIf="isLoading">
+            <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-5">Patientez-svp...</p>
+        </div>
+        <span *ngIf="!isLoading">
+            <ul class="file-manager-sidebar ps-0 mb-0" *ngIf="(horaireList | filter: searchText).length > 0; else noResults"> 
+                <li *ngFor="let item of horaireList | filter: searchText; index as i">
+                    <a [routerLink]="['/layouts/presences', corporate.id, 'horaires', item.id, 'calendar']"
+                        class="fw-semibold position-relative" 
+                        routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <i class="ri-calendar-todo-fill"></i>
+                        {{ i +1 }}.
+                        {{ item.name_horaire }}
+                    </a>
+                </li>
+            </ul>
+            <ng-template #noResults>
+                <p>Aucun resultat "{{searchText}}".</p>
+            </ng-template>
+        </span>
+    </mat-card-content>
+</mat-card>

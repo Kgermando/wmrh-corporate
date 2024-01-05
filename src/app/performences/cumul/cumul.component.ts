@@ -18,6 +18,7 @@ export class CumulComponent implements OnInit {
   currentUser: PersonnelModel | any;
 
   cumuls = 0;
+  totalCumul = 0;
 
   hospitaliteTotal = 0;
   ponctualiteTotal = 0;
@@ -37,6 +38,10 @@ export class CumulComponent implements OnInit {
       this.authService.user().subscribe({
         next: (user) => {
           this.currentUser = user;
+          this.performenceService.cumulCount(this.currentUser.code_entreprise, this.element.id).subscribe((res) => {
+            var cumulCount = res;
+            this.totalCumul = cumulCount[0].count * 30;
+          })
           this.performenceService.hospitaliteTotal(this.currentUser.code_entreprise, this.element.id).subscribe(
             h => {
               this.performenceService.ponctualiteTotal(this.currentUser.code_entreprise, this.element.id).subscribe(

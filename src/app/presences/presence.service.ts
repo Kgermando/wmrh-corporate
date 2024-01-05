@@ -17,7 +17,7 @@ export class PresenceService extends ApiService {
     return this.http.get(`${this.endpoint}/get-registre/${code_entreprise}/${site_location}/${date_presence}`);
   }
 
- 
+
 
   getPie(code_entreprise: string, matricule: string): Observable<any> {
     return this.http.get(`${this.endpoint}/get-pie/${code_entreprise}/${matricule}`);

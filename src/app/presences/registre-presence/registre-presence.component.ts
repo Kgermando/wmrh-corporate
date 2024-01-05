@@ -16,7 +16,10 @@ import { ToastrService } from 'ngx-toastr';
 import { formatDate } from '@angular/common';
 import { SiteLocationModel } from 'src/app/preferences/site-location/models/site-location-model';
 import { SiteLocationService } from 'src/app/preferences/site-location/site-location.service';
- 
+import { CorporateService } from 'src/app/preferences/corporates/corporate.service';
+import { CorporateModel } from 'src/app/preferences/corporates/models/corporate.model';
+import { Papa } from 'ngx-papaparse';
+import { PersonnelService } from 'src/app/personnels/personnel.service';
 
 @Component({
   selector: 'app-registre-presence',
@@ -27,7 +30,7 @@ export class RegistrePresenceComponent implements OnInit {
   @Input('personne') personne: PersonnelModel; 
   
   displayedColumns: string[] = ['site_location', 'matricule', 'apointement', 'prestation', 'date_entree', 'date_sortie', 'observation'];
-   
+  
   ELEMENT_DATA: ApointementModel[] = []; 
   
   dataSource = new MatTableDataSource<ApointementModel>(this.ELEMENT_DATA);
@@ -35,6 +38,11 @@ export class RegistrePresenceComponent implements OnInit {
 
   isLoading = false;
   currentUser: PersonnelModel; 
+
+  corporateList: CorporateModel[] = [];
+  corporate: CorporateModel;
+  siteLocationList: SiteLocationModel[] = [];
+  siteLocation: SiteLocationModel;
 
   formGroup!: FormGroup;
   date_presence: any;
@@ -55,6 +63,7 @@ export class RegistrePresenceComponent implements OnInit {
       private router: Router,
       private authService: AuthService,
       private presenceService: PresenceService,
+      private corporateService: CorporateService,
       public dialog: MatDialog,
       private toastr: ToastrService,
   ) {}
@@ -103,10 +112,13 @@ export class RegistrePresenceComponent implements OnInit {
       this.authService.user().subscribe({
           next: (user) => {
             this.currentUser = user;
-            if (this.currentUser.site_locations) {
-              this.onChange();
-            }
-            this.isLoading = false;
+            this.corporateService.getAll(this.currentUser.code_entreprise).subscribe(res => {
+              this.corporateList = res;
+              this.isLoading = false;
+            });
+            // if (this.currentUser.site_locations) {
+            //   this.onChange();
+            // }
           },
           error: (error) => {
             this.isLoading = false;
@@ -114,15 +126,32 @@ export class RegistrePresenceComponent implements OnInit {
             console.log(error);
           }
         }); 
-  } 
+  }
+
+
+  onChangeCorporate(event: any) {
+    this.corporate = event.value;
+    this.siteLocationList = this.corporate.site_locations;
+
+    // this.siteLocation = new SiteLocationModel();
+
+    this.ELEMENT_DATA = [];
+    this.dataSource = new MatTableDataSource<ApointementModel>(this.ELEMENT_DATA);
+  }
+
+  onChangeSiteLocation(event: any) {
+    console.log('siteLocation', event.value);
+    this.siteLocation = event.value;
+
+    this.onChange(this.siteLocation);
+  }
 
  
-  onChange() {
+  onChange(siteLocation: SiteLocationModel) { 
     if (!this.date_presence) {
-      var datePresence = formatDate(new Date(), 'yyyy-MM-dd', 'en-US'); 
-        this.presenceService.getRegisterPresence(
-        this.currentUser.code_entreprise,
-        this.currentUser.site_locations.site_location, datePresence).subscribe(res => {
+      var datePresence = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
+      this.presenceService.getRegisterPresence(
+          siteLocation.code_entreprise, siteLocation.site_location, datePresence).subscribe(res => {
           this.ELEMENT_DATA = res;
           this.dataSource = new MatTableDataSource<ApointementModel>(this.ELEMENT_DATA);
           this.dataSource.sort = this.sort;
@@ -133,9 +162,8 @@ export class RegistrePresenceComponent implements OnInit {
       this.date_presence = val.date_presence;
       var datePresence = formatDate(this.date_presence, 'yyyy-MM-dd', 'en-US'); 
       this.presenceService.getRegisterPresence(
-      this.currentUser.code_entreprise,
-      this.currentUser.site_locations.site_location, datePresence).subscribe(res => {
-          this.ELEMENT_DATA = res;
+        siteLocation.code_entreprise, siteLocation.site_location, datePresence).subscribe(res => {
+          this.ELEMENT_DATA = res; 
           this.dataSource = new MatTableDataSource<ApointementModel>(this.ELEMENT_DATA);
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
@@ -218,20 +246,7 @@ export class RegistrePresenceComponent implements OnInit {
     } catch (error) {
       
     }
-  }
-
-  // downloadModelReport() {
-  //   this.isLoading = true;  
-  //   this.httpClient.get("assets/files/presence_model.xlsx",{responseType: "blob"}).subscribe((res:any) => { 
-  //     const downloadUrl= window.URL.createObjectURL(res);
-  //     const link = document.createElement('a');
-  //     link.href = downloadUrl;
-  //     link.download = `Votre_model_employes.xlsx`;
-  //     link.click();
-  //     this.toastr.success('Success!', 'Téléchargé avec succès!');
-  //     this.isLoading = false;
-  //   });
-  // } 
+  } 
 
 }
 
@@ -242,45 +257,108 @@ export class RegistrePresenceComponent implements OnInit {
 })
 export class PresenceUploadCSVDialogBox {
   isLoading = false; 
+  presenceList: ApointementModel[] = [];
+  pointage: ApointementModel;
+  currentUser: PersonnelModel | any;
+  personneList: PersonnelModel[] = [];
+  personne: PersonnelModel;
 
   constructor( 
       public dialogRef: MatDialogRef<PresenceUploadCSVDialogBox>, 
       private toastr: ToastrService,
+      private router: Router,
+      private papa: Papa,
+      private authService: AuthService,
       private presenceService: PresenceService,
+      private personnelService: PersonnelService,
   ) {}
 
-
-  upload(event: Event) {
-    this.isLoading = true;
-    const target = event.target as HTMLInputElement;
-    const files = target.files as FileList;
-    console.log({files});
-
-    const file = files.item(0);
-    const data = new FormData();
-    // @ts-ignore
-    data.append('file', file); 
-
-    this.presenceService.uploadCSV(data).subscribe({
-      next: () => {
-        this.toastr.success('Success!', 'Ajouté avec succès!');
-        // window.location.reload();
-        this.isLoading = false; 
-        this.close();
+  ngOnInit() { 
+    this.authService.user().subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        this.personnelService.getAll(this.currentUser.code_entreprise).subscribe((res) => {
+          this.personneList = res;
+        });
       },
-      error: (e) => {
-        this.isLoading = false;
-        this.close();
-        this.toastr.error(`${e.error.message}`, 'Oupss!');
-        window.alert(e.error.message);
-        console.log(e);
-        
+      error: (error) => { 
+        this.router.navigate(['/auth/login']);
+        console.log(error);
       }
-    });
-  } 
+    }); 
+  }
+
+  
+  upload(event: any) {
+    this.isLoading = true;
+    const file = event.target.files[0];
+    if (this.isValidCSVFile(file)) {
+      this.papa.parse(file, {
+        worker: true,
+        header: true,
+        delimiter: ';',
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        encoding: 'utf-8',
+        step: (row) => {
+          this.pointage = row.data;
+          this.personne = this.personneList.filter((v) => v.matricule == this.pointage.matricule)[0];
+          if (this.personne) {
+            var body = {
+              matricule: this.personne.matricule,
+              apointement: this.pointage.apointement, 
+              prestation: this.pointage.prestation,
+              observation: this.pointage.observation,
+              date_entree: new Date(this.pointage.date_entree),
+              date_sortie: new Date(this.pointage.date_sortie),
+              site_location: this.currentUser.site_locations.site_location,
+              signature: this.currentUser.matricule,
+              created: new Date(),
+              update_created: new Date(),
+              entreprise: this.currentUser.entreprise,
+              code_entreprise: this.currentUser.code_entreprise,
+              personnel: this.personne.id,
+              corporate: this.personne.corporates.id
+            };
+            this.presenceService.create(body).subscribe({
+              next: () => {},
+              error: (err) => {
+                this.isLoading = false;
+                this.toastr.error(`${err.error.message}`, 'Oupss!');
+                console.log(err);
+                this.close();
+              }
+            });
+          } else {
+            this.toastr.info(`Verifiez les matricules`, 'Un soucis!');
+            this.close();
+          }
+        },
+        complete: () => {
+          this.isLoading = false;
+          console.log("All done!");
+          this.toastr.success('Ajouter avec succès!', 'Success!');
+          this.close();
+        },
+        error: (error, file) => {
+          this.isLoading = false;
+          this.toastr.error(`${error}`, 'Oupss!');
+          console.log(error);
+          console.log("file", file);
+          this.close();
+        },
+      });
+    } else {  
+      alert("Please import valid .csv file."); 
+    }
+      this.isLoading = false;  
+    }
  
-
-
+  
+  isValidCSVFile(file: any) {  
+    return file.name.endsWith(".csv");  
+  }
+  
   close(){
       this.dialogRef.close(true);
   } 
@@ -299,12 +377,6 @@ export class PresenceExportXLSXDialogBox implements OnInit {
   currentUser: PersonnelModel | any;
 
   siteLocationList: SiteLocationModel[] = [];
-
-  // dateRange = new FormGroup({
-  //   site_location: new FormControl(),
-  //   start: new FormControl(),
-  //   end: new FormControl()
-  // });
   dateRange!: FormGroup;
 
   constructor( 

@@ -3,6 +3,7 @@ import { SalaireService } from '../salaire.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Router } from '@angular/router';
 import { PersonnelModel } from 'src/app/personnels/models/personnel-model';
+import { CorporateModel } from 'src/app/preferences/corporates/models/corporate.model';
 
 @Component({
   selector: 'app-classeur-filter-disp',
@@ -10,13 +11,14 @@ import { PersonnelModel } from 'src/app/personnels/models/personnel-model';
   styleUrls: ['./classeur-filter-disp.component.scss']
 })
 export class ClasseurFilterDispComponent implements OnInit {
-  @Input('farde') farde: any;
+  @Input('classer') classer: any;
+  @Input('corporate') corporate: CorporateModel;
 
 
   currentUser: PersonnelModel | any;
  
-  fardeList: any[] = [];
-  dateFarde: any;
+  classerList: any[] = [];
+  dateClasser: any;
   moisClasseur = '';
   annee: any;
 
@@ -31,13 +33,13 @@ export class ClasseurFilterDispComponent implements OnInit {
     this.authService.user().subscribe({
       next: (user) => {
         this.currentUser = user;
-        this.salaireService.fardeDisponible(this.currentUser.code_entreprise).subscribe(farde => {
-          this.fardeList = farde;
+        this.salaireService.classerDisponible(this.currentUser.code_entreprise, this.corporate.id).subscribe(classer => {
+          this.classerList = classer;
  
-          var datePaieList = this.fardeList.filter((v) => v.month == this.farde.month && v.year == this.farde.year);
-          this.dateFarde = datePaieList[datePaieList.length-1];
-          const month = parseInt(this.dateFarde.month);
-          this.annee =  parseInt(this.dateFarde.year);
+          var datePaieList = this.classerList.filter((v) => v.month == this.classer.month && v.year == this.classer.year);
+          this.dateClasser = datePaieList[datePaieList.length-1];
+          const month = parseInt(this.dateClasser.month);
+          this.annee =  parseInt(this.dateClasser.year);
           if (month === 1) {
             this.moisClasseur = 'Janvier';
           } else if(month === 2) {

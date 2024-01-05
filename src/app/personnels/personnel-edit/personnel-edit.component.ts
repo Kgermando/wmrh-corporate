@@ -6,11 +6,6 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { PersonnelService } from '../personnel.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatSelectChange } from '@angular/material/select';
-import { DepartementService } from 'src/app/preferences/departements/departement.service';
-import { FonctionService } from 'src/app/preferences/fonction/fonction.service';
-import { TitleService } from 'src/app/preferences/titles/title.service';
-import { ServiceService } from 'src/app/preferences/services/service.service';
-import { SiteLocationService } from 'src/app/preferences/site-location/site-location.service';
 import { DepartementModel } from 'src/app/preferences/departements/model/departement-model';
 import { FonctionModel } from 'src/app/preferences/fonction/models/fonction-model';
 import { TitleModel } from 'src/app/preferences/titles/models/title-model';
@@ -20,6 +15,8 @@ import { permissionDataList } from 'src/app/shared/tools/permission-list';
 import { monnaieDataList } from 'src/app/shared/tools/monnaie-list';
 import { CategoriepersonnelDataList } from 'src/app/shared/tools/categorie_personnel';
 import { RoleDataList } from 'src/app/shared/tools/role-list';
+import { CorporateService } from 'src/app/preferences/corporates/corporate.service';
+import { CorporateModel } from 'src/app/preferences/corporates/models/corporate.model';
 
 @Component({
   selector: 'app-personnel-edit',
@@ -65,8 +62,11 @@ export class PersonnelEditComponent implements OnInit {
   titleList: TitleModel[] = [];
   serviceList: ServicePrefModel[] = [];
   siteLocationList: SiteLocationModel[] = [];
+  corporateList: CorporateModel[] = [];
 
   categoriList = CategoriepersonnelDataList;
+
+  corporate: CorporateModel;
 
   constructor(
     private router: Router,
@@ -74,11 +74,7 @@ export class PersonnelEditComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private authService: AuthService, 
     private personnelService: PersonnelService,
-    private departementService: DepartementService,
-    private fonctionService: FonctionService,
-    private titleService: TitleService,
-    private serviceService: ServiceService,
-    private siteLocation: SiteLocationService,
+    private corporateService: CorporateService,
     private toastr: ToastrService) {}
 
 
@@ -138,39 +134,33 @@ export class PersonnelEditComponent implements OnInit {
       statut_personnel: [''],
       roles: [''],
       permission: [''],
+      corporate_view: [''],
     });
 
     this.id = this.route.snapshot.params['id']; 
     this.authService.user().subscribe({
       next: (user) => {
-        this.currentUser = user; 
-
-        this.departementService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-          this.departementList = res; 
-        });
-        this.fonctionService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-          this.fonctionList = res; 
-        });
-        this.titleService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-          this.titleList = res; 
-        });
-        this.serviceService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-          this.serviceList = res;
-        });
-        this.siteLocation.getAll(this.currentUser.code_entreprise).subscribe(res => {
-          this.siteLocationList = res;
+        this.currentUser = user;  
+        this.corporateService.getAll(this.currentUser.code_entreprise).subscribe(res => {
+          this.corporateList = res;
         });
 
         this.personnelService.get(this.id).subscribe(item => { 
-          this.personne = item; 
+          this.personne = item;
+          this.departementList = this.personne.corporates.departements;
+          this.fonctionList = this.personne.corporates.fonctions;
+          this.titleList = this.personne.corporates.titles;
+          this.serviceList = this.personne.corporates.services;
+          this.siteLocationList = this.personne.corporates.site_locations;
+
           this.formGroup.patchValue({
-            nom: this.capitalizeTest(item.nom),
-            postnom: this.capitalizeTest(item.postnom),
-            prenom: this.capitalizeTest(item.prenom),
-            email: this.capitalizeTest(item.email),
+            nom: this.capitalizeText(item.nom),
+            postnom: this.capitalizeText(item.postnom),
+            prenom: this.capitalizeText(item.prenom),
+            email: this.capitalizeText(item.email),
             telephone: item.telephone,
             sexe: item.sexe,
-            adresse: this.capitalizeTest(item.adresse),
+            adresse: this.capitalizeText(item.adresse),
             category: item.category,
             signature: this.currentUser.matricule, 
             update_created: new Date()
@@ -179,7 +169,7 @@ export class PersonnelEditComponent implements OnInit {
             numero_cnss: item.numero_cnss,
             date_naissance: item.date_naissance,
             lieu_naissance: item.lieu_naissance,
-            nationalite: this.capitalizeTest(item.nationalite),
+            nationalite: this.capitalizeText(item.nationalite),
             etat_civile: item.etat_civile,
             nbr_dependants: item.nbr_dependants,
             signature: this.currentUser.matricule,
@@ -205,7 +195,7 @@ export class PersonnelEditComponent implements OnInit {
             alloc_familliale: (item.alloc_familliale) ? item.alloc_familliale : '0',
             soins_medicaux: (item.soins_medicaux) ? item.soins_medicaux : '0',
             compte_bancaire: item.compte_bancaire,
-            nom_banque: this.capitalizeTest(item.nom_banque),
+            nom_banque: this.capitalizeText(item.nom_banque),
             frais_bancaire: (item.frais_bancaire) ? item.frais_bancaire : '0',
             syndicat: item.syndicat,
             cv_url: item.cv_url,
@@ -216,6 +206,7 @@ export class PersonnelEditComponent implements OnInit {
             statut_personnel: item.statut_personnel,
             roles: item.roles, 
             permission: item.permission,
+            corporate_view: item.corporate_view,
             signature: this.currentUser.matricule,
             update_created: new Date()
           });
@@ -330,7 +321,7 @@ export class PersonnelEditComponent implements OnInit {
       .subscribe({
         next: () => {
           this.toastr.success('Modification enregistré!', 'Success!');
-          this.router.navigate(['/layouts/personnels/personnel-list']);
+          this.router.navigate(['/layouts/personnels', this.personne.corporates.id, 'personnel-list']);
           this.isLoading = false;
         },
         error: err => {
@@ -364,8 +355,12 @@ export class PersonnelEditComponent implements OnInit {
     return c1 && c2 ? c1.id === c2.id : c1 === c2;
   }
 
+  compareFnCorporate(c1: CorporateModel, c2: CorporateModel): boolean {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
+  }
+
   
-  capitalizeTest(text: string): string {
+  capitalizeText(text: string): string {
     return (text && text[0].toUpperCase() + text.slice(1).toLowerCase()) || text;
   }
 }

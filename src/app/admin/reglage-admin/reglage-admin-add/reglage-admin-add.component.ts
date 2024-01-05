@@ -132,7 +132,7 @@ export class ReglageAdminAddComponent implements OnInit {
                 contre_valeur_logement: 30,
                 signature: this.currentUser.matricule,
                 created: "2023-07-19 08:45:59.632", 
-                update_created: "2023-07-19 08:45:59.632", 
+                update_created: "2023-10-05 08:45:59.632", 
                 entreprise: company.company_name,
                 code_entreprise: company.code_entreprise
               };

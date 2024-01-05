@@ -38,6 +38,18 @@
                         <span class="fw-semibold">Identifiant: </span>
                         <span class="gray-color">{{ currentUser.matricule }}</span>
                     </li>
+                    <li>
+                        <span class="fw-semibold">Signature: </span>
+                        <span class="gray-color">{{ currentUser.signature }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Créé le: </span>
+                        <span class="gray-color">{{ currentUser.created | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Mis à jour le: </span>
+                        <span class="gray-color">{{ currentUser.update_created | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+                    </li>
                 </ul>
             </ng-template>
             <ng-template carouselSlide>
@@ -171,18 +183,6 @@
                     <li>
                         <span class="fw-semibold">Permission: </span> 
                             <span class="gray-color"> {{ currentUser.permission }}</span>
-                    </li>
-                    <li>
-                        <span class="fw-semibold">Signature: </span>
-                        <span class="gray-color">{{ currentUser.signature }}</span>
-                    </li>
-                    <li>
-                        <span class="fw-semibold">Créé le: </span>
-                        <span class="gray-color">{{ currentUser.created | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
-                    </li>
-                    <li>
-                        <span class="fw-semibold">Mis à jour le: </span>
-                        <span class="gray-color">{{ currentUser.update_created | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
                     </li>
                 </ul>
             </ng-template>

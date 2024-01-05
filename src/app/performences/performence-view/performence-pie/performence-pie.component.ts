@@ -8,11 +8,9 @@ import {
   ApexTooltip,
   ApexDataLabels,
   ApexLegend,
-} from "ng-apexcharts"; 
-import { AuthService } from 'src/app/auth/auth.service';
+} from "ng-apexcharts";  
 import { CustomizerSettingsService } from 'src/app/customizer-settings/customizer-settings.service';
-import { PersonnelModel } from 'src/app/personnels/models/personnel-model';
-import { PerformenceService } from '../../performence.service';
+import { PersonnelModel } from 'src/app/personnels/models/personnel-model'; 
 
 export type ChartOptions = {
     series: ApexNonAxisChartSeries;

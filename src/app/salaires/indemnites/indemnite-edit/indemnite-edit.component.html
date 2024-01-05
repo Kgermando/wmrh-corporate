@@ -1,0 +1,190 @@
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-5">Patientez-svp...</p>
+</div>
+<div class="mb-25" *ngIf="!isLoading">
+    <div class="row justify-content-center" *ngIf="indemnite && preference">
+        <div class="col-lg-8 col-md-8 col-md-12"  id="htmlData" #htmlData>  
+            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+                <mat-card class="mb-25 tagus-card"> 
+                    <mat-card-header> 
+                        <input class="form-control" style="width: 300px !important;"
+                            type="text"
+                            aria-label="Sizing example input"
+                            aria-describedby="inputGroup-sizing-lg"
+                            formControlName="intitule">
+                        <div>
+                            <a mat-icon-button color="primary" 
+                                    (click)="openDialog()">
+                                <mat-icon>calculate</mat-icon>
+                            </a>
+                            <a mat-icon-button class="tagus" (click)="openPDF()" matTooltip="Imprimer ce document">
+                                <mat-icon>print</mat-icon>
+                            </a>
+                            <a mat-icon-button color="warn" 
+                                (click)="delete(indemnite.id)" matTooltip="Supprimer cette fiche d'indemnité">
+                                <mat-icon>delete</mat-icon>
+                            </a> 
+                        </div>
+                    </mat-card-header>
+                    <mat-card-content class="example-buttons">
+                        <div class="d-flex flex-nowrap mb-25 align-items-center justify-content-space-between">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <table class="table"> 
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-start">
+                                                Entreprise:
+                                            </td>
+                                            <td class="gray-color text-start" *ngIf="preference.company">{{ preference.company.company_name }}</td> 
+                                            <td class="gray-color text-start" *ngIf="!preference.company"> - </td> 
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                RCCM:
+                                            </td>
+                                            <td class="gray-color text-start" *ngIf="preference.company">{{ preference.company.rccm }}</td>
+                                            <td class="gray-color text-start" *ngIf="!preference.company"> - </td> 
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                ID. Nat:
+                                            </td>
+                                            <td class="gray-color text-start" *ngIf="preference.company">{{ preference.company.id_nat }}</td> 
+                                            <td class="gray-color text-start" *ngIf="!preference.company"> - </td> 
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                N° Impôt:
+                                            </td>
+                                            <td class="gray-color text-start" *ngIf="preference.company">{{ preference.company.numero_impot }}</td>
+                                            <td class="gray-color text-start" *ngIf="!preference.company"> - </td> 
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                N° CNSS:
+                                            </td>
+                                            <td class="gray-color text-start" *ngIf="preference.company">{{ preference.company.numero_cnss }}</td>
+                                            <td class="gray-color text-start" *ngIf="!preference.company"> - </td> 
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 d-flex justify-content-center">
+                                <span *ngIf="!preference.company">
+                                    <img src="assets/img/user/user13.jpg" class="border-radius logo">
+                                </span>
+                                <span *ngIf="preference.company">
+                                    <img [src]="preference.company.logo" class="border-radius logo" *ngIf="preference.company.logo != '-'">
+                                    <img src="assets/img/user/user13.jpg" class="border-radius logo" *ngIf="preference.company.logo === '-'">
+                                </span>
+                            </div>
+                        </div>
+                        <mat-divider class="mb-25" ></mat-divider>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td class="text-start">
+                                        Identifiant:
+                                    </td>
+                                    <td class="gray-color text-start">{{ indemnite.personnel.matricule.toUpperCase() }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">
+                                        Nom complet:
+                                    </td>
+                                    <td class="gray-color text-start">{{ indemnite.personnel.nom}} {{ indemnite.personnel.postnom}} {{ indemnite.personnel.prenom}}</td> 
+                                </tr>
+                                <tr *ngIf="indemnite.personnel.departements">
+                                    <td class="text-start">
+                                        Département
+                                    </td>
+                                    <td class="gray-color text-start">{{ indemnite.personnel.departements.departement }} </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">
+                                        N° CNSS:
+                                    </td>
+                                    <td class="gray-color text-start">{{ indemnite.personnel.numero_cnss }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">
+                                        Compte bancaire:
+                                    </td>
+                                    <td class="gray-color text-start">{{ indemnite.personnel.compte_bancaire }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">
+                                        Monnaie:
+                                    </td>
+                                    <td class="gray-color text-start">
+                                        <mat-select formControlName="monnaie" (selectionChange)="onChange($event)">
+                                            <mat-option *ngFor="let monnaie of monnaieList" [value]="monnaie">
+                                                {{monnaie}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">
+                                        Taux de conversion:
+                                    </td>
+                                    <td class="gray-color text-start">1$ = {{ indemnite.taux_dollard }} FC</td> 
+                                </tr>
+                            </tbody>
+                        </table>
+                        <mat-divider></mat-divider>
+                        <ul class="list ps-0 mb-0 mt-25">
+                            <li class="fontSize">
+                                COMPOSER LA FICHE...
+                            </li>
+                        </ul>
+                        <table class="table mb-25">
+                            <tbody>
+                                <tr *ngFor="let item of idemniteContentList">
+                                    <td class="text-start">
+                                        {{item.nom}}:
+                                    </td>
+                                    <td class="gray-color text-end mr-5">
+                                        {{item.montant | numberFormat:'fr-FR'}} {{ monnaie }}
+                                        <a mat-icon-button color="accent" (click)="openEditDialog('300ms', '100ms', item.id)" 
+                                          matTooltip="Modifier">
+                                            <mat-icon>edit</mat-icon>
+                                        </a>
+                                        <a mat-icon-button color="warn" (click)="deleteItem(item.id)"  matTooltip="Retirer">
+                                            <mat-icon>close</mat-icon>
+                                        </a>
+                                    </td>
+                                </tr> 
+                            </tbody>
+                        </table> 
+                        <app-idemnite-content [indemnite]="indemnite" [currentUser]="currentUser"></app-idemnite-content>
+                        <ul class="list ps-0 mb-0 mt-25"> 
+                            <li class="fw-semibold net_a_payer d-flex align-items-center justify-content-space-between">
+                                Total :
+                                <span>
+                                    <span  class="gray-color fontSize">{{ total | numberFormat:'fr-FR' }} {{ monnaie }}</span>
+                                </span>
+                            </li>
+                        </ul> 
+                        <div class="col-lg-6 col-md-12 col-sm-12 mt-25"> 
+                            <mat-slide-toggle style="background: color= red;"
+                                [checked]="isActive" (change)="toggle($event)"
+                            >Cocher la case pour rendre disponible!</mat-slide-toggle>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center mt-25" 
+                            *ngIf="currentUser.permission === 'U' || 
+                            currentUser.permission === 'RU' ||
+                            currentUser.permission === 'CRU' ||
+                            currentUser.permission === 'RUD' ||
+                            currentUser.permission === 'CRUD'">
+                            <button mat-flat-button class="tagus" *ngIf="isActive">Disponible</button>
+                            <p></p>
+                            <button mat-stroked-button class="tagus" *ngIf="!isActive">Brouillon</button>
+                        </div>
+                    </mat-card-content>
+                </mat-card>  
+            </form>
+        </div> 
+    
+    </div>
+</div>

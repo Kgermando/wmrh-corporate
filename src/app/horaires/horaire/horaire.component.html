@@ -1,7 +1,44 @@
-
-
-<full-calendar [options]="calendarOptions"></full-calendar>
-
-<!-- <div class="tagus-form-group mb-25">
-    <mat-calendar></mat-calendar>
-</div> -->
+<div class="d-flex justify-content-center" *ngIf="isLoadingView">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div>
+<mat-card class="mb-25 enrolled-created-box tagus-card" *ngIf="!isLoadingView && horaire">
+    <mat-card-header>
+        <h4 class="mb-0">{{ horaire.name_horaire.toLocaleUpperCase() }}</h4>
+        <span *ngIf="currentUser">
+            <button mat-icon-button color="accent" 
+                (click)="edit(horaire.id)"
+                *ngIf="currentUser.permission === 'U' || 
+                    currentUser.permission === 'RU' ||
+                    currentUser.permission === 'CRU' ||
+                    currentUser.permission === 'RUD' ||
+                    currentUser.permission === 'CRUD'" 
+                    matTooltip="Modifier l'horaire"
+                    class="mat-icon">
+                    <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" 
+                    (click)="delete(horaire.id)"
+                *ngIf="currentUser.permission === 'D' || 
+                    currentUser.permission === 'RD' ||
+                    currentUser.permission === 'RUD' || 
+                    currentUser.permission === 'CRUD'" 
+                    matTooltip="Supprimer cette horaire"
+                    class="mat-icon">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </span>
+    </mat-card-header>
+    <mat-card-content> 
+        <mat-tab-group mat-stretch-tabs="true" mat-align-tabs="start" animationDuration="0ms">
+            <mat-tab label="SHIFT 1">
+                <app-shift-one [horaire]="horaire"></app-shift-one>
+            </mat-tab>
+            <mat-tab label="SHIFT 2">
+                <app-shift-two [horaire]="horaire"></app-shift-two>
+            </mat-tab>
+            <mat-tab label="SHIFT 3">
+                <app-shift-tree [horaire]="horaire"></app-shift-tree>
+            </mat-tab>
+        </mat-tab-group> 
+    </mat-card-content>
+</mat-card>

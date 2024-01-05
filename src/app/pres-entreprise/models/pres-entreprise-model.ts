@@ -1,6 +1,6 @@
 import { PersonnelModel } from "src/app/personnels/models/personnel-model";
 
-export interface PresentrepriseModel {
+export interface PresEntrepriseModel {
     id: number;
     personnel: PersonnelModel;
     intitule: string; // Objet de l'empreint

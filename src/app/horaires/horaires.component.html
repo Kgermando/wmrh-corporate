@@ -1,41 +1,8 @@
-
-<div class="d-flex justify-content-center" *ngIf="isLoading">
-    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
-</div>
-<div *ngIf="!isLoading">
-    <mat-card class="mb-25 tagus-card"> 
-        <mat-card-header>
-            <div>
-                <h4 class="mb-0">Horaire</h4>
-            </div>
-            <div>
-                <button mat-flat-button class="default-btn tagus m-0 margin" 
-                    (click)="openEditDialog('300ms', '100ms')">
-                    <i class="ri-add-fill"></i> 
-                    Ajouter l'horaire
-                </button>
-            </div>
-        </mat-card-header>
-        <mat-card-content>
-            <div class="row">
-                <div class="col-lg-7 col-md-12">
-                    <!-- <div *ngFor="let horaire of horaireList">
-                        <span *ngIf="horaire.personnel_shift_1.includes(currentUser.matricule)">
-                            <app-horaire [horaire]="horaire"></app-horaire>
-                        </span>
-                        <span *ngIf="horaire.personnel_shift_2.includes(currentUser.matricule)">
-                            <app-horaire [horaire]="horaire"></app-horaire>
-                        </span>
-                        <span *ngIf="horaire.personnel_shift_3.includes(currentUser.matricule)">
-                            <app-horaire [horaire]="horaire"></app-horaire>
-                        </span>
-                    </div> -->
-                    <app-horaire [horaireList]="horaireList"></app-horaire>
-                </div>
-                <div class="col-lg-5 col-md-12">  
-                    <app-horaire-view [horaireList]="horaireList" [currentUser]="currentUser"></app-horaire-view>
-                </div>
-            </div>
-        </mat-card-content>
-    </mat-card>
+<div fxLayout="row" fxLayoutGap="25px" fxLayout.xs="column" fxLayoutGap.xs="0" fxLayout.sm="column" fxLayoutGap.sm="0">
+    <div fxFlex="23%" fxFlex.xl="20%" fxFlex.xs="100%" fxFlex.sm="100%" class="col">
+        <app-horaire-sidebar></app-horaire-sidebar> 
+    </div>
+    <div fxFlex="77%" fxFlex.xl="80%" fxFlex.xs="100%" fxFlex.sm="100%" class="col">
+        <router-outlet></router-outlet>
+    </div>
 </div>

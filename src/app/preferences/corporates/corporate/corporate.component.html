@@ -1,0 +1,58 @@
+
+<mat-card class="mb-25 tagus-card">
+    <mat-card-header>
+        <h4 class="mb-0">Liste des corporates</h4>
+        <button mat-flat-button class="default-btn text-soft-primary" (click)="openAddDialog('300ms', '100ms')">
+            <i class="ri-add-fill"></i> Ajouter une corporate
+        </button>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="fw-semibold gray-color">N° </th> 
+                        <th class="fw-semibold gray-color">Statut </th>
+                        <th class="fw-semibold gray-color">Nom </th>
+                        <th class="fw-semibold gray-color">Code</th>
+                        <th class="fw-semibold gray-color">Total employés </th>
+                        <th class="fw-semibold gray-color">RCCM </th>
+                        <th class="fw-semibold gray-color">ID Nat </th>
+                        <th class="fw-semibold gray-color">Numero impôt </th>
+                        <th class="fw-semibold gray-color">Numero CNSS </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of corporateList; index as i">
+                        <td class="gray-color">{{i + 1}}. </td> 
+                        <td class="gray-color">
+                            <a [routerLink]="['/layouts/preferences/corporates', item.id, 'detail']" class="gray-color product-info"> 
+                                <h5 class="fw-semibold mb-5" *ngIf="item.statut">Actif</h5>
+                                <h5 class="fw-semibold mb-5" *ngIf="!item.statut">Désactivé</h5> 
+                            </a>
+                        </td>
+                        <td class="gray-color">
+                            <a [routerLink]="['/layouts/preferences/corporates', item.id, 'detail']" class="gray-color product-info">
+                                <h5 class="fw-semibold mb-5">{{item.corporate_name}}</h5>
+                            </a>
+                        </td>
+                        <td class="gray-color">
+                            <a [routerLink]="['/layouts/preferences/corporates', item.id, 'detail']" class="gray-color product-info"> 
+                                <h5 class="fw-semibold mb-5">{{item.code_corporate}}</h5> 
+                            </a>
+                        </td>
+                        <td class="gray-color">
+                            <a [routerLink]="['/layouts/preferences/corporates', item.id, 'detail']" class="gray-color product-info"> 
+                                <h5 class="fw-semibold mb-5">{{item.nbre_employe}}</h5> 
+                            </a>
+                        </td>
+                        <td class="gray-color">{{item.rccm}}</td>
+                        <td class="gray-color">{{item.id_nat}}</td>
+                        <td class="gray-color">{{item.numero_impot}}</td>
+                        <td class="gray-color">{{item.numero_cnss}}</td> 
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </mat-card-content>
+</mat-card>

@@ -8,8 +8,7 @@ import { PenaliteModel } from '../models/penalite-model';
   styleUrls: ['./penalite-filter.component.scss']
 })
 export class PenaliteFilterComponent implements OnInit {
-  @Input('element') element: PenaliteModel;
-  @Input('preference') preference: PreferenceModel;
+  @Input('element') element: PenaliteModel; 
 
   isValid = false; 
   isMoisSuivantValid = false;

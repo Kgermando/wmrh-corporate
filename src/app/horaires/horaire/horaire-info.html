@@ -1,0 +1,15 @@
+
+
+<mat-card class="mb-25 tagus-card">
+    <mat-card-header>
+        <h4 class="mb-0">SHIFT {{ data.shift }}</h4>
+        <p>Heure: {{ data.time }} </p>
+    </mat-card-header>
+    <mat-card-content>
+        <ul class="list ps-0 mb-0" *ngFor="let personne of data.personnel_shift">
+            <li>
+                {{ personne }}
+            </li>
+        </ul>  
+    </mat-card-content>
+</mat-card>

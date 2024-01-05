@@ -61,6 +61,9 @@ export class BulletinPaieComponent implements OnInit {
   mois = '';
 
   @ViewChild('htmlData', { static: false}) htmlData!: ElementRef;
+
+  delaiEditBulletin: Date;
+  isValidDelai = false;
     
 
   constructor(
@@ -169,6 +172,20 @@ export class BulletinPaieComponent implements OnInit {
             // Reglage
             this.reglageService.preference(this.currentUser.code_entreprise).subscribe(reglage => {
               this.preference = reglage; 
+
+              var date = new Date(this.salaire.update_created); 
+              this.delaiEditBulletin = new Date(date);
+              this.delaiEditBulletin.setDate(date.getDate() + this.preference.delai_edit_bulletin);
+
+              var dateNow = new Date();
+
+              if (dateNow > date && dateNow < this.delaiEditBulletin) {
+                this.isValidDelai = true;
+                console.log('isValidDelai true', this.isValidDelai);
+              } else {
+                this.isValidDelai = false;
+                console.log('isValidDelai false', this.isValidDelai);
+              }
             });
           }); 
           this.isLoading = false; 
@@ -180,11 +197,19 @@ export class BulletinPaieComponent implements OnInit {
         }
       });
     }
- 
-  
-    toggleTheme() {
-      this.themeService.toggleTheme();
+
+    edit(id: number) {
+      var body = {
+        statut: 'Traitement', 
+        signature: this.currentUser.matricule, 
+        update_created: new Date(),
+      };
+      this.salaireService.update(id, body).subscribe(res => {
+        this.router.navigate(['/layouts/salaires/statuts-paies']);
+        this.toastr.info('Ce Bulletin est repassé en mode Traitement', 'Success!');
+      });
     }
+  
 
 
     public openPDF(): void {
@@ -237,5 +262,9 @@ export class BulletinPaieComponent implements OnInit {
       pdfMake.createPdf(docDefinition).open();  
     }  
 
+
+    toggleTheme() {
+      this.themeService.toggleTheme();
+    }
   
 }

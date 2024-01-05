@@ -81,7 +81,7 @@ import { EditPenaliteDialogBox, PenaliteDetailComponent } from './penalites/pena
 import { PenaliteTableComponent } from './penalites/penalite-detail/penalite-table/penalite-table.component';
 import { EditHeureSuppDialogBox, HeureSuppDetailComponent } from './heures-supp/heure-supp-detail/heure-supp-detail.component';
 import { HeureSuppTableComponent } from './heures-supp/heure-supp-detail/heure-supp-table/heure-supp-table.component';
-import { HoraireComponent } from './horaires/horaire/horaire.component';
+import { HoraireComponent, HoraireInfoDialogBox } from './horaires/horaire/horaire.component';
 import { PrimeFilterComponent } from './primes/prime-filter/prime-filter.component';
 import { PenaliteFilterComponent } from './penalites/penalite-filter/penalite-filter.component';
 import { HeureSuppFilterComponent } from './heures-supp/heure-supp-filter/heure-supp-filter.component';
@@ -173,17 +173,28 @@ import { ProfilPerformanceComponent } from './auth/profile/profil-performance/pr
 import { ProfilAvancesSalaireComponent } from './auth/profile/profil-avances-salaire/profil-avances-salaire.component';
 import { ProfilPresencesViewComponent } from './auth/profile/profil-presences/profil-presences-view/profil-presences-view.component';
 import { ClasseurFilterDispComponent } from './salaires/classeur-filter-disp/classeur-filter-disp.component';
-import { HoraireAddDialogBox, HorairesComponent } from './horaires/horaires.component'; 
-import { HoraireAddComponent } from './horaires/horaire-add/horaire-add.component'; 
+import { HorairesComponent } from './horaires/horaires.component';
 import { HoraireViewComponent } from './horaires/horaire-view/horaire-view.component';
-import { IndemnitesComponent } from './salaires/indemnites/indemnites.component';
-import { IndemnitePaieComponent } from './salaires/indemnite-paie/indemnite-paie.component';
+import { IndemnitesComponent } from './salaires/indemnites/indemnites.component'; 
 import { CorbeilComponent } from './corbeil/corbeil.component';
 import { CorbeilViewComponent } from './corbeil/corbeil-view/corbeil-view.component';
 import { UsersComponent } from './admin/users/users.component';
 import { UserViewComponent } from './admin/users/user-view/user-view.component';
+import { CoporateAddDialogBox, CorporateComponent } from './preferences/corporates/corporate/corporate.component';
+import { CorporateViewComponent, EditCorporateDialogBox } from './preferences/corporates/corporate-view/corporate-view.component';
+import { CorporateReglageComponent, EditCorporateReglageDialogBox } from './preferences/corporate-reglage/corporate-reglage.component';
+import { HoraireAddDialogBox, HoraireSidebarComponent } from './horaires/horaire-sidebar/horaire-sidebar.component';
+import { IndemniteEditComponent } from './salaires/indemnites/indemnite-edit/indemnite-edit.component';
+import { IndemniteViewComponent } from './salaires/indemnites/indemnite-view/indemnite-view.component';
+import { EditIndemniteDialogBox, IdemniteContentComponent } from './salaires/indemnites/idemnite-content/idemnite-content.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { HoraireEditComponent } from './horaires/horaire-edit/horaire-edit.component';
+import { ShiftOneComponent } from './horaires/horaire/shift-one/shift-one.component';
+import { ShiftTreeComponent } from './horaires/horaire/shift-tree/shift-tree.component';
+import { ShiftTwoComponent } from './horaires/horaire/shift-two/shift-two.component';
+import { PersonnelAddAdminComponent } from './personnels/personnel-add-admin/personnel-add-admin.component';
 
-
+ 
 @NgModule({
   declarations: [
     AppComponent,
@@ -344,18 +355,34 @@ import { UserViewComponent } from './admin/users/user-view/user-view.component';
     ProfilPerformanceComponent,
     ProfilAvancesSalaireComponent,
     ProfilPresencesViewComponent, 
-    ClasseurFilterDispComponent, 
-    HoraireAddComponent, 
+    ClasseurFilterDispComponent,
     HorairesComponent, 
     HoraireViewComponent, 
-    IndemnitesComponent, 
-    IndemnitePaieComponent, 
+    IndemnitesComponent,
     CorbeilComponent, 
     CorbeilViewComponent, 
     UsersComponent, 
     UserViewComponent,
     UpdateInfoDialogBox,
-    HoraireAddDialogBox
+    HoraireAddDialogBox,
+    CorporateComponent,
+    CorporateViewComponent,
+    EditCorporateDialogBox,
+    CoporateAddDialogBox,
+    CorporateReglageComponent,
+    EditCorporateReglageDialogBox,
+    HoraireSidebarComponent,
+    HoraireInfoDialogBox,
+    IndemniteEditComponent,
+    IndemniteViewComponent,
+    IdemniteContentComponent,
+    EditIndemniteDialogBox,
+    FilterPipe,
+    HoraireEditComponent,
+    ShiftOneComponent,
+    ShiftTreeComponent,
+    ShiftTwoComponent,
+    PersonnelAddAdminComponent,
   ],
   imports: [
     BrowserModule,

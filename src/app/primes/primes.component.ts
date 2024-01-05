@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CustomizerSettingsService } from '../customizer-settings/customizer-settings.service';
 import { AuthService } from '../auth/auth.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y'; 
@@ -11,12 +11,14 @@ import { PersonnelModel } from '../personnels/models/personnel-model';
 import { ReglageService } from '../preferences/reglages/reglage.service';
 import { PreferenceModel } from '../preferences/reglages/models/reglage-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { PersonnelService } from '../personnels/personnel.service';
 import { PrimeModel } from './models/prime-model';
 import { PrimeService } from './prime.service';
 import { monnaieDataList } from '../shared/tools/monnaie-list';
+import { CorporateModel } from '../preferences/corporates/models/corporate.model';
+import { CorporateService } from '../preferences/corporates/corporate.service';
 
 @Component({
   selector: 'app-primes',
@@ -38,15 +40,19 @@ export class PrimesComponent implements OnInit {
   isLoading = false;
   currentUser: PersonnelModel | any;
 
-  preference: PreferenceModel;
+  corporate: CorporateModel;
+
+  // preference: PreferenceModel;
  
   constructor(
       private _liveAnnouncer: LiveAnnouncer,
       public themeService: CustomizerSettingsService,
       private router: Router,
       private authService: AuthService,
+      private route: ActivatedRoute,
+      private corporateService: CorporateService,  
       private primeService: PrimeService,
-      private reglageService: ReglageService,
+      // private reglageService: ReglageService,
       public dialog: MatDialog,
   ) {} 
 
@@ -56,30 +62,27 @@ export class PrimesComponent implements OnInit {
 
 
   ngOnInit() { 
-        this.isLoading = true;
-        this.authService.user().subscribe({
-          next: (user) => {
-              this.currentUser = user;
-              this.primeService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-                this.ELEMENT_DATA = res; 
-                this.dataSource = new MatTableDataSource<PrimeModel>(this.ELEMENT_DATA);
-                this.dataSource.sort = this.sort;
-                this.dataSource.paginator = this.paginator; 
-            });
-              this.reglageService.preference(this.currentUser.code_entreprise).subscribe(res => {
-                this.preference = res; 
-              });
-            this.isLoading = false;
-          },
-          error: (error) => {
-            this.isLoading = false;
-            this.router.navigate(['/auth/login']);
-            console.log(error);
-          }
-        }); 
-        
-    }
+    this.route.params.subscribe(routeParams => { 
+      this.primeService.refreshDataList$.subscribe(() => {
+        this.loadData(routeParams['id']);
+      })
+      this.loadData(routeParams['id']);
+    });
+  }
 
+  public loadData(id: any): void {
+    this.isLoading = true;
+    this.corporateService.getOne(Number(id)).subscribe(res => {
+      this.corporate = res;
+      this.primeService.getAllByCorporate(this.corporate.id).subscribe((primes) => {
+        this.ELEMENT_DATA = primes;  
+        this.dataSource = new MatTableDataSource<PrimeModel>(this.ELEMENT_DATA);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.isLoading = false;
+      });
+    });
+  }
  
   applyFilter(event: Event) {
       const filterValue = (event.target as HTMLInputElement).value;
@@ -99,11 +102,14 @@ export class PrimesComponent implements OnInit {
     this.router.navigate(['/layouts/salaires/primes', id, 'detail'])
   }
 
-  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, corporate: any): void {
     this.dialog.open(PrimeAddDialogBox, {
       width: '600px',
       enterAnimationDuration,
       exitAnimationDuration, 
+      data: {
+        corporate: corporate
+      }
     }); 
   } 
 }
@@ -127,12 +133,12 @@ export class PrimeAddDialogBox implements OnInit {
   monnaieList = monnaieDataList;
 
   constructor( 
+    @Inject(MAT_DIALOG_DATA) public data: any,
       public dialogRef: MatDialogRef<PrimeAddDialogBox>,
       private formBuilder: FormBuilder,
       private router: Router,
       private authService: AuthService, 
-      private toastr: ToastrService,
-      private personnelService: PersonnelService,
+      private toastr: ToastrService, 
       private primeService: PrimeService,
   ) {}
   
@@ -142,9 +148,7 @@ export class PrimeAddDialogBox implements OnInit {
     this.authService.user().subscribe({
       next: (user) => {
         this.currentUser = user;
-        this.personnelService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-          this.personneList = res;
-        });
+        this.personneList = this.data.corporate.personnels;
       },
       error: (error) => {
         this.router.navigate(['/auth/login']);
@@ -174,7 +178,8 @@ export class PrimeAddDialogBox implements OnInit {
           created: new Date(),
           update_created: new Date(),
           entreprise: this.currentUser.entreprise,
-          code_entreprise: this.currentUser.code_entreprise
+          code_entreprise: this.data.corporate.code_corporate,
+          corporate: this.data.corporate.id
         };
         this.primeService.create(body).subscribe({
           next: () => {

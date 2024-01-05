@@ -324,7 +324,7 @@
                                                    aria-describedby="inputGroup-sizing-sm"
                                                    formControlName="alloc_familliale" 
                                                    > 
-                                                   / {{ alloc_famillialePlafond | numberFormat:'fr-FR' }} FC
+                                                   <!-- / {{ alloc_famillialePlafond | numberFormat:'fr-FR' }} FC -->
                                               </td>
 
                                             <!-- <td class="gray-color text-end"  *ngIf="this.alloc_familliale > this.alloc_famillialePlafond">
@@ -427,13 +427,29 @@
                                             <td class="text-start">
                                                 Avances salaire
                                             </td> 
-                                            <td class="gray-color text-end">{{ avance_slaire | numberFormat:'fr-FR' }} FC</td>  
+                                            <td class="gray-color text-end">
+                                                <input class="form-control" 
+                                                type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="avance_slaire" 
+                                                   > / 
+                                                {{ avance_slaire | numberFormat:'fr-FR' }} FC
+                                            </td>  
                                         </tr>
                                         <tr>
                                             <td class="text-start">
                                                 Sanctions ou pénalités
                                             </td> 
-                                            <td class="gray-color text-end">{{ penalites | numberFormat:'fr-FR' }} FC</td> 
+                                            <td class="gray-color text-end">
+                                                <input class="form-control" 
+                                                type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="penalites" 
+                                                   > /
+                                                {{ penalites | numberFormat:'fr-FR' }} FC
+                                            </td> 
                                         </tr>
                                         <tr>
                                             <td class="text-start">
@@ -451,7 +467,15 @@
                                             <td class="text-start">
                                                 Pret entreprise
                                             </td> 
-                                            <td class="gray-color text-end">{{ salaire.pres_entreprise | numberFormat:'fr-FR' }} FC</td>  
+                                            <td class="gray-color text-end">
+                                                
+                                                <input class="form-control" 
+                                                type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="pres_entreprise" 
+                                                   > / {{ pres_entreprise | numberFormat:'fr-FR' }} FC
+                                            </td>  
                                         </tr>
                                     </tbody>
                                 </table>
@@ -467,7 +491,7 @@
                         <div class="col-lg-6 col-md-12 col-sm-12 mt-25"> 
                             <mat-slide-toggle style="background: color= red;"
                                 [checked]="isPublie" (change)="toggle($event)"
-                            >Cocher la case pour publié!</mat-slide-toggle>
+                            >Cocher la case pour rendre disponible!</mat-slide-toggle>
                         </div>
                         <div class="d-flex align-items-center justify-content-center mt-25" 
                             *ngIf="currentUser.permission === 'U' || 
@@ -475,7 +499,7 @@
                             currentUser.permission === 'CRU' ||
                             currentUser.permission === 'RUD' ||
                             currentUser.permission === 'CRUD'">
-                            <button mat-flat-button class="tagus" *ngIf="isPublie">Publier</button>
+                            <button mat-flat-button class="tagus" *ngIf="isPublie">Disponible</button>
                             <p></p>
                             <button mat-stroked-button class="tagus" *ngIf="!isPublie">Brouillon</button>
                         </div>

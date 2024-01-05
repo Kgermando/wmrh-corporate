@@ -270,7 +270,7 @@ export class PresenceAllComponent implements OnInit {
 
     
     getMultiPresence() {
-        this.dashAllService.presencePieAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+        this.dashAllService.presencePieAll(this.currentUser.code_entreprise, 1, this.start_date, this.end_date).subscribe(
             res => {
                 this.multiPresence = res;
                 this.chartOptionMultiLine = {

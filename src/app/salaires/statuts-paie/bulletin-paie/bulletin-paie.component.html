@@ -30,6 +30,11 @@
                        
                         
                         <div> 
+                            <button mat-icon-button color="warn" 
+                                (click)="edit(salaire.id)" 
+                                matTooltip="Traitement du bulletin" *ngIf="isValidDelai">
+                                <mat-icon>edit</mat-icon>
+                            </button>
                             <button mat-icon-button class="tagus" (click)="openPDF()">
                                 <mat-icon>print</mat-icon>
                             </button>

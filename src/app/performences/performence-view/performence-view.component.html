@@ -10,9 +10,9 @@
                     <h4 class="mb-0">Performance individuelle</h4>
                     <button mat-flat-button class="default-btn tagus" (click)="openAddDialog('300ms', '100ms', personne.id)">
                         <i class="ri-add-fill"></i> Ajouter Performance
-                    </button> 
+                    </button>
                 </mat-card-header>
-                <mat-card-content> 
+                <mat-card-content>
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <ul class="list ps-0 mb-0">
@@ -28,11 +28,11 @@
                                         {{ personne.prenom }}
                                     </span>
                                 </li>
-                                <li>
-                                    <span class="fw-semibold d-inline-block">Statut: </span>
+                                <!-- <li>
+                                    <span class="fw-semibold d-inline-block">Statut personnel: </span>
                                     <span class="gray-color" *ngIf="personne.statut_personnel">OUI</span>
                                     <span class="gray-color" *ngIf="!personne.statut_personnel">NON</span>
-                                </li>
+                                </li> -->
                                 <li>
                                     <span class="fw-semibold d-inline-block">Sexe: </span>
                                     <span class="gray-color">
@@ -56,11 +56,17 @@
                                     <span class="gray-color" *ngIf="personne.titles">
                                         {{ personne.titles.title }}
                                     </span>
+                                    <span class="gray-color" *ngIf="!personne.titles">
+                                       -
+                                    </span>
                                 </li>
                                 <li>
                                     <span class="fw-semibold d-inline-block">Service: </span>
                                     <span class="gray-color" *ngIf="personne.services">
                                         {{ personne.services.service }}
+                                    </span>
+                                    <span class="gray-color" *ngIf="!personne.services">
+                                        -
                                     </span>
                                 </li> 
                                 <li>
@@ -68,11 +74,14 @@
                                     <span class="gray-color" *ngIf="personne.site_locations">
                                         {{ personne.site_locations.site_location }}
                                     </span>
+                                    <span class="gray-color" *ngIf="!personne.site_locations">
+                                        -
+                                    </span>
                                 </li>
                                 <li>
                                     <span class="fw-semibold d-inline-block">Cumul des points: </span>
                                     <span class="gray-color">
-                                        {{ cumuls }} / 30
+                                        <app-cumul [element]="personne"></app-cumul>
                                     </span>
                                 </li>
                             </ul>

@@ -13,18 +13,18 @@
                 <div class="d-flex align-items-center justify-content-end">
                     <mat-form-field appearance="fill">
                         <mat-label>Select entreprise</mat-label>
-                        <mat-select (selectionChange)="onChangeFarde($event)" formControlName="entreprise">
-                            <mat-option *ngFor="let entreprise of entrepriseList" [value]="entreprise.service">
-                                {{entreprise.service}}
+                        <mat-select (selectionChange)="onChangeCorporate($event)" formControlName="entreprise">
+                            <mat-option *ngFor="let corporate of corporateList" [value]="corporate">
+                                {{corporate.corporate_name}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
                     <div class="box"></div>
                     <mat-form-field appearance="fill">
                         <mat-label>Select classeur</mat-label>
-                        <mat-select (selectionChange)="onChangeFarde($event)" formControlName="classeur">
-                            <mat-option *ngFor="let farde of fardeList" [value]="farde">
-                                <app-classeur-filter-disp [farde]="farde"></app-classeur-filter-disp>
+                        <mat-select (selectionChange)="onChangeClasser($event)" formControlName="classeur">
+                            <mat-option *ngFor="let classer of classerList" [value]="classer">
+                                <app-classeur-filter-disp [classer]="classer" [corporate]="corporate"></app-classeur-filter-disp>
                             </mat-option>
                         </mat-select>
                     </mat-form-field> 
@@ -99,7 +99,11 @@
                 </table> 
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
-                <table class="table"> 
+
+                <div class="d-flex justify-content-center" *ngIf="isLoad">
+                    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-5">Patientez-svp...</p>
+                </div>
+                <table class="table" *ngIf="!isLoad"> 
                     <tbody> 
                         <tr>
                             <td class="text-start">
@@ -177,7 +181,7 @@
         <thead>
             <tr>
                 <th class="fw-semibold gray-color">N°</th>
-                <th class="fw-semibold main-color">Entreprise</th>
+                <th class="fw-semibold main-color">Site de travail</th>
                 <th class="fw-semibold main-color">Matricule</th>
                 <th class="fw-semibold gray-color">Nom Complet</th>
                 <th class="fw-semibold gray-color">Departement</th>
@@ -186,7 +190,6 @@
                 <th class="fw-semibold gray-color">CNSS(QPO)</th>
                 <th class="fw-semibold gray-color">RNI</th>
                 <th class="fw-semibold gray-color">IPR</th>
-                <th class="fw-semibold gray-color">Net à payer</th>
                 <th class="fw-semibold gray-color">Heures supp.</th>
                 <th class="fw-semibold gray-color">Heures Monnaie</th>
                 <th class="fw-semibold gray-color">Primes d'ancienneté</th>
@@ -194,18 +197,22 @@
                 <th class="fw-semibold gray-color">Pénalités</th>
                 <th class="fw-semibold gray-color">Avances salaire</th>
                 <th class="fw-semibold gray-color">Syndicats</th>
-                <th class="fw-semibold gray-color">Compte</th>
                 <th class="fw-semibold gray-color">Frais bancaire</th>
+                <th class="fw-semibold gray-color">Net à payer</th>
+                <th class="fw-semibold gray-color">Compte</th>
                 <th class="fw-semibold gray-color">Banque</th>
             </tr>
         </thead>
-        <tbody>
+        <div class="d-flex justify-content-center" *ngIf="isLoad">
+            <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-5">Patientez-svp...</p>
+        </div> 
+        <tbody *ngIf="!isLoad">
             <tr *ngFor="let item of releveList; index as i">
                 <td class="gray-color fw-semibold">
                     {{ i + 1 }}
                 </td>
                 <td class="gray-color fw-semibold">
-                    {{ item.service }}
+                    {{ item.site_location }}
                 </td>
                 <td class="gray-color fw-semibold">
                     {{ item.matricule.toUpperCase() }}
@@ -231,9 +238,7 @@
                 <td class="gray-color fw-semibold">
                     {{ item.ipr | numberFormat:'fr-FR'}} FC
                 </td>
-                <td class="gray-color fw-semibold">
-                    {{ item.net_a_payer | numberFormat:'fr-FR'}} FC
-                </td>
+                
                 <td class="gray-color fw-semibold">
                     {{ item.heures_supp }} H
                 </td>
@@ -256,10 +261,13 @@
                     {{ item.syndicat | numberFormat:'fr-FR'}} FC
                 </td>
                 <td class="gray-color fw-semibold">
-                    {{ item.compte_bancaire }}
+                    {{ item.frais_bancaire | numberFormat:'fr-FR'}} FC
                 </td>
                 <td class="gray-color fw-semibold">
-                    {{ item.frais_bancaire | numberFormat:'fr-FR'}} FC
+                    {{ item.net_a_payer | numberFormat:'fr-FR'}} FC
+                </td>
+                <td class="gray-color fw-semibold">
+                    {{ item.compte_bancaire }}
                 </td>
                 <td class="gray-color fw-semibold">
                     {{ item.nom_banque }}

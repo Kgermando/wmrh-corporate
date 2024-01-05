@@ -1,9 +1,12 @@
  
 <mat-card class="mb-25 tagus-card" [class.component-dark-theme]="themeService.isDark()">
-    <mat-card-header>
-        <h4 class="mb-0">Heures supplementaires</h4>
+    <mat-card-header *ngIf="corporate">
         <div>
-            <button mat-flat-button class="default-btn text-soft-info" (click)="openEditDialog('300ms', '100ms')">
+            <h6 class="mb-0">{{corporate.corporate_name}}</h6>
+            <h4 class="mb-0">Heures supplementaires</h4>
+        </div>
+        <div>
+            <button mat-flat-button class="default-btn text-soft-info" (click)="openEditDialog('300ms', '100ms', corporate)">
                 <i class="ri-add-fill"></i> Add Heures supp.
             </button>
         </div> 

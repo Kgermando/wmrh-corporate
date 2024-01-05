@@ -62,6 +62,7 @@ import { archivesGuard,
   dashboardGuard, 
   departementsGuard, 
   emailsGuard, 
+  entrepriseGuard, 
   fonctionGuard, 
   heureSuppGuard, 
   horaireGuard, 
@@ -100,12 +101,18 @@ import { MesBulletinsComponent } from './salaires/mes-bulletins/mes-bulletins.co
 import { AbonnementAdminViewComponent } from './admin/abonnement-admin/abonnement-admin-view/abonnement-admin-view.component';
 import { ProfilPresencesViewComponent } from './auth/profile/profil-presences/profil-presences-view/profil-presences-view.component';
 import { HorairesComponent } from './horaires/horaires.component';
-import { HoraireAddComponent } from './horaires/horaire-add/horaire-add.component';
 import { IndemnitesComponent } from './salaires/indemnites/indemnites.component';
 import { CorbeilComponent } from './corbeil/corbeil.component';
 import { CorbeilViewComponent } from './corbeil/corbeil-view/corbeil-view.component';
 import { UsersComponent } from './admin/users/users.component';
 import { UserViewComponent } from './admin/users/user-view/user-view.component';
+import { CorporateComponent } from './preferences/corporates/corporate/corporate.component';
+import { CorporateViewComponent } from './preferences/corporates/corporate-view/corporate-view.component';
+import { HoraireComponent } from './horaires/horaire/horaire.component';
+import { IndemniteEditComponent } from './salaires/indemnites/indemnite-edit/indemnite-edit.component';
+import { IndemniteViewComponent } from './salaires/indemnites/indemnite-view/indemnite-view.component';
+import { HoraireEditComponent } from './horaires/horaire-edit/horaire-edit.component';
+import { PersonnelAddAdminComponent } from './personnels/personnel-add-admin/personnel-add-admin.component';
  
 
 const routes: Routes = [
@@ -119,35 +126,40 @@ const routes: Routes = [
     { path: 'dashboard', component: DashboardComponent, canActivate: [dashboardGuard] },
     { path: 'profile', component: ProfileComponent },
     { path: 'reset-password', component: ResetPasswordComponent, canActivate: [dashboardGuard]},
-    { path: 'personnels/personnel-list', component: PersonnelListComponent, canActivate: [personnelsGuard] },
-    { path: 'personnels/personnel-add', component: PersonnelAddComponent, canActivate: [personnelsGuard] },
-    { path: 'personnels/:id/personnel-edit', component: PersonnelEditComponent, canActivate: [personnelsGuard] },
-    { path: 'personnels/:id/personnel-view', component: PersonnelViewComponent , canActivate: [personnelsGuard]},
+    { path: 'personnels/:id/personnel-list', component: PersonnelListComponent, canActivate: [personnelsGuard]},
+    { path: 'personnels/:id/personnel-add', component: PersonnelAddComponent, canActivate: [personnelsGuard]},
+    { path: 'personnels/:id/personnel-edit', component: PersonnelEditComponent, canActivate: [personnelsGuard]},
+    { path: 'personnels/:id/personnel-view', component: PersonnelViewComponent, canActivate: [personnelsGuard]},
+    { path: 'personnels/personnel-add/admin', component: PersonnelAddAdminComponent, canActivate: [personnelsGuard]},
     { path: 'personnels/syndicats', component: SyndicatsComponent, canActivate: [syndicatGuard] },
     { path: 'personnels/syndicats/:id/view', component: SyndicatViewComponent, canActivate: [syndicatGuard] },
     { path: 'personnels/hors-usages', component: CorbeilComponent, canActivate: [personnelsGuard] },
     { path: 'personnels/hors-usages/:id/view', component: CorbeilViewComponent, canActivate: [personnelsGuard] },
 
     { path: 'preferences/reglages', component: ReglagesComponent, canActivate: [reglagesGuard] },
-    { path: 'preferences/fonction', component: FonctionComponent, canActivate: [fonctionGuard] },
+    { path: 'preferences/:id/fonction', component: FonctionComponent, canActivate: [fonctionGuard] },
     { path: 'preferences/fonction/:id/detail', component: FonctionViewComponent, canActivate: [fonctionGuard] },
-    { path: 'preferences/departement', component: DepartementsComponent, canActivate: [departementsGuard] },
+    { path: 'preferences/:id/departements', component: DepartementsComponent, canActivate: [departementsGuard] },
     { path: 'preferences/departement/:id/detail', component: DepViewComponent, canActivate: [departementsGuard] },
-    { path: 'preferences/services', component: ServicesComponent, canActivate: [serviceGuard] },
+    { path: 'preferences/:id/services', component: ServicesComponent, canActivate: [serviceGuard] },
     { path: 'preferences/services/:id/detail', component: ServViewComponent, canActivate: [serviceGuard] },
-    { path: 'preferences/titles', component: TitlesComponent, canActivate: [titresGuard] },
+    { path: 'preferences/:id/titles', component: TitlesComponent, canActivate: [titresGuard] },
     { path: 'preferences/titles/:id/detail', component: TitleViewComponent, canActivate: [titresGuard] },
-    { path: 'preferences/site-location', component: SiteLocationComponent, canActivate: [siteLocationGuard] },
+    { path: 'preferences/:id/site-location', component: SiteLocationComponent, canActivate: [siteLocationGuard] },
     { path: 'preferences/site-location/:id/detail', component: SiteLocationViewComponent, canActivate: [siteLocationGuard] },
+    { path: 'preferences/corporates', component: CorporateComponent, canActivate: [entrepriseGuard]},
+    { path: 'preferences/corporates/:id/detail', component: CorporateViewComponent, canActivate: [entrepriseGuard]},
 
-    { path: 'presences/pointage', component: PointageComponent, canActivate: [pointagesGuard] },
+    { path: 'presences/:id/pointage', component: PointageComponent, canActivate: [pointagesGuard] },
     { path: 'presences/pointage/:matricule', component: PointageViewComponent, canActivate: [pointagesGuard] },
     { path: 'presences/registre-presences', component: RegistrePresenceComponent, canActivate: [registrePresenceGuard] }, 
-    { path: 'presences/heures-supp', component: HeuresSuppComponent, canActivate: [heureSuppGuard] },
+    { path: 'presences/:id/heures-supp', component: HeuresSuppComponent, canActivate: [heureSuppGuard] },
     { path: 'presences/heures-supp/:id/detail', component: HeureSuppDetailComponent, canActivate: [heureSuppGuard] },
     { path: 'presences/pointage-profil/:matricule/detail', component: ProfilPresencesViewComponent }, // C'est le lien du profil, donc pas de guard
-                                                                                                                                                                          
-
+    { path: 'presences/:id/horaires', component: HorairesComponent, children: [ 
+      { path: ':horaire_id/calendar', component: HoraireComponent},
+      { path: ':horaire_id/horaire-edit', component: HoraireEditComponent },
+    ], canActivate: [horaireGuard]},
     { path: 'recrutements/postes', component: PostesComponent, canActivate: [postesGuard] },
     { path: 'recrutements/postes/poste-add', component: PosteAddComponent, canActivate: [postesGuard] },
     { path: 'recrutements/postes/:id/poste-edit', component: PosteEditComponent, canActivate: [postesGuard] },
@@ -157,29 +169,27 @@ const routes: Routes = [
     { path: 'recrutements/candidatures/:id/candidature-edit', component: CandidatureEditComponent, canActivate: [candidaturesGuard] },
     { path: 'recrutements/candidatures/:id/candidature-view', component: CandidatureViewComponent, canActivate: [candidaturesGuard] },
 
-    { path: 'salaires/primes', component: PrimesComponent, canActivate: [primeDiversGuard] },
+    { path: 'salaires/:id/primes', component: PrimesComponent, canActivate: [primeDiversGuard] },
     { path: 'salaires/primes/:id/detail', component: PrimeDetailComponent, canActivate: [primeDiversGuard] },
-    { path: 'salaires/penalites', component: PenalitesComponent, canActivate: [penaliteGuard] },
+    { path: 'salaires/:id/penalites', component: PenalitesComponent, canActivate: [penaliteGuard] },
     { path: 'salaires/penalites/:id/detail', component: PenaliteDetailComponent, canActivate: [penaliteGuard] },
-    { path: 'salaires/avance-salaire', component: AvanceSalairesComponent, canActivate: [avanceSalaireGuard] },
+    { path: 'salaires/:id/avance-salaire', component: AvanceSalairesComponent, canActivate: [avanceSalaireGuard] },
     { path: 'salaires/avance-salaire/:id/detail', component: AvanceSalaireDetailComponent, canActivate: [avanceSalaireGuard] },
-    { path: 'salaires/liste-paiements', component: ListPaimentsComponent, canActivate: [listePaiementGuard] },
+    { path: 'salaires/:id/liste-paiements', component: ListPaimentsComponent, canActivate: [listePaiementGuard] },
     { path: 'salaires/liste-paiements/:id/paie-view', component: PaieViewComponent, canActivate: [listePaiementGuard] },
     { path: 'salaires/statuts-paies', component: StatutsPaieComponent, canActivate: [statutPaieGuard] },
     { path: 'salaires/mes-bulletins-salaires', component: MesBulletinsComponent, canActivate: [mesBulletinsGuard] },
     { path: 'salaires/traitement/:id/fiche-paie', component: FichePaieComponent, canActivate: [statutPaieGuard] },
     { path: 'salaires/disponible/:id/bulletin-paie', component: BulletinPaieComponent, canActivate: [statutPaieGuard] }, 
     { path: 'salaires/releve-paie', component: RelevePaieComponent, canActivate: [relevePaieGuard]},
-    { path: 'salaires/pres-entreprise', component: PresEntrepriseComponent, canActivate: [presEntrepriseGuard] },
+    { path: 'salaires/:id/pres-entreprise', component: PresEntrepriseComponent, canActivate: [presEntrepriseGuard] },
     { path: 'salaires/pres-entreprise/:id/detail', component: PresEntrepriseViewComponent, canActivate: [presEntrepriseGuard] },
-    { path: 'salaires/indemnites', component: IndemnitesComponent, canActivate: [indemniteGuard]},
-    { path: 'salaires/indemnites/:id/indemnite-paie', component: IndemnitesComponent, canActivate: [indemniteGuard]},
-    { path: 'salaires/calculate', component: CalculateComponent }, 
+    { path: 'salaires/:id/indemnites', component: IndemnitesComponent, canActivate: [indemniteGuard]},
+    { path: 'salaires/indemnites/traitement/:id/indemnite-paie', component: IndemniteEditComponent, canActivate: [indemniteGuard]},
+    { path: 'salaires/indemnites/disponible/:id/indemnite-paie', component: IndemniteViewComponent, canActivate: [indemniteGuard]},
+    { path: 'salaires/calculate', component: CalculateComponent },
 
-    { path: 'horaires', component: HorairesComponent, canActivate: [horaireGuard] },
-    { path: 'horaires/:id/horaire-edit', component: HoraireAddComponent, canActivate: [horaireGuard]},
-
-    { path: 'performences', component: PerformencesComponent, canActivate: [performenceGuard] },
+    { path: ':id/performences', component: PerformencesComponent, canActivate: [performenceGuard] },
     { path: 'performences/:id/performence-view', component: PerformenceViewComponent , canActivate: [performenceGuard]},
 
     { path: 'archives', component: ArchivesComponent, canActivate: [archivesGuard] },

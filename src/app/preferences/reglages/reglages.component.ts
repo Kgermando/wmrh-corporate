@@ -38,8 +38,9 @@ export class ReglagesComponent implements OnInit {
           this.currentUser = user;
           this.reglageService.preference(this.currentUser.code_entreprise).subscribe(res => {
             this.preference = res; 
+            this.isLoading = false;
           });
-          this.isLoading = false;
+          
         },
         error: (error) => {
           this.isLoading = false;
@@ -53,7 +54,7 @@ export class ReglagesComponent implements OnInit {
     openEditEntrepriseDialog(enterAnimationDuration: string, exitAnimationDuration: string, id: number): void {
       this.dialog.open(EditEntrepriseDialogBox, {
         width: '600px',
-        height: '100%', 
+        height: '100%',
         enterAnimationDuration,
         exitAnimationDuration,
         data: {
@@ -288,6 +289,18 @@ export class EditReglageDialogBox implements OnInit{
     if (this.data['reglage'] == 'Montant pour travailleur non quadre') {
       this.formGroup = this.formBuilder.group({  
         montant_travailler_non_quadre: '',
+      });
+    }
+
+    if (this.data['reglage'] == 'Prise en Compte paiement ce mois') {
+      this.formGroup = this.formBuilder.group({
+        pris_en_compte_mois_plus_1: '',
+      });
+    }
+
+    if (this.data['reglage'] == 'Delai édition du bulletin') {
+      this.formGroup = this.formBuilder.group({
+        delai_edit_bulletin: '',
       });
     }
     
@@ -543,7 +556,21 @@ export class EditReglageDialogBox implements OnInit{
           });
         }
 
-        
+        if (this.data['reglage'] == 'Prise en Compte paiement ce mois') {
+          this.formGroup.patchValue({
+            pris_en_compte_mois_plus_1: this.data['valeur'],
+            signature: this.currentUser.matricule, 
+            update_created: new Date(),
+          });
+        }
+
+        if (this.data['reglage'] == 'Delai édition du bulletin') {
+          this.formGroup.patchValue({
+            delai_edit_bulletin: this.data['valeur'],
+            signature: this.currentUser.matricule, 
+            update_created: new Date(),
+          });
+        } 
 
       },
       error: (error) => {

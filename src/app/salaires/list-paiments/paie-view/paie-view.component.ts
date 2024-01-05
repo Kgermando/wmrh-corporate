@@ -11,6 +11,7 @@ import { SalaireService } from '../../salaire.service';
 import { formatDate } from '@angular/common';
 import { NotifyService } from 'src/app/notify/notify.service'; 
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { IndemniteService } from '../../indemnites/indemnite.service';
 
 @Component({
   selector: 'app-paie-view',
@@ -64,6 +65,7 @@ export class PaieViewComponent implements OnInit {
     private personnelService: PersonnelService,
     private salaireService: SalaireService,
     private reglageService: ReglageService,
+    private indemniteService: IndemniteService,
     private notifyService: NotifyService,
     private toastr: ToastrService) {}
  
@@ -129,11 +131,10 @@ export class PaieViewComponent implements OnInit {
       if (!this.date_paie) {
         this.date_paie = new Date();
         var datePaie = formatDate(this.date_paie, 'yyyy-MM-dd', 'en-US');
-        console.log('datePaie 1', datePaie);
         this.personnelService.get(Number(id)).subscribe(res => {
           this.personne = res;
-          this.reglageService.preference(this.currentUser.code_entreprise).subscribe(res => {
-            this.preference = res;
+          this.reglageService.preference(this.personne.corporates.code_corporate).subscribe(res => {
+            this.preference = res; 
           });
           this.salaireService.primeTotalUSD(this.currentUser.code_entreprise, this.personne.id, datePaie).subscribe(prime => {
             var primes  = prime;
@@ -146,10 +147,12 @@ export class PaieViewComponent implements OnInit {
           this.salaireService.penaliteTotalUSD(this.currentUser.code_entreprise, this.personne.id, datePaie).subscribe(penalite => {
             var penalites  = penalite;
             penalites.map((item: any) => this.penaliteUSD = parseFloat(item.sum));
+            console.log('penaliteUSD', this.penaliteUSD);
           });
           this.salaireService.penaliteTotalCDF(this.currentUser.code_entreprise, this.personne.id, datePaie).subscribe(penalite => {
             var penalites  = penalite;
             penalites.map((item: any) => this.penaliteCDF = parseFloat(item.sum));
+            console.log('penaliteCDF', this.penaliteCDF);
           });
           this.salaireService.nbrHeureSupp(this.currentUser.code_entreprise, this.personne.id, datePaie).subscribe(
             heureSup => {
@@ -161,24 +164,28 @@ export class PaieViewComponent implements OnInit {
             avanceSalaire => {
               var avanceSalaires = avanceSalaire; 
               avanceSalaires.map((item: any) => this.avanceSalaireUSD = parseFloat(item.sum)); 
+              console.log('avanceSalaireUSD', this.avanceSalaireUSD);
             }
           );
           this.salaireService.avanceSalaireTotalCDF(this.currentUser.code_entreprise, this.personne.id, datePaie).subscribe(
             avanceSalaire => {
               var avanceSalaires = avanceSalaire; 
               avanceSalaires.map((item: any) => this.avanceSalaireCDF = parseFloat(item.sum)); 
+              console.log('avanceSalaireCDF', this.avanceSalaireCDF);
             }
           );
           this.salaireService.preEntrepriseUSD(this.currentUser.code_entreprise, this.personne.id, datePaie).subscribe(
             presEntreprise => {
-              var preEntrepriseUSDs = presEntreprise; 
-              preEntrepriseUSDs.map((item: any) => this.presEntrepriseUSD = parseFloat(item.sum)); 
+              var preEntreprises = presEntreprise; 
+              preEntreprises.map((item: any) => this.presEntrepriseUSD = parseFloat(item.sum)); 
+              console.log('presEntrepriseUSD', this.presEntrepriseUSD);
             }
           );
           this.salaireService.preEntrepriseCDF(this.currentUser.code_entreprise, this.personne.id, datePaie).subscribe(
             presEntreprise => {
-              var preEntrepriseUSD = presEntreprise; 
-              preEntrepriseUSD.map((item: any) => this.presEntrepriseCDF = parseFloat(item.sum)); 
+              var preEntreprises = presEntreprise; 
+              preEntreprises.map((item: any) => this.presEntrepriseCDF = parseFloat(item.sum)); 
+              console.log('presEntrepriseCDF', this.presEntrepriseCDF);
             }
           );
           this.salaireService.getJrPrestE(this.currentUser.code_entreprise, this.personne.matricule, datePaie).subscribe(
@@ -208,13 +215,14 @@ export class PaieViewComponent implements OnInit {
         
       }
 
+      // Si la date change dans le cas ou l'on veut remonter dans le temps pour payer
       this.formGroup.valueChanges.subscribe(val => {
         this.date_paie = val.date_paie;
         var datePaie = formatDate(this.date_paie, 'yyyy-MM-dd', 'en-US');
         console.log('datePaie 2', datePaie);
         this.personnelService.get(Number(id)).subscribe(res => {
           this.personne = res;
-          this.reglageService.preference(this.currentUser.code_entreprise).subscribe(res => {
+          this.reglageService.preference(this.currentUser.corporates.code_corporate).subscribe(res => {
             this.preference = res;
           });
           this.salaireService.primeTotalUSD(this.currentUser.code_entreprise, this.personne.id, datePaie).subscribe(prime => {
@@ -308,6 +316,10 @@ export class PaieViewComponent implements OnInit {
         var penalite = (this.penaliteUSD * this.preference.taux_dollard) + this.penaliteCDF;
         var avanceSalaire = (this.avanceSalaireUSD * this.preference.taux_dollard) + this.avanceSalaireCDF;
         var pres_entreprise = (this.presEntrepriseUSD * this.preference.taux_dollard) + this.presEntrepriseCDF;
+
+        console.log('penalite ', penalite);
+        console.log('avanceSalaire ', avanceSalaire);
+        console.log('pres_entreprise ', pres_entreprise);
 
         if (this.personne.monnaie == 'USD') {
           salaire = parseFloat(this.personne.salaire_base) * this.preference.taux_dollard;
@@ -545,7 +557,8 @@ export class PaieViewComponent implements OnInit {
           created: new Date(),
           update_created: new Date(),
           entreprise: this.currentUser.entreprise,
-          code_entreprise: this.currentUser.code_entreprise
+          code_entreprise: this.personne.corporates.code_corporate,
+          corporate: this.personne.corporates.id
         };
         this.salaireService.create(body).subscribe({
           next: (res) => { 
@@ -554,8 +567,6 @@ export class PaieViewComponent implements OnInit {
               statut_paie: 'Traitement',
               signature: this.currentUser.matricule,
               update_created: new Date(),
-              entreprise: this.currentUser.entreprise,
-              code_entreprise: this.currentUser.code_entreprise
             };
             this.personnelService.update(this.personne.id, personnel).subscribe({
               next: () => {
@@ -570,7 +581,7 @@ export class PaieViewComponent implements OnInit {
                   created: new Date(),
                   update_created: new Date(),
                   entreprise: this.currentUser.entreprise,
-                  code_entreprise: this.currentUser.code_entreprise
+                  code_entreprise: this.personne.corporates.code_corporate,
                 };
                 this.notifyService.create(bodyNotifyN).subscribe(
                   () => {  
@@ -597,7 +608,34 @@ export class PaieViewComponent implements OnInit {
         this.isLoadingSubmit = false;
         console.log(error);
       }
-    } 
+    }
+
+
+    createIndemnite() {
+      try {
+        this.isLoadingSubmit = true;
+        var body = {
+          corporate: this.personne.corporates.id,
+          personnel: this.personne.id,
+          intitule: 'Indemnité de ...',
+          statut: 'Traitement',
+          taux_dollard: this.preference.taux_dollard,
+          signature: this.currentUser.matricule,
+          created: new Date(),
+          update_created: new Date(),
+          entreprise: this.currentUser.entreprise,
+          code_entreprise: this.personne.corporates.code_corporate,
+        }
+        this.indemniteService.create(body).subscribe(res => {
+          this.isLoadingSubmit = false;
+          this.toastr.success('Genéré avec succès!', 'Success!'); 
+          this.router.navigate(['/layouts/salaires/indemnites/traitement', res['id'], 'indemnite-paie']);
+        });
+      } catch (error) {
+        this.isLoadingSubmit = false;
+        console.log(error);
+      }
+    }
   
     toggleTheme() {
       this.themeService.toggleTheme();

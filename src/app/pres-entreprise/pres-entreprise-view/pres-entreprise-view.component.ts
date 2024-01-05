@@ -1,11 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { PersonnelModel } from 'src/app/personnels/models/personnel-model';
-import { PresentrepriseModel } from '../models/pres-entreprise-model';
-import { PreferenceModel } from 'src/app/preferences/reglages/models/reglage-model';
+import { PresEntrepriseModel } from '../models/pres-entreprise-model'; 
 import { CustomizerSettingsService } from 'src/app/customizer-settings/customizer-settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from 'src/app/auth/auth.service';
-import { ReglageService } from 'src/app/preferences/reglages/reglage.service';
+import { AuthService } from 'src/app/auth/auth.service'; 
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PresEntrepriseService } from '../pres-entreprise.service';
@@ -23,9 +21,8 @@ export class PresEntrepriseViewComponent implements OnInit {
 
   currentUser: PersonnelModel | any;
   
-  presEntreprise: PresentrepriseModel;
-
-  preference: PreferenceModel;
+  presEntreprise: PresEntrepriseModel;
+ 
 
   totalDejaPayE = 0;
   reste = 0;
@@ -35,8 +32,7 @@ export class PresEntrepriseViewComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
       private authService: AuthService,
-    private presEntrepriseService: PresEntrepriseService,
-    private reglageService: ReglageService,
+    private presEntrepriseService: PresEntrepriseService, 
     public dialog: MatDialog,
     private toastr: ToastrService) {}
 
@@ -59,10 +55,7 @@ export class PresEntrepriseViewComponent implements OnInit {
               
               this.reste = +this.presEntreprise.total_empreints - this.totalDejaPayE;
 
-            });
-            this.reglageService.preference(this.currentUser.code_entreprise).subscribe(res => {
-              this.preference = res; 
-            });
+            }); 
         
           this.isLoading = false;
         },

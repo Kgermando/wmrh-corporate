@@ -23,6 +23,7 @@ import { PerformencePieYearModel } from "src/app/performences/models/performence
 import { DashAllService } from "../../all/dash-all.service";
 import { PersonnelModel } from "src/app/personnels/models/personnel-model";
 import { EmployeService } from "../employe.service";
+import { CorporateModel } from "src/app/preferences/corporates/models/corporate.model";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -112,6 +113,7 @@ export type ChartOptionService = {
   styleUrls: ['./employes-all.component.scss']
 })
 export class EmployesAllComponent implements OnInit{
+    @Input('corporate') corporate: CorporateModel;
     @Input('start_date') start_date: any;
     @Input('end_date') end_date: any;
 
@@ -188,7 +190,7 @@ export class EmployesAllComponent implements OnInit{
   }  
 
   getAgeParContrat() {
-    this.employeService.ageContratEmployeAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.employeService.ageContratEmployeAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res => {
             this.ageParContratList = res;
             this.chartOptions = {
@@ -245,7 +247,7 @@ export class EmployesAllComponent implements OnInit{
 
 
   getAgeParEmploye() {
-    this.employeService.ageEmployeAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.employeService.ageEmployeAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res => {
             this.ageParEmployeList = res;
             this.chartOptionAgeMoyenneEmployes = {
@@ -298,7 +300,7 @@ export class EmployesAllComponent implements OnInit{
 
 
   getPieSexe() {
-    this.employeService.getPieSexeAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.employeService.getPieSexeAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res => {
             this.sexeList = res;
             this.chartOptionPieSexe = {
@@ -357,7 +359,7 @@ export class EmployesAllComponent implements OnInit{
 
 
   getPerformence() {
-    this.dashAllService.getPerformencesAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.dashAllService.getPerformencesAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res => {
             this.prerformencePieList = res;
             this.chartOptionPerformence = {
@@ -470,7 +472,7 @@ export class EmployesAllComponent implements OnInit{
   
 
   getEmployeparDepartement() {
-    this.employeService.employeDepartementAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.employeService.employeDepartementAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res => {
             this.employeParDepartement = res; 
             this.chartOptionDepartement = {
@@ -525,7 +527,7 @@ export class EmployesAllComponent implements OnInit{
   }
 
   getEmployeparService() {
-    this.employeService.employeServiceAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.employeService.employeServiceAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res => {
             this.employeParService = res; 
             this.chartOptionService = {
@@ -580,7 +582,7 @@ export class EmployesAllComponent implements OnInit{
   }
 
   getEmployeparSiteTravail() {
-    this.employeService.employeSiteLocationAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.employeService.employeSiteLocationAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res => {
             this.employeParSiteTravail = res; 
             this.chartOptionSiteTravail = {
@@ -637,25 +639,25 @@ export class EmployesAllComponent implements OnInit{
 
 
   getTotal() {
-    this.employeService.departementAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.employeService.departementAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res =>  {
             this.depList = res;
             this.depList.map((item: any) => this.depTotal = parseFloat(item.count));
         }
     );
-    this.employeService.syndicatAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.employeService.syndicatAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res =>  {
             this.syndicatList = res;
             this.syndicatList.map((item: any) => this.syndicatTotal = parseFloat(item.count));
         }
     );
-    this.employeService.siteLocationAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.employeService.siteLocationAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res =>  {
             this.siteLocationList = res;
             this.siteLocationList.map((item: any) => this.siteLocationTotal = parseFloat(item.count));
         }
     );
-    this.employeService.compteActifAll(this.currentUser.code_entreprise, this.start_date, this.end_date).subscribe(
+    this.employeService.compteActifAll(this.currentUser.code_entreprise, this.corporate.id, this.start_date, this.end_date).subscribe(
         res =>  {
             this.compteActifList = res;
             this.compteActifList.map((item: any) => this.compteActifTotal = parseFloat(item.count));

@@ -21,7 +21,7 @@
                             <mat-datepicker #picker></mat-datepicker> 
                         </mat-form-field>
                     </div>
-                        <button mat-flat-button class="default-btn tagus" color="warn" (click)="onSubmit()" >
+                        <!-- <button mat-flat-button class="default-btn tagus" color="warn" (click)="onSubmit()" >
                             <div class="d-flex justify-content-center" *ngIf="!isLoadingSubmit">
                                 <span><i class="ri-add-fill"></i> Génerer la fiche de paie </span>
                             </div> 
@@ -29,7 +29,29 @@
                                 <mat-spinner color="primary" [diameter]="10"></mat-spinner> 
                                 <p class="text-white ml-2">Patientez-svp...</p>
                             </div>
-                        </button>
+                        </button> -->
+                        <mat-menu #appMenu="matMenu">
+                            <button mat-menu-item class="submitBtnMenu" (click)="createIndemnite()">
+                                <span class="submitBtnMenuSpan">
+                                    <i class="ri-add-fill"></i>    
+                                    Génerer l'Indemenité
+                                </span>
+                            </button>
+                        </mat-menu>
+                        <mat-button-toggle-group>
+                        <mat-button-toggle class="submitBtn" (click)="onSubmit()">
+                            <div class="d-flex justify-content-center" *ngIf="!isLoadingSubmit">
+                                <span><i class="ri-add-fill"></i> Génerer la fiche de paie </span>
+                            </div> 
+                            <div class="d-flex justify-content-center" *ngIf="isLoadingSubmit">
+                                <mat-spinner color="primary" [diameter]="10"></mat-spinner> 
+                                <p class="text-white ml-2">Patientez-svp...</p>
+                            </div>
+                        </mat-button-toggle>
+                        <mat-button-toggle [matMenuTriggerFor]="appMenu" class="submitBtnDrop">
+                            <mat-icon>arrow_drop_down</mat-icon>
+                        </mat-button-toggle>
+                        </mat-button-toggle-group>
                     </div>
                 </mat-card-header>
                 <mat-card-content>
@@ -46,7 +68,7 @@
                             <ul class="list ps-0 mb-0">
                                 <li>
                                     <span class="fw-semibold">Entreprise: </span>
-                                    <span class="gray-color" *ngIf="personne.services">{{ personne.services.service }}</span>
+                                    <span class="gray-color" *ngIf="personne.corporates">{{ personne.corporates.corporate_name }}</span>
                                 </li> 
                             </ul>
                         </div>

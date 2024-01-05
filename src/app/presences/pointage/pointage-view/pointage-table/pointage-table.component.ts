@@ -105,6 +105,7 @@ export class PointageTableComponent implements OnInit {
   openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, id: number): void {
     this.dialog.open(EditPresenceDialogBox, {
       width: '600px',
+      height: '100%',
       enterAnimationDuration,
       exitAnimationDuration,
       data: {

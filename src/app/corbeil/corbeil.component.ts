@@ -18,7 +18,7 @@ import { PersonnelService } from '../personnels/personnel.service';
   styleUrls: ['./corbeil.component.scss']
 })
 export class CorbeilComponent implements OnInit {
-  displayedColumns: string[] = ['service', 'matricule', 'fullname', 'email', 'telephone', 'sexe'];
+  displayedColumns: string[] = ['corporate_name', 'matricule', 'fullname', 'email', 'telephone', 'sexe'];
   
   ELEMENT_DATA: any[] = [];
   

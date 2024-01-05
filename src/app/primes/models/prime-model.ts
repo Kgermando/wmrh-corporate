@@ -1,4 +1,5 @@
 import { PersonnelModel } from "src/app/personnels/models/personnel-model";
+import { CorporateModel } from "src/app/preferences/corporates/models/corporate.model";
 
 export interface PrimeModel {
     id: number;
@@ -10,5 +11,6 @@ export interface PrimeModel {
     created: Date;
     update_created: Date;
     entreprise: string;
-    code_entreprise: string; 
+    code_entreprise: string;
+    corporate: CorporateModel;
 }

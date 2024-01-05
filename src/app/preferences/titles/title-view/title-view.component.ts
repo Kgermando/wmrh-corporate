@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { PersonnelModel } from 'src/app/personnels/models/personnel-model'; 
 import { CustomizerSettingsService } from 'src/app/customizer-settings/customizer-settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,7 +17,7 @@ import { TitleModel } from '../models/title-model';
   templateUrl: './title-view.component.html',
   styleUrls: ['./title-view.component.scss']
 })
-export class TitleViewComponent implements AfterViewInit {
+export class TitleViewComponent implements OnInit {
   isLoading = false;
 
   currentUser: PersonnelModel | any;
@@ -45,30 +45,32 @@ export class TitleViewComponent implements AfterViewInit {
     private titleService: TitleService, 
     private _liveAnnouncer: LiveAnnouncer, 
     private toastr: ToastrService) {} 
+
+
+  ngOnInit(): void {
+    this.isLoading = true;
+    let id = this.route.snapshot.paramMap.get('id');
+    this.authService.user().subscribe({
+        next: () => {
+          this.titleService.get(Number(id)).subscribe(res => {
+            this.item = res; 
+            this.ELEMENT_DATA = this.item.personnels; 
+            this.total = this.item.personnels.length;
+            this.dataSource = new MatTableDataSource<PersonnelModel>(this.ELEMENT_DATA);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;  
+          });  
+          this.isLoading = false;
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.router.navigate(['/auth/login']);
+          console.log(error);
+        }
+      });  
+  }
   
-      ngAfterViewInit() { 
-          this.isLoading = true;
-          let id = this.route.snapshot.paramMap.get('id');
-          this.authService.user().subscribe({
-              next: () => {
-                this.titleService.get(Number(id)).subscribe(res => {
-                  this.item = res; 
-                  this.ELEMENT_DATA = this.item.personnels; 
-                  this.total = this.item.personnels.length;
-                  this.dataSource = new MatTableDataSource<PersonnelModel>(this.ELEMENT_DATA);
-                  this.dataSource.sort = this.sort;
-                  this.dataSource.paginator = this.paginator;  
-                });  
-                this.isLoading = false;
-              },
-              error: (error) => {
-                this.isLoading = false;
-                this.router.navigate(['/auth/login']);
-                console.log(error);
-              }
-            });  
-      }
-  
+ 
    
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;

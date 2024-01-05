@@ -1,15 +1,16 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PerformenceModel } from './models/performence-model';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PersonnelModel } from '../personnels/models/personnel-model';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CustomizerSettingsService } from '../customizer-settings/customizer-settings.service';
-import { Router } from '@angular/router';
-import { AuthService } from '../auth/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog'; 
+import { MatDialog } from '@angular/material/dialog';  
+import { CorporateModel } from '../preferences/corporates/models/corporate.model';
+import { CorporateService } from '../preferences/corporates/corporate.service';
 import { PersonnelService } from '../personnels/personnel.service';
 
 @Component({
@@ -28,15 +29,17 @@ export class PerformencesComponent implements OnInit {
   isLoading = false;
   currentUser: PersonnelModel | any;
 
+  corporate: CorporateModel;
+
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator; 
  
   constructor(
       private _liveAnnouncer: LiveAnnouncer,
-      public themeService: CustomizerSettingsService,
-      private router: Router,
-      private authService: AuthService,
-      private personnelService: PersonnelService,
+      public themeService: CustomizerSettingsService, 
+      private route: ActivatedRoute,
+      private corporateService: CorporateService,
+      private personnelService: PersonnelService,   
       public dialog: MatDialog,
   ) {} 
 
@@ -47,25 +50,27 @@ export class PerformencesComponent implements OnInit {
 
 
   ngOnInit() { 
-        this.isLoading = true;
-        this.authService.user().subscribe({
-            next: (user) => {
-                this.currentUser = user;
-                this.personnelService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-                  this.ELEMENT_DATA = res; 
-                  this.dataSource = new MatTableDataSource<PersonnelModel>(this.ELEMENT_DATA);
-                  this.dataSource.sort = this.sort;
-                  this.dataSource.paginator = this.paginator; 
-              });
-                this.isLoading = false;
-            },
-            error: (error) => {
-              this.isLoading = false;
-              this.router.navigate(['/auth/login']);
-              console.log(error);
-            }
-          });  
-    }
+    this.route.params.subscribe(routeParams => { 
+      this.personnelService.refreshDataList$.subscribe(() => {
+        this.loadData(routeParams['id']);
+      })
+      this.loadData(routeParams['id']);
+    });
+  }
+ 
+    public loadData(id: any): void {
+      this.isLoading = true;
+      this.corporateService.getOne(Number(id)).subscribe(res => {
+        this.corporate = res; 
+        this.personnelService.getPersennelByCorporate(this.corporate.id).subscribe((personnels) => {
+          this.ELEMENT_DATA = personnels;
+          this.dataSource = new MatTableDataSource<PersonnelModel>(this.ELEMENT_DATA);
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.isLoading = false;
+        });
+      });
+    } 
 
  
   applyFilter(event: Event) {

@@ -24,15 +24,14 @@
         <div class="mat-elevation-z8 tagus-mat-table">
             <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
  
-                <ng-container matColumnDef="service">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Entreprise</th>
+                <ng-container matColumnDef="site_location">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Site de travail</th>
                     <td mat-cell *matCellDef="let element">
                         <a [routerLink]="['/layouts/salaires/liste-paiements', element.id, 'paie-view']">
-                            {{element.service}}
+                            {{element.site_location}}
                         </a>
                     </td>
-                </ng-container>
-
+                </ng-container> 
                 <ng-container matColumnDef="matricule">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Identifiant</th>
                     <td mat-cell *matCellDef="let element">
