@@ -1,1 +1,100 @@
-<p>corporate-view works!</p>
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div>
+<div *ngIf="!isLoading && corporate"> 
+    <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+        <mat-card-header class="border-bottom">
+            <div>
+                <h4 class="mb-0">{{ corporate.corporate_name }} </h4>
+               <span class="fw-semibold d-inline-block">
+                    Statut:  
+                    <span class="gray-color green" *ngIf="corporate.statut">Actif</span>
+                    <span class="gray-color red" *ngIf="!corporate.statut">Inactif</span>
+               </span>
+            </div>
+            <div> 
+                <button mat-icon-button color="accent" 
+                    (click)="openEditDialog('300ms', '100ms', corporate.id)"
+                    *ngIf="currentUser.permission === 'U' || 
+                    currentUser.permission === 'RU' ||
+                    currentUser.permission === 'CRU' ||
+                    currentUser.permission === 'RUD' ||
+                    currentUser.permission === 'CRUD'" matTooltip="Modifier ce document">
+                        <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" 
+                        (click)="delete(corporate.id)"
+                        *ngIf="currentUser.permission === 'D' || 
+                        currentUser.permission === 'RD' ||
+                        currentUser.permission === 'RUD' || 
+                        currentUser.permission === 'CRUD'" matTooltip="Supprimer ce document">
+                        <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <ul class="list ps-0 mb-0">
+                        <li>
+                            <span class="fw-semibold d-inline-block">Corporate: </span>
+                            <span class="gray-color">{{ corporate.corporate_name }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">ID corporate: </span>
+                            <span class="gray-color">{{ corporate.code_corporate }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Nombre employés: </span>
+                            <span class="gray-color">{{ corporate.nbre_employe }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">RCCM: </span>
+                            <span class="gray-color">{{ corporate.rccm }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">ID Nat.: </span>
+                            <span class="gray-color">{{ corporate.id_nat }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Numero impôt: </span>
+                            <span class="gray-color">{{ corporate.numero_impot }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Numero CNSS: </span>
+                            <span class="gray-color">{{ corporate.numero_cnss }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Responsable: </span>
+                            <span class="gray-color">{{ corporate.responsable }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Téléphone: </span>
+                            <span class="gray-color">{{ corporate.telephone }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Email: </span>
+                            <span class="gray-color">{{ corporate.email }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Adresse: </span>
+                            <span class="gray-color">{{ corporate.adresse }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Signature: </span>
+                            <span class="gray-color">{{ corporate.signature }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Created: </span>
+                            <span class="gray-color">{{ corporate.created | date: 'dd/MM/yyyy' }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Mise à jour: </span>
+                            <span class="gray-color">{{ corporate.update_created | date: 'dd/MM/yyyy' }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>  
+        </mat-card-content> 
+    </mat-card> 
+</div>
