@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/wmrh",
+    "public": "dist/wmrh-corporte",
     "ignore": [
       "firebase.json",
       "**/.*",
