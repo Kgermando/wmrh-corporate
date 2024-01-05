@@ -1,0 +1,586 @@
+mat-form-field {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 50%;
+    width: 100%;
+}
+
+.tickets-status-box {
+    .box {
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 12px;
+        background: rgba(117, 127, 239, 0.1);
+
+        span {
+            font-size: 14px;
+
+            &.up, &.down {
+                position: relative;
+                padding-left: 30px;
+
+                i {
+                    transform: translateY(-50%);
+                    position: absolute;
+                    margin-top: 2px;
+                    line-height: 1;
+                    top: 50%;
+                    left: 0;
+                    font: {
+                        size: 23px;
+                        weight: 700;
+                    };
+                }
+            }
+            &.up {
+                i {
+                    color: #00b69b;
+                }
+            }
+            &.down {
+                i {
+                    color: #ee368c;
+                }
+            }
+        }
+        h4 {
+            margin: {
+                bottom: 20px;
+                top: 5px;
+            };
+            font: {
+                size: 18px;
+                family: var(--fontFamily) !important;
+            };
+        }
+        .mat-mdc-progress-bar {
+            border-radius: 5px;
+        }
+        &:last-child {
+            background: rgba(45, 182, 245, 0.1);
+            margin-bottom: 0;
+
+            .mat-mdc-progress-bar {
+                .mdc-linear-progress__bar-inner {
+                    border-color: #2db6f5;
+                }
+            }
+        }
+    }
+    &.component-rtl-enabled {
+        .box {
+            span {
+                &.up, &.down {
+                    padding: {
+                        left: 0;
+                        right: 30px;
+                    };
+                    i {
+                        left: auto;
+                        right: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+:host ::ng-deep {
+    .tickets-status-box {
+        .box {
+            &:last-child {
+                .mat-mdc-progress-bar {
+                    .mdc-linear-progress__bar-inner {
+                        border-color: #2db6f5;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width : 767px) {
+
+    .tickets-status-box {
+        .box {
+            margin-top: 15px;
+        }
+    }
+
+}
+
+@media only screen and (min-width : 768px) and (max-width : 991px) {
+
+    .tickets-status-box {
+        .box {
+            margin-top: 15px;
+        }
+    }
+
+}
+
+.single-stats-box {
+    text-align: center;
+
+    .icon {
+        background: rgba(117, 127, 239, 0.08);
+        transition: var(--transition);
+        color: var(--heraBlueColor);
+        border-radius: 50%;
+        text-align: center;
+        position: relative;
+        font-size: 40px;
+        height: 80px;
+        width: 80px;
+        margin: {
+            left: auto;
+            right: auto;
+        };
+        i {
+            left: 0;
+            right: 0;
+            top: 50%;
+            line-height: 1;
+            position: absolute;
+            transform: translateY(-50%);
+        }
+        &.bg2 {
+            background: rgba(0, 182, 155, 0.08);
+            color: #00b69b;
+        }
+        &.bg3 {
+            background: rgba(238, 54, 140, 0.08);
+            color: #ee368c;
+        }
+        &.bg4 {
+            background: rgba(45, 182, 245, 0.08);
+            color: #9A9BFE;
+        }
+        &.bg5 {
+            background: rgba(255, 138, 84, 0.08);
+            color: #ff8a54;
+        }
+    }
+    .title {
+        margin-top: 10px;
+        
+        h3 {
+            margin-bottom: 5px;
+            font: {
+                size: 28px;
+                family: var(--fontFamily) !important;
+            };
+        }
+    }
+    .d-flex {
+        display: block !important;
+    }
+    &:hover {
+        .icon {
+            color: var(--whiteColor);
+            background: var(--heraBlueColor);
+
+            &.bg2 {
+                color: var(--whiteColor);
+                background: #00b69b;
+            }
+            &.bg3 {
+                color: var(--whiteColor);
+                background: #ee368c;
+            }
+            &.bg4 {
+                color: var(--whiteColor);
+                background: #2db6f5;
+            }
+            &.bg5 {
+                color: var(--whiteColor);
+                background: #ff8a54;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width : 767px) {
+
+    .single-stats-box {
+        .icon {
+            font-size: 30px;
+            height: 65px;
+            width: 65px;
+        }
+        .title {
+            h3 {
+                font-size: 24px;
+            }
+        }
+    }
+
+}
+
+@media only screen and (min-width : 992px) and (max-width : 1199px) {
+
+    .single-stats-box {
+        text-align: center;
+        padding: {
+            left: 15px;
+            right: 15px;
+        };
+        .d-flex {
+            display: block !important;
+        }
+        .icon {
+            display: inline-block;
+        }
+        .title {
+            margin: {
+                left: 0;
+                top: 10px;
+            };
+        }
+    }
+
+}
+
+@media only screen and (min-width: 1200px) and (max-width: 1399px) {
+
+    .single-stats-box {
+        text-align: center;
+        
+        .d-flex {
+            display: block !important;
+        }
+        .icon {
+            display: inline-block;
+        }
+        .title {
+            margin: {
+                left: 0;
+                top: 10px;
+            };
+        }
+    }
+    .component-rtl-enabled {
+        .single-stats-box {
+            .title {
+                margin: {
+                    left: 10px;
+                    right: 0;
+                };
+            }
+        }
+    }
+
+}
+
+@media only screen and (min-width: 1600px) {
+
+    .single-stats-box {
+        text-align: left;
+
+        .icon {
+            margin: {
+                left: 0;
+                right: 0;
+            };
+        }
+        .title {
+            margin: {
+                top: 0;
+                left: 15px;
+            };
+        }
+        .d-flex {
+            display: flex !important;
+        }
+    } 
+
+}
+.single-stats-box {
+    .title {
+        display: block;
+        font-size: 16px;
+    }
+    .icon {
+        background: rgba(117, 127, 239, 0.1);
+        color: var(--heraBlueColor);
+        border-radius: 5px;
+        text-align: center;
+        position: relative;
+        font-size: 25px;
+        height: 48px;
+        width: 48px;
+
+        i {
+            left: 0;
+            right: 0;
+            top: 50%;
+            line-height: 1;
+            position: absolute;
+            transform: translateY(-50%);
+        }
+        &.bg2 {
+            background: rgba(45, 182, 245, 0.1);
+            color: #2DB6F5;
+        }
+        &.bg3 {
+            background: rgba(238, 54, 140, 0.1);
+            color: #EE368C;
+        }
+    }
+    h3 {
+        line-height: 1;
+        color: var(--heraBlueColor);
+        font: {
+            size: 22px;
+            family: var(--fontFamily) !important;
+        };
+        margin: {
+            top: 8px;
+            bottom: 30px;
+        };
+    }
+    p {
+        line-height: initial;
+        
+        span {
+            position: relative;
+            padding-left: 30px;
+
+            i {
+                transform: translateY(-50%);
+                color: var(--blackColor);
+                position: absolute;
+                margin-top: 2px;
+                line-height: 1;
+                top: 50%;
+                left: 0;
+                font: {
+                    size: 25px;
+                    weight: 700;
+                };
+            }
+        }
+        &.up {
+            span {
+                color: var(--aareRiverColor);
+
+                i {
+                    color: var(--aareRiverColor);
+                }
+            }
+        }
+        &.down {
+            span {
+                color: #ee368c;
+
+                i {
+                    color: #ee368c;
+                }
+            }
+        }
+    }
+}
+ 
+
+@media only screen and (max-width : 767px) {
+
+    .single-stats-box {
+        .title {
+            font-size: 14px;
+        }
+        .icon {
+            font-size: 20px;
+            height: 40px;
+            width: 40px;
+        }
+        h3 {
+            font-size: 18px;
+            margin: {
+                top: 0;
+                bottom: 16px;
+            };
+        }
+        p {
+            span {
+                padding-left: 29px;
+                
+                i {
+                    font-size: 24px;
+                }
+            }
+        }
+    }
+    .component-rtl-enabled {
+        .single-stats-box {
+            p {
+                span {
+                    padding: {
+                        left: 0;
+                        right: 29px;
+                    };
+                    i {
+                        font-size: 24px;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+@media only screen and (min-width : 768px) and (max-width : 991px) {
+
+    .single-stats-box {
+        .title {
+            font-size: 15px;
+        }
+        .icon {
+            font-size: 22px;
+            height: 40px;
+            width: 40px;
+        }
+        h3 {
+            font-size: 22px;
+            margin: {
+                top: 10px;
+                bottom: 16px;
+            };
+        }
+        p {
+            span {
+                padding-left: 25px;
+    
+                i {
+                    font-size: 20px;
+                }
+            }
+        }
+    } 
+
+}
+
+.user-activities-box {
+    ul {
+        li {
+            border-bottom: 1px solid #f7faff;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+
+            i {
+                line-height: 1;
+                font-size: 30px;
+            }
+            h5 {
+                margin-bottom: 7px;
+                font: {
+                    size: 20px;
+                    family: var(--fontFamily) !important;
+                };
+            }
+            &:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+        }
+    }
+    &.component-dark-theme {
+        ul {
+            li {
+                border-bottom-color: #1f2226;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width : 767px) {
+
+    .user-activities-box {
+        ul {
+            li {
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+    
+                i {
+                    font-size: 25px;
+                }
+                h5 {
+                    font-size: 18px;
+                    margin-bottom: 5px;
+                }
+            }
+        }
+    }
+
+}
+
+@media only screen and (min-width : 768px) and (max-width : 991px) {
+
+    .user-activities-box {
+        ul {
+            li {
+                padding-bottom: 18px;
+                margin-bottom: 18px;
+    
+                h5 {
+                    margin-bottom: 5px;
+                }
+            }
+        }
+    }
+
+}
+
+@media only screen and (min-width : 992px) and (max-width : 1199px) {
+
+    .user-activities-box {
+        ul {
+            li {
+                padding-bottom: 18px;
+                margin-bottom: 18px;
+    
+                h5 {
+                    margin-bottom: 5px;
+                }
+            }
+        }
+    }
+
+}
+
+
+
+.present {
+   color: #27ae60 !important;
+} 
+
+.absence-sans-autorisation {
+    color: #FC0000 !important; 
+}
+
+.absence-autorisee {
+    color: #FAAA0C !important; 
+}
+
+.absent-maladie {
+    color: #ee368c !important; 
+}
+
+.conge-circonstanciel {
+   color: #8e44ad !important; 
+}
+
+.conge-annuel {
+    color: #2db6f5 !important; 
+}
+
+.suspension {
+    color: #2980b9 !important; 
+}
+
+.service-off {
+    color: #2c3e50 !important; 
+}
+
+.mission {
+    color: #038fa8 !important; 
+}

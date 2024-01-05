@@ -1,0 +1,118 @@
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div>
+<div *ngIf="!isLoading">
+    <div class="row" *ngIf="personne">
+        <div class="col-lg-12 col-md-12">
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header *ngIf="currentUser">
+                    <h4 class="mb-0">Fiche employé</h4>
+                    <div  
+                        *ngIf="currentUser.permission === 'C' || 
+                            currentUser.permission === 'CR' ||
+                            currentUser.permission === 'CRU' ||
+                            currentUser.permission === 'CRUD'">
+                    <div class="tagus-form-group">
+                        <mat-form-field appearance="fill" class="date-input" [formGroup]="formGroup">
+                            <mat-label>MM/DD/YYYY</mat-label>
+                            <input matInput [matDatepicker]="picker" id="date_paie"
+                                formControlName="date_paie" [min]="personne.date_debut_contrat">
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker> 
+                        </mat-form-field>
+                    </div>
+                        <button mat-flat-button class="default-btn tagus" color="warn" (click)="onSubmit()" >
+                            <div class="d-flex justify-content-center" *ngIf="!isLoadingSubmit">
+                                <span><i class="ri-add-fill"></i> Génerer la fiche de paie </span>
+                            </div> 
+                            <div class="d-flex justify-content-center" *ngIf="isLoadingSubmit">
+                                <mat-spinner color="primary" [diameter]="10"></mat-spinner> 
+                                <p class="text-white ml-2">Patientez-svp...</p>
+                            </div>
+                        </button>
+                    </div>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold">Matricule: </span>
+                                    <span class="gray-color">{{ personne.matricule }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold">Entreprise: </span>
+                                    <span class="gray-color" *ngIf="personne.services">{{ personne.services.service }}</span>
+                                </li> 
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold">Departement: </span>
+                                    <span class="gray-color" *ngIf="personne.departements">{{ personne.departements.departement }}</span>
+                                </li> 
+                            </ul>
+                        </div> 
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold">Nom: </span>
+                                    <span class="gray-color">{{ personne.nom }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold">Postnom: </span>
+                                    <span class="gray-color">{{ personne.postnom }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold">Prenom: </span>
+                                    <span class="gray-color">{{ personne.prenom }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold">Email: </span>
+                                    <span class="gray-color">{{ personne.email }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold">Telephone: </span>
+                                    <span class="gray-color">{{ personne.telephone }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold">Sexe: </span>
+                                    <span class="gray-color">{{ personne.sexe }}</span>
+                                </li> 
+                            </ul>
+                        </div> 
+                    </div> 
+                </mat-card-content>
+                <mat-card-content>
+                    <app-releve-paie-table [personne]="personne" [preference]="preference"></app-releve-paie-table>
+                </mat-card-content>
+            </mat-card> 
+        </div>
+        
+    </div>
+</div>

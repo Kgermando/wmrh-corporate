@@ -1,0 +1,64 @@
+<div class="create-dialog-box scrollable-dialog">
+    <div class="title d-flex align-items-center justify-content-space-between">
+        <h4 class="mb-0">Ajout des heures supplementaires</h4>
+        <button class="close-btn bg-transparent p-0 border-none" (click)="close()"><i class="flaticon-close"></i></button>
+    </div>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Personnel <span>*</span></label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Select agent</mat-label>
+                        <mat-select formControlName="personnel">
+                            <mat-option *ngFor="let personne of personneList" [value]="personne.id">
+                                {{personne.prenom}} {{personne.nom}}  <<{{personne.matricule}}>> 
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formGroup.controls['personnel'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Motif </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le motif </mat-label>
+                        <input matInput type="text" formControlName="motif" name="motif">
+                        <mat-error *ngIf="formGroup.controls['motif'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Nombre d'heures </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le nombre d'heures </mat-label>
+                        <input matInput type="number" formControlName="nbr_heures" name="montant">
+                        <mat-error *ngIf="formGroup.controls['nbr_heures'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div> 
+        </div>
+        <div class="d-flex justify-content-center" *ngIf="isLoading">
+            <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+        </div>
+        <div class="text-end" *ngIf="!isLoading && currentUser">
+            <button type="button" class="gray" (click)="close()"><i class="ri-close-fill"></i> Annuler</button>
+            <button type="submit" *ngIf="currentUser.permission === 'C' || 
+                currentUser.permission === 'CR' ||
+                currentUser.permission === 'CRU' ||
+                currentUser.permission === 'CRUD'"><i class="ri-edit-fill"></i> Soumettre
+            </button>
+        </div>
+    </form> 
+</div>

@@ -1,0 +1,489 @@
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-5">Patientez-svp...</p>
+</div>
+<div class="mb-25" *ngIf="!isLoading">
+    <div class="row justify-content-center" *ngIf="salaire && preference">
+        <div class="col-lg-8 col-md-8 col-md-12"  id="htmlData" #htmlData>  
+                <mat-card class="mb-25 tagus-card">
+                    <mat-card-header class="mb-10 d-flex justify-content-center">
+                        <h4 class="mb-0 text-center">{{ title.toUpperCase()}} </h4>
+                    </mat-card-header>
+                    <mat-card-header>
+                        <h6>Classeur du {{mois}}/{{dateYear}}</h6>
+                        <div> 
+                            <button mat-icon-button color="primary" 
+                                    (click)="openDialog()">
+                                <mat-icon>calculate</mat-icon>
+                            </button>
+                            <button mat-icon-button class="tagus" (click)="openPDF()" matTooltip="Imprimer">
+                                <mat-icon>print</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" 
+                                (click)="delete(salaire.id)" matTooltip="Supprimer ce bulletin">
+                                <mat-icon>delete</mat-icon>
+                            </button> 
+                        </div>
+                    </mat-card-header>
+                    <mat-card-content class="example-buttons">
+                        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+                        <div class="d-flex flex-nowrap mb-25 align-items-center justify-content-space-between">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <table class="table"> 
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-start">
+                                                Entreprise:
+                                            </td>
+                                            <td class="gray-color text-start" *ngIf="preference.company">{{ preference.company.company_name }}</td> 
+                                            <td class="gray-color text-start" *ngIf="!preference.company"> - </td> 
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                RCCM:
+                                            </td>
+                                            <td class="gray-color text-start" *ngIf="preference.company">{{ preference.company.rccm }}</td>
+                                            <td class="gray-color text-start" *ngIf="!preference.company"> - </td> 
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                ID. Nat:
+                                            </td>
+                                            <td class="gray-color text-start" *ngIf="preference.company">{{ preference.company.id_nat }}</td> 
+                                            <td class="gray-color text-start" *ngIf="!preference.company"> - </td> 
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                N° Impôt:
+                                            </td>
+                                            <td class="gray-color text-start" *ngIf="preference.company">{{ preference.company.numero_impot }}</td>
+                                            <td class="gray-color text-start" *ngIf="!preference.company"> - </td> 
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                N° CNSS:
+                                            </td>
+                                            <td class="gray-color text-start" *ngIf="preference.company">{{ preference.company.numero_cnss }}</td>
+                                            <td class="gray-color text-start" *ngIf="!preference.company"> - </td> 
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 d-flex justify-content-center">
+                                <span *ngIf="!preference.company">
+                                    <img src="assets/img/user/user13.jpg" class="border-radius logo">
+                                </span>
+                                <span *ngIf="preference.company">
+                                    <img [src]="preference.company.logo" class="border-radius logo" *ngIf="preference.company.logo != '-'">
+                                    <img src="assets/img/user/user13.jpg" class="border-radius logo" *ngIf="preference.company.logo === '-'">
+                                </span>
+                            </div>
+                        </div>
+                        <mat-divider class="mb-25" ></mat-divider>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td class="text-start">
+                                        Identifiant:
+                                    </td>
+                                    <td class="gray-color text-start">{{ salaire.personnel.matricule.toUpperCase() }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">
+                                        Nom complet:
+                                    </td>
+                                    <td class="gray-color text-start">{{ salaire.personnel.nom}} {{ salaire.personnel.postnom}} {{ salaire.personnel.prenom}}</td> 
+                                </tr>
+                                <tr *ngIf="salaire.personnel.departements">
+                                    <td class="text-start">
+                                        Département
+                                    </td>
+                                    <td class="gray-color text-start">{{ salaire.personnel.departements.departement }} </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">
+                                        N° CNSS:
+                                    </td>
+                                    <td class="gray-color text-start">{{ salaire.personnel.numero_cnss }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">
+                                        Compte bancaire:
+                                    </td>
+                                    <td class="gray-color text-start">{{ salaire.personnel.compte_bancaire }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">
+                                        Monnaie:
+                                    </td>
+                                    <td class="gray-color text-start">{{ salaire.monnaie }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">
+                                        Taux de conversion:
+                                    </td>
+                                    <td class="gray-color text-start">1$ = {{ salaire.taux_dollard }} FC</td> 
+                                </tr>
+                            </tbody>
+                        </table>
+                        <ul class="list ps-0 mb-0 mt-25">
+                            <div class="table-responsive mb-10">
+                                <table class="table"> 
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-start fontSize">
+                                                PRESTATIONS
+                                            </td> 
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Jours prestés :
+                                            </td> 
+                                            <td class="gray-color text-end">{{ salaire.nbre_jrs_preste }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Jours feriés :
+                                            </td> 
+                                            <td class="gray-color text-end">{{ salaire.nbre_jrs_ferie }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Congé payés (2/3) :
+                                            </td> 
+                                            <td class="gray-color text-end">{{ salaire.conge_paye }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Nombre de dependants :
+                                            </td> 
+                                            <td class="gray-color text-end">{{ salaire.nbr_dependants }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Nombre d'heures supp. :
+                                            </td> 
+                                            <td class="gray-color text-end">{{ salaire.heures_supp }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Ages d'anciennetés :
+                                            </td> 
+                                            <td class="gray-color text-end">{{ salaire.anciennete_nbr_age }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>  
+                            <div class="table-responsive mb-10">
+                                <table class="table"> 
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-start fontSize">
+                                                BASE IMPOSABLE
+                                            </td> 
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Salaire de base : 
+                                            </td> 
+                                           <td class="gray-color text-end">
+                                            <input class="form-control" 
+                                            type="number" 
+                                               aria-label="Sizing example input" 
+                                               aria-describedby="inputGroup-sizing-sm"
+                                               formControlName="salaire_base"
+                                               >  |
+                                            <span *ngIf="salaire.monnaie == 'USD'">
+                                                    {{ +salaire.personnel.salaire_base * +salaire.taux_dollard | numberFormat:'fr-FR' }}
+                                            </span>
+                                            <span *ngIf="salaire.monnaie == 'CDF'">
+                                                {{ salaire.personnel.salaire_base | numberFormat:'fr-FR' }}
+                                            </span>  FC
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Primes d'anciennetés : 
+                                            </td> 
+                                              <td class="gray-color text-end" 
+                                                    >{{ salaire.prime_anciennete | numberFormat:'fr-FR' }} FC
+                                                </td> 
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Primes diverses :
+                                            </td>
+                                            <td class="gray-color text-end">
+                                                <input class="form-control" 
+                                                    type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="primes" 
+                                                   > FC
+                                              </td> 
+                                            </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Heures supp. :
+                                            </td>
+                                            <td class="gray-color text-end"  *ngIf="this.salaire.heures_supp >= 2">
+                                                <input class="form-control" 
+                                                    type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="heure_supplementaire_monnaie"
+                                                   
+                                                   >
+                                              </td> 
+                                              <td class="gray-color text-end" *ngIf="this.salaire.heures_supp < 2"
+                                                    >{{ salaire.heures_supp | numberFormat:'fr-FR' }} FC
+                                                </td> 
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Remunération Brute Imposaable(RBI)
+                                            </td> 
+                                            <td class="gray-color fontSize text-end">{{ rbi | numberFormat:'fr-FR' }} FC</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> 
+                            <div class="table-responsive mb-10">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-start fontSize">
+                                                AVANTAGES LEGAUX
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr> 
+                                            <td class="text-start">
+                                                Contre-valeur logement :
+                                            </td> 
+                                            <!-- <td class="gray-color text-end" *ngIf="(this.alloc_logement > this.alloc_logementPlafond)">
+                                                <input class="form-control" 
+                                                type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="alloc_logement" 
+                                                   >
+                                                   / {{ alloc_logementPlafond | numberFormat:'fr-FR' }} FC
+                                              </td> -->
+                                              <td class="gray-color text-end">
+                                                <input class="form-control" 
+                                                type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="alloc_logement" 
+                                                   >
+                                                   / {{ alloc_logementPlafond | numberFormat:'fr-FR' }} FC
+                                              </td>
+                                            <!-- <td class="gray-color text-end" *ngIf="this.alloc_logement <= this.alloc_logementPlafond"
+                                              >{{ alloc_logement | numberFormat:'fr-FR' }} FC
+                                              / {{ alloc_logementPlafond | numberFormat:'fr-FR' }} FC
+                                          </td> -->
+                                        </tr> 
+                                        <tr>
+                                            <td class="text-start">
+                                                Allocation transport : 
+                                            </td>
+                                            <td class="gray-color text-end">
+                                                <input class="form-control" 
+                                                type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="alloc_transport"
+                                                   >
+                                                   / {{ alloc_transportPlafond | numberFormat:'fr-FR' }} FC
+                                              </td> 
+
+                                            <!-- <td class="gray-color text-end" *ngIf="this.alloc_transport > this.alloc_transportPlafond">
+                                                <input class="form-control" 
+                                                type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="alloc_transport"
+                                                   >
+                                                   / {{ alloc_transportPlafond | numberFormat:'fr-FR' }} FC
+                                              </td> 
+                                              <td class="gray-color text-end" *ngIf="this.alloc_transport <= this.alloc_transportPlafond"
+                                              >{{ alloc_transport | numberFormat:'fr-FR' }} FC 
+                                              / {{ alloc_transportPlafond | numberFormat:'fr-FR' }} FC
+                                            </td>  -->
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Allocation familliale : 
+                                            </td>
+                                            <td class="gray-color text-end">
+                                                <input class="form-control" 
+                                                type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="alloc_familliale" 
+                                                   > 
+                                                   / {{ alloc_famillialePlafond | numberFormat:'fr-FR' }} FC
+                                              </td>
+
+                                            <!-- <td class="gray-color text-end"  *ngIf="this.alloc_familliale > this.alloc_famillialePlafond">
+                                                <input class="form-control" 
+                                                type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="alloc_familliale" 
+                                                   > 
+                                                   / {{ alloc_famillialePlafond | numberFormat:'fr-FR' }} FC
+                                              </td>
+                                              <td class="gray-color text-end" *ngIf="this.alloc_familliale <= this.alloc_famillialePlafond"
+                                                >{{ alloc_familliale | numberFormat:'fr-FR' }} FC
+                                                / {{ alloc_famillialePlafond | numberFormat:'fr-FR' }} FC
+                                            </td>  -->
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Soins medicaux :
+                                            </td>
+                                            <td class="gray-color text-end">
+                                                <input class="form-control" 
+                                                type="number"
+                                                   aria-label="Sizing example input" 
+                                                   aria-describedby="inputGroup-sizing-sm"
+                                                   formControlName="soins_medicaux" 
+                                                   > FC
+                                              </td>
+                                              <!-- <td class="gray-color text-end"
+                                                >{{ salaire.soins_medicaux | numberFormat:'fr-FR' }} FC
+                                            </td>  -->
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-responsive mb-10">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-start fontSize">
+                                                IMPÔT ÉLIDE
+                                            </td>
+                                            <td></td>
+                                        </tr> 
+                                        <tr>
+                                            <td class="text-start">
+                                                Redressement du RNI
+                                            </td>
+                                            <td class="gray-color text-end">{{ redressement | numberFormat:'fr-FR' }} FC</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Économie d'impôts
+                                            </td>
+                                            <td class="gray-color text-end">{{ impot_elide | numberFormat:'fr-FR' }} FC</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-responsive mb-10">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-start fontSize">
+                                                NET IMPOSABLE
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                CNSS QPO ({{preference.cnss_qpo}}%):
+                                            </td> 
+                                            <td class="gray-color text-end">{{ cnss_qpo | numberFormat:'fr-FR' }} FC</td>  
+                                        </tr> 
+                                        <tr>
+                                            <td class="text-start">
+                                                Remunération Nette Imposable(RNI)
+                                            </td>
+                                            <td class="gray-color fontSize text-end">{{ rni | numberFormat:'fr-FR' }} FC</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-responsive mb-10">
+                                <table class="table"> 
+                                    <tbody> 
+                                        <tr>
+                                            <td class="text-start fontSize">
+                                                DEDUCTIONS
+                                            </td> 
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                IPR
+                                            </td>
+                                            <td class="gray-color text-end">{{ ipr | numberFormat:'fr-FR' }} FC</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Avances salaire
+                                            </td> 
+                                            <td class="gray-color text-end">{{ avance_slaire | numberFormat:'fr-FR' }} FC</td>  
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Sanctions ou pénalités
+                                            </td> 
+                                            <td class="gray-color text-end">{{ penalites | numberFormat:'fr-FR' }} FC</td> 
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                            Cotisations Syndicale ({{preference.cotisation_syndicale}}%):
+                                            </td> 
+                                            <td class="gray-color text-end">{{ syndicat | numberFormat:'fr-FR' }} FC</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Frais bancaires
+                                            </td> 
+                                            <td class="gray-color text-end">{{ prise_en_charge_frais_bancaire | numberFormat:'fr-FR' }} FC</td>  
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
+                                                Pret entreprise
+                                            </td> 
+                                            <td class="gray-color text-end">{{ salaire.pres_entreprise | numberFormat:'fr-FR' }} FC</td>  
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <li class="fw-semibold net_a_payer d-flex align-items-center justify-content-space-between">
+                                Net à payer :
+                                <span>
+                                    <span  class="gray-color fontSize">{{ net_a_payer | numberFormat:'fr-FR' }} FC</span>
+                                </span>
+                            </li>
+                        </ul>
+                        
+                        <div class="col-lg-6 col-md-12 col-sm-12 mt-25"> 
+                            <mat-slide-toggle style="background: color= red;"
+                                [checked]="isPublie" (change)="toggle($event)"
+                            >Cocher la case pour publié!</mat-slide-toggle>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center mt-25" 
+                            *ngIf="currentUser.permission === 'U' || 
+                            currentUser.permission === 'RU' ||
+                            currentUser.permission === 'CRU' ||
+                            currentUser.permission === 'RUD' ||
+                            currentUser.permission === 'CRUD'">
+                            <button mat-flat-button class="tagus" *ngIf="isPublie">Publier</button>
+                            <p></p>
+                            <button mat-stroked-button class="tagus" *ngIf="!isPublie">Brouillon</button>
+                        </div>
+                    </form> 
+                    </mat-card-content>
+                </mat-card>  
+        </div> 
+    
+    </div>
+</div>
+

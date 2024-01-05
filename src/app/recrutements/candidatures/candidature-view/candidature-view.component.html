@@ -1,0 +1,79 @@
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div>
+<div *ngIf="!isLoading">
+    <div class="row" *ngIf="candidature">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header class="border-bottom">
+                    <h4 class="mb-0">
+                        {{ candidature.search_profil }}
+                    </h4>
+                    <div> 
+                        <button mat-icon-button color="accent"  
+                        [routerLink]="['/layouts/recrutements/candidatures', candidature.id, 'candidature-edit']"
+                        *ngIf="currentUser.permission === 'U' || 
+                        currentUser.permission === 'RU' ||
+                        currentUser.permission === 'CRU' ||
+                        currentUser.permission === 'RUD' ||
+                        currentUser.permission === 'CRUD'" matTooltip="Modifier">
+                                <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" 
+                                (click)="delete(candidature.id)"
+                                *ngIf="currentUser.permission === 'D' || 
+                                currentUser.permission === 'RD' ||
+                                currentUser.permission === 'RUD' || 
+                                currentUser.permission === 'CRUD'" matTooltip="Supprimer ce document">
+                                <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </mat-card-header>
+                <mat-card-content>
+                    <ul class="list ps-0 mb-25"> 
+                        <li> 
+                            <span class="fw-semibold d-inline-block">Nom complet: </span>
+                            <span class="gray-color">{{ candidature.full_name }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Sexe: </span>
+                            <span class="gray-color">{{ candidature.sexe }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Departement: </span>
+                            <span class="gray-color">{{ candidature.departement }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Statut: </span>
+                            <span class="badge text-soft-success" *ngIf="candidature.statut === 'Recrue'">Recrue</span>
+                            <span class="badge text-soft-primary" *ngIf="candidature.statut === 'Postulant'">Postulant</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Signature: </span>
+                            <span class="gray-color">{{ candidature.signature }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Créé le: </span>
+                            <span class="gray-color">{{ candidature.created | date: 'dd/MM/yyyy  HH:mm:ss' }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Mise à jour le: </span>
+                            <span class="gray-color">{{ candidature.update_created | date: 'dd/MM/yyyy  HH:mm:ss' }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">CV: </span>
+                            <span class="gray-color" *ngIf="candidature.scan_url !== '-'">
+                                <a href="{{ candidature.scan_url }}">Télécherger le CV ici</a>
+                            </span>
+                            <span class="gray-color" *ngIf="candidature.scan_url === '-'">
+                                Le CV n'a pas encore été scanné!
+                            </span>
+                        </li> 
+
+                    </ul>   
+                </mat-card-content>
+            </mat-card>  
+        </div>
+         
+    </div>
+</div>

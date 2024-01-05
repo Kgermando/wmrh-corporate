@@ -1,0 +1,541 @@
+<div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-space-between">
+    <h4 class="mb-0">Reglages générale</h4>
+    <ol class="breadcrumb mb-0 ps-0">
+        <li class="breadcrumb-item">
+            <a routerLink="/">
+                <i class="ri-home-8-line"></i>
+                Dashboard
+            </a>
+        </li>
+        <li class="breadcrumb-item gray-color">Preferences</li>
+        <li class="breadcrumb-item fw-semibold">Reglages</li>
+    </ol>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div>
+<div *ngIf="!isLoading">
+    <div class="row" *ngIf="preference && currentUser">
+        <div class="d-flex justify-content-space-between">
+            <p>Denière mise à jour le: {{ preference.update_created | date: 'dd/MM/yyyy HH:mm:ss' }} </p>
+            <p>Par: {{ preference.signature }}</p>
+        </div>
+        
+        <div class="col-lg-4 col-md-12">
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()" >
+                <mat-card-header class="border-bottom">
+                    <h5 class="mb-0">Information de l'entreprise</h5>
+                    <button mat-icon-button color="primary" 
+                                (click)="openEditEntrepriseDialog('300ms', '100ms', preference.company.id)" matTooltip="Modifier">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </mat-card-header>
+                <mat-card-content> 
+                    <ul class="list ps-0 mb-0">
+                        <li>
+                            <!-- <span class="fw-semibold">Logo: </span> -->
+                            <span>
+                                <img src="assets/img/user/user13.jpg" class="border-radius logo" *ngIf="preference.company.logo === '-'">
+                                <img [src]="preference.company.logo" class="border-radius logo" *ngIf="preference.company.logo != '-'">
+                            </span> 
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Code entreprise: </span>
+                            <span class="gray-color">{{ preference.company.code_entreprise }}</span> 
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Nom de l'entreprise: </span>
+                            <span class="gray-color">{{ preference.company.company_name }}</span> 
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Nombre d'employés: </span>
+                            <span class="gray-color">{{ preference.company.nbre_employe }}</span> 
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Numéro CNSS: </span>
+                            <span class="gray-color">{{ preference.company.numero_cnss }}</span> 
+                        </li> 
+                        <li>
+                            <span class="fw-semibold">RCCM: </span>
+                            <span class="gray-color">{{ preference.company.rccm }}</span> 
+                        </li>
+                        <li>
+                            <span class="fw-semibold">ID Nat: </span>
+                            <span class="gray-color">{{ preference.company.id_nat }}</span> 
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Numero impôt: </span>
+                            <span class="gray-color">{{ preference.company.numero_impot }}</span> 
+                        </li>
+                        <li>
+                            <span class="fw-semibold ">Email: </span>
+                            <span class="gray-color">{{ preference.company.email }}</span> 
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Telephone: </span>
+                            <span class="gray-color">{{ preference.company.telephone }}</span> 
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Adresse: </span>
+                            <span class="gray-color">{{ preference.company.adresse }}</span> 
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Responsable: </span>
+                            <span class="gray-color">{{ preference.company.responsable }}</span> 
+                        </li>
+                    </ul>
+                </mat-card-content>
+            </mat-card> 
+            
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header class="border-bottom">
+                    <h5 class="mb-0">Taxes de la société</h5>
+                </mat-card-header>
+                <mat-card-content>
+                    <ul class="list ps-0 mb-0">
+                        <li>
+                            <span class="fw-semibold">CNSS QPP: </span>
+                            <span class="gray-color">{{ preference.cnss_qpp }} %</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'CNSS QPP', preference.cnss_qpp)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">INPP: </span>
+                            <span class="gray-color">{{ preference.inpp }} %</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'INPP', preference.inpp)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">ONEM: </span>
+                            <span class="gray-color">{{ preference.onem }} %</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'ONEM', preference.onem)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li> 
+                    </ul>   
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header class="border-bottom">
+                    <h5 class="mb-0">IPR Taux Barèmique</h5>
+                </mat-card-header>
+                <mat-card-content>
+                    <ul class="list ps-0 mb-0">
+                        <li>
+                            <span class="fw-semibold">Barèmique de 3%: </span>
+                            <span class="gray-color">{{ preference.bareme_3 | number }} CDF</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Taux Barèmique de 3%', preference.bareme_3)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Barèmique de 15%: </span>
+                            <span class="gray-color">{{ preference.bareme_15 | number }} CDF</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Taux Barèmique de 15%', preference.bareme_15)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Barèmique de 30%: </span>
+                            <span class="gray-color">{{ preference.bareme_30 | number }} CDF</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Taux Barèmique de 30%', preference.bareme_30)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                    </ul>   
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div class="col-lg-4 col-md-12">   
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header class="border-bottom">
+                    <h5 class="mb-0">Paramètres de déduction </h5>
+                </mat-card-header>
+                <mat-card-content>
+                    <ul class="list ps-0 mb-0">
+                        <li>
+                            <span class="fw-semibold">Cotisation syndicale: </span>
+                            <span class="gray-color">{{ preference.cotisation_syndicale }} %</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Cotisation syndicale', preference.cotisation_syndicale)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">CNSS QPO: </span>
+                            <span class="gray-color">{{ preference.cnss_qpo }} %</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'CNSS QPO', preference.cnss_qpo)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">SMIG: </span>
+                            <span class="gray-color">{{ preference.smig }} FC</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'SMIG', preference.smig)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                    </ul>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header class="border-bottom">
+                    <h5 class="mb-0">Jours feriés</h5>
+                </mat-card-header>
+                <mat-card-content>
+                    <ul class="list ps-0 mb-0">
+                        <li>
+                            <span class="fw-semibold">Jour de l'AN: </span>
+                            <span class="gray-color">{{ preference.new_year  | date: 'dd-MM-yyyy' }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Jour de l\'AN', preference.new_year)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Jour de Noêl: </span>
+                            <span class="gray-color">{{ preference.noel  | date: 'dd-MM-yyyy' }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Jour de Noêl', preference.noel)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Jour de Martyrs: </span>
+                            <span class="gray-color">{{ preference.martyr_day  | date: 'dd-MM-yyyy' }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Jour de Martyr', preference.martyr_day)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Jour de L.D. Kabila: </span>
+                            <span class="gray-color">{{ preference.kabila_day  | date: 'dd-MM-yyyy' }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Jour de L.D. Kabila', preference.kabila_day)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Jour de P. Lumumba: </span>
+                            <span class="gray-color">{{ preference.lumumba_day  | date: 'dd-MM-yyyy' }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Jour de P. Lumumba', preference.lumumba_day)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Jour de travail: </span>
+                            <span class="gray-color">{{ preference.labour_day  | date: 'dd-MM-yyyy' }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Jour de traval', preference.labour_day)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Jour de liberation: </span>
+                            <span class="gray-color">{{ preference.liberation_day  | date: 'dd-MM-yyyy' }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Jour de liberation', preference.liberation_day)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Jour de l'independance: </span>
+                            <span class="gray-color">{{ preference.indepence_day  | date: 'dd-MM-yyyy' }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Jour de l\'independance', preference.indepence_day)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Jour des parents: </span>
+                            <span class="gray-color">{{ preference.parent_day  | date: 'dd-MM-yyyy' }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Jour des parents', preference.parent_day)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Jour de S. kimbangu: </span>
+                            <span class="gray-color">{{ preference.kimbangu_day  | date: 'dd-MM-yyyy' }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Jour de S. kimbangu', preference.kimbangu_day)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                    </ul>   
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div class="col-lg-4 col-md-12">
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header class="border-bottom">
+                    <h5 class="mb-0">Paramètres de paie</h5>
+                </mat-card-header>
+                <mat-card-content>
+                    <ul class="list ps-0 mb-0">
+                        <li>
+                            <span class="fw-semibold">Date de paie: </span>
+                            <span class="gray-color">{{ preference.date_paie  | date: 'dd-MM-yyyy' }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Date de paie', preference.date_paie)" *ngIf="currentUser.permission === 'U' || 
+                                    currentUser.permission === 'RU' ||
+                                    currentUser.permission === 'CRU' ||
+                                    currentUser.permission === 'RUD' ||
+                                    currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <!-- <li>
+                            <span class="fw-semibold">Monnaie: </span>
+                            <span class="gray-color">{{ preference.monnaie }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Monnaie', preference.monnaie)" *ngIf="currentUser.permission === 'U' || 
+                                    currentUser.permission === 'RU' ||
+                                    currentUser.permission === 'CRU' ||
+                                    currentUser.permission === 'RUD' ||
+                                    currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li> -->
+                        <li>
+                            <span class="fw-semibold">Nbre d'heures de travail: </span>
+                            <span class="gray-color">{{ preference.nbre_heure_travail }} Heures</span>
+                            <button mat-icon-button color="warn" 
+                            (click)="openEditDialog('300ms', '100ms', 'Nbre d\'heures de travail', preference.nbre_heure_travail)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Taux dollard USD/CDF: </span> 
+                            <span class="gray-color">{{ preference.taux_dollard }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Taux dollard USD/CDF', preference.taux_dollard)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Prise en charge frais bancaire: </span> 
+                            <span class="gray-color" *ngIf="preference.prise_en_charge_frais_bancaire">OUI</span>
+                            <span class="gray-color" *ngIf="!preference.prise_en_charge_frais_bancaire">NON</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Prise en charge frais bancaire', preference.prise_en_charge_frais_bancaire)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Nbre de courses transport: </span> 
+                            <span class="gray-color">{{ preference.courses_transport }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Courses transport', preference.courses_transport)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Travailleur cadre: </span> 
+                            <span class="gray-color">{{ preference.montant_travailler_quadre }} CDF</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Montant pour travailleur quadre', preference.montant_travailler_quadre)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Travailleur non cadre: </span> 
+                            <span class="gray-color">{{ preference.montant_travailler_non_quadre }} CDF</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Montant pour travailleur non quadre', preference.montant_travailler_non_quadre)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                    </ul>   
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header class="border-bottom">
+                    <h5 class="mb-0">Primes d'anciennetés</h5>
+                </mat-card-header>
+                <mat-card-content>
+                    <ul class="list ps-0 mb-0">
+                        <li>
+                            <span class="fw-semibold">Prime de plus de 5 ans: </span>
+                            <span class="gray-color">{{ preference.prime_ancien_5 }} %</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Prime de plus de 5 ans', preference.prime_ancien_5)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Prime de plus de 10 ans: </span>
+                            <span class="gray-color">{{ preference.prime_ancien_10 }} %</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Prime de plus de 10 ans', preference.prime_ancien_10)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold">Prime de plus de 15 ans: </span>
+                            <span class="gray-color">{{ preference.prime_ancien_15 }} %</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Prime de plus de 15 ans', preference.prime_ancien_15)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold">Prime de plus de 20 ans: </span>
+                            <span class="gray-color">{{ preference.prime_ancien_20 }} %</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Prime de plus de 20 ans', preference.prime_ancien_20)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
+                            <span class="fw-semibold">Prime de plus de 25 ans: </span>
+                            <span class="gray-color">{{ preference.prime_ancien_25 }} %</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Prime de plus de 25 ans', preference.prime_ancien_25)" *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li> 
+                    </ul>  
+                </mat-card-content>
+            </mat-card> 
+        </div> 
+    </div>
+</div>

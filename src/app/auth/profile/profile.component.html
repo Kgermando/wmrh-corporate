@@ -1,0 +1,134 @@
+
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div>
+<ng-container *ngIf="!isLoading">
+    <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayout.md="column" fxLayoutGap="25px" fxLayoutGap.xs="0" fxLayoutGap.sm="0" fxLayoutGap.md="0"  *ngIf="currentUser">
+        <div fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.lg="33%" fxFlex.md="100%" class="col">
+    
+                <div
+                    class="profile-card-box border-radius bg-white box-shadow mb-25"
+                    [class.component-dark-theme]="themeService.isDark()"
+                    [class.card-borderd-theme]="themeService.isCardBorder()"
+                    [class.card-border-radius]="themeService.isCardBorderRadius()"
+                > 
+                    <div class="bottom">
+                        <div class="d-md-flex align-items-end justify-content-space-between">
+                            <div class="profile-box position-relative">
+                                <div>
+                                    <img [src]="currentUser.photo"class="rounded-circle" alt="user" *ngIf="currentUser.photo">
+                                    <img src="assets/img/user/user15.jpg" class="rounded-circle" alt="user" *ngIf="!currentUser.photo">
+                                    <button mat-icon-button color="warn" (click)="openChangePhotoDialog('300ms', '100ms', currentUser.id)" matTooltip="Modifier la photo profile">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                </div>
+                                <h5 class="fw-semibold">{{currentUser.prenom}} {{currentUser.nom}}</h5>
+                                <span class="d-block gray-color">{{currentUser.titre}}</span>
+                            </div>
+                            <div class="impression-box text-center">
+                                <div class="chart">
+                                    <apx-chart
+                                        [series]="chartOptions.series!"
+                                        [chart]="chartOptions.chart!"
+                                        [plotOptions]="chartOptions.plotOptions!"
+                                        [colors]="chartOptions.colors!"
+                                        [labels]="chartOptions.labels!"
+                                        [fill]="chartOptions.fill!"
+                                    ></apx-chart>
+                                </div>
+                                <span class="d-block">Excellent</span>
+                                <h5 class="mb-0 fw-semibold gray-color">Performences</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+        
+                <app-info-profile [currentUser]="currentUser"></app-info-profile> 
+                <p> </p> 
+                <!-- <button mat-flat-button class="d-block" color="primary" routerLink="/layouts/profile/edit">Modifier vos informations</button> -->
+                <p> </p> 
+               
+                <button mat-flat-button class="d-block" color="primary" (click)="openUpdateInfoDialog('300ms', '100ms', currentUser.id)" >Modifier vos informations</button>
+                <p></p>
+                <button mat-flat-button class="d-block" color="warn" (click)="openPasswordDialog('300ms', '100ms')" >Modifier le mot de passe</button>
+                <p> </p> 
+                <p> </p> 
+            </div>
+            <div fxFlex="67%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.lg="67%" fxFlex.md="100%" class="col">
+                <mat-card class="mb-25 tagus-card">
+                    <!-- <mat-card-header class="border-bottom">
+                        <h5 class="mb-0">Expansion Panel as Accordion</h5>
+                    </mat-card-header> -->
+                    <mat-card-content>
+                        <mat-accordion class="example-headers-align">
+                            <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title class="d-flex flex-nowrap align-items-center justify-content-space-between">
+                                        <h5>Mes paies</h5> 
+                                        <!-- <mat-icon>date_range</mat-icon> -->
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <app-profile-paie [currentUser]="currentUser"></app-profile-paie>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title class="d-flex flex-nowrap align-items-center justify-content-space-between">
+                                        <h5>Mes Heures supp.</h5> 
+                                        <!-- <mat-icon>date_range</mat-icon> -->
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <app-profil-heures-supp [currentUser]="currentUser"></app-profil-heures-supp>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title class="d-flex flex-nowrap align-items-center justify-content-space-between">
+                                        <h5>Mes présences</h5> 
+                                        <!-- <mat-icon>date_range</mat-icon> -->
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                    <app-profil-presences [currentUser]="currentUser"></app-profil-presences>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)" hideToggle>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title class="d-flex flex-nowrap align-items-center justify-content-space-between">
+                                        <h5>Mes primes</h5> 
+                                        <!-- <mat-icon>date_range</mat-icon> -->
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                    <app-profil-primes [currentUser]="currentUser"></app-profil-primes>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel [expanded]="step === 4" (opened)="setStep(4)" hideToggle>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title class="d-flex flex-nowrap align-items-center justify-content-space-between">
+                                        <h5>Mes performances</h5> 
+                                        <!-- <mat-icon>date_range</mat-icon> -->
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                    <app-profil-performance [currentUser]="currentUser"></app-profil-performance>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel [expanded]="step === 5" (opened)="setStep(5)" hideToggle>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title class="d-flex flex-nowrap align-items-center justify-content-space-between">
+                                        <h5>Mes pénalités</h5> 
+                                        <!-- <mat-icon>date_range</mat-icon> -->
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                    <app-profil-penalites [currentUser]="currentUser"></app-profil-penalites>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel [expanded]="step === 6" (opened)="setStep(6)" hideToggle>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title class="d-flex flex-nowrap align-items-center justify-content-space-between">
+                                        <h5>Mes avances salaire</h5> 
+                                        <!-- <mat-icon>date_range</mat-icon> -->
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header> 
+                                    <app-profil-avances-salaire [currentUser]="currentUser"></app-profil-avances-salaire>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </mat-card-content>
+                </mat-card> 
+                
+            </div> 
+        
+    </div>
+</ng-container>

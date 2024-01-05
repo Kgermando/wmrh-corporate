@@ -1,0 +1,35 @@
+
+<div class="calc-body">
+
+	<div class="calc-screen">
+		<input type="text" [ngModel]="formattedTokens" id="calc-operation" readonly>
+		<input type="text" [ngModel]="input" id="calc-typed" readonly>
+	</div>
+	
+	<div class="calc-button-row">
+		<button class="ac" (click)="reset()">AC</button>
+		<button class="opt" (click)="execOperator('(')">(</button>
+		<button class="opt" (click)="execOperator(')')">)</button>
+		<button class="opt" (click)="execOperator('/')">/</button>
+
+		<button (click)="insertChar('1')">1</button>
+		<button  (click)="insertChar('2')">2</button>
+		<button (click)="insertChar('3')">3</button>
+		<button class="opt" (click)="execOperator('*')">x</button>
+
+		<button  (click)="insertChar('4')">4</button>
+		<button  (click)="insertChar('5')">5</button>
+		<button   (click)="insertChar('6')">6</button>
+		<button class="opt" (click)="execOperator('+')">+</button>
+
+		<button (click)="insertChar('7')">7</button>
+		<button  (click)="insertChar('8')">8</button>
+		<button  (click)="insertChar('9')">9</button>
+		<button class="opt"  (click)="execOperator('-')">-</button>
+
+		<button (click)="insertChar('0')">0</button>
+		<button  (click)="insertChar('.')">,</button>
+		<button autofocus class="equal" (click)="evaluate()">=</button>
+	</div>
+</div>
+

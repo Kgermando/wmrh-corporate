@@ -1,0 +1,76 @@
+<mat-card class="mb-25 tagus-card" [class.component-dark-theme]="themeService.isDark()">
+    <mat-card-header>
+        <h4 class="mb-0">Liste des entreprises</h4>
+        <button mat-flat-button class="default-btn tagus m-0 margin" 
+            routerLink="/layouts/support/reglages-admin-add">
+            <i class="ri-add-fill"></i> Ajouter l'entreprise
+        </button> 
+    </mat-card-header>
+    <mat-card-content> 
+        <div class="tagus-form-group">
+            <mat-form-field appearance="fill">
+                <i class="ri-search-line"></i>
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+        </div>
+        <div class="mat-elevation-z8 tagus-mat-table">
+            <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
+ 
+                <ng-container matColumnDef="statut">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>statut</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/support/entreprises', element.id, 'entreprise-view']"
+                            *ngIf="element.statut">
+                            Actif
+                        </a>
+                        <a [routerLink]="['/layouts/support/entreprises', element.id, 'entreprise-view']"
+                            *ngIf="!element.statut">
+                            Inactif
+                        </a>
+                    </td>
+                </ng-container> 
+ 
+                 <ng-container matColumnDef="company_name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Entreprise</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/support/entreprises', element.id, 'entreprise-view']">
+                            {{element.company_name}} 
+                        </a>
+                    </td>
+                </ng-container>  
+
+                <ng-container matColumnDef="code_entreprise">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>code_entreprise</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/support/entreprises', element.id, 'entreprise-view']">
+                            {{element.code_entreprise}} 
+                        </a> 
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rccm">
+                    <th mat-header-cell *matHeaderCellDef>RCCM</th>
+                    <td mat-cell *matCellDef="let element">{{element.rccm}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="responsable">
+                    <th mat-header-cell *matHeaderCellDef>Responsable</th>
+                    <td mat-cell *matCellDef="let element">{{element.responsable}}</td>
+                </ng-container> 
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+ 
+            </table>
+            <mat-paginator [pageSizeOptions]="[15, 30, 45]" showFirstLastButtons></mat-paginator>
+            <div *ngIf="isLoading" 
+                style="display: flex; justify-content: center; align-items: center; background: white;">
+                <mat-progress-spinner [diameter]="30"
+                    color="primary" 
+                    mode="indeterminate">
+                </mat-progress-spinner>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

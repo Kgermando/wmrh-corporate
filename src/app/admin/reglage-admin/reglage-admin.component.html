@@ -1,0 +1,133 @@
+<div
+    class="justify-content-center"
+    [class.component-dark-theme]="themeService.isDark()" 
+> 
+    <mat-card class="mb-25 tagus-card">
+        <mat-card-header>
+            <h4 class="mb-0">Liste des reglages</h4> 
+        </mat-card-header>
+        <mat-card-content>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="fw-semibold gray-color pr-10">ID </th> 
+                            <th class="fw-semibold gray-color pr-10 text-start">company_name </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">nbr_employe </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">cnss </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">rccm </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">id_nat </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">numero_impot </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">email </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">telephone </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">adresse </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">date_paie </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">cnss_qpp </th> 
+                            <th class="fw-semibold gray-color pr-10 text-start">inpp </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">onem </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">cotisation_syndicale </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">cnss_qpo </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">smig </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">nbre_heure_travail </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">taux_dollard </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">prise_en_charge_frais_bancaire </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">courses_transport </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">montant_travailler_quadre </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">montant_travailler_non_quadre </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">new_year </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">noel </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">martyr_day </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">kabila_day </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">lumumba_day </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">labour_day </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">liberation_day </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">indepence_day </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">parent_day </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">kimbangu_day </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">prime_ancien_0 </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">prime_ancien_5 </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">prime_ancien_10 </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">prime_ancien_15 </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">prime_ancien_20 </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">prime_ancien_25 </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">bareme_3 </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">bareme_15 </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">bareme_30 </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">Signature </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">created </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">Update </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">Entreprise </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">Code entreprise </th>
+                            <th class="fw-semibold gray-color pr-10 text-start">Delete </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of preferenceList">
+                            <td class="gray-color pr-10">{{item.id}} </td> 
+                            <td class="gray-color pr-10" *ngIf="item.company">{{item.company.company_name}}</td> 
+                            <td class="gray-color pr-10" *ngIf="!item.company">-</td>
+                            <td class="gray-color pr-10" *ngIf="item.company">{{item.company.nbre_employe}}</td>
+                            <td class="gray-color pr-10" *ngIf="!item.company">-</td>
+                            <td class="gray-color pr-10" *ngIf="item.company">{{item.company.numero_cnss}}</td> 
+                            <td class="gray-color pr-10" *ngIf="!item.company">-</td>
+                            <td class="gray-color pr-10" *ngIf="item.company">{{item.company.rccm}}</td> 
+                            <td class="gray-color pr-10" *ngIf="!item.company">-</td>
+                            <td class="gray-color pr-10" *ngIf="item.company">{{item.company.id_nat}}</td> 
+                            <td class="gray-color pr-10" *ngIf="!item.company">-</td>
+                            <td class="gray-color pr-10" *ngIf="item.company">{{item.company.numero_impot}}</td> 
+                            <td class="gray-color pr-10" *ngIf="!item.company">-</td>
+                            <td class="gray-color pr-10" *ngIf="item.company">{{item.company.email}}</td> 
+                            <td class="gray-color pr-10" *ngIf="!item.company">-</td>
+                            <td class="gray-color pr-10" *ngIf="item.company">{{item.company.telephone}}</td> 
+                            <td class="gray-color pr-10" *ngIf="!item.company">-</td>
+                            <td class="gray-color pr-10" *ngIf="item.company">{{item.company.adresse}}</td>
+                            <td class="gray-color pr-10" *ngIf="!item.company">-</td>
+                            <td class="gray-color pr-10">{{item.date_paie  | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.cnss_qpp}}</td> 
+                            <td class="gray-color pr-10">{{item.inpp}}</td> 
+                            <td class="gray-color pr-10">{{item.onem}}</td> 
+                            <td class="gray-color pr-10">{{item.cotisation_syndicale}}</td> 
+                            <td class="gray-color pr-10">{{item.cnss_qpo}}</td> 
+                            <td class="gray-color pr-10">{{item.smig}}</td>
+                            <td class="gray-color pr-10">{{item.nbre_heure_travail}}</td>
+                            <td class="gray-color pr-10">{{item.taux_dollard}}</td>
+                            <td class="gray-color pr-10">{{item.prise_en_charge_frais_bancaire}}</td>
+                            <td class="gray-color pr-10">{{item.courses_transport}}</td>
+                            <td class="gray-color pr-10">{{item.montant_travailler_quadre}}</td>
+                            <td class="gray-color pr-10">{{item.montant_travailler_non_quadre}}</td>
+                            <td class="gray-color pr-10">{{item.new_year | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.noel | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.martyr_day | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.kabila_day | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.lumumba_day | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.labour_day | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.liberation_day | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.indepence_day | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.parent_day | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.kimbangu_day  | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.prime_ancien_0}} %</td>
+                            <td class="gray-color pr-10">{{item.prime_ancien_5}} %</td>
+                            <td class="gray-color pr-10">{{item.prime_ancien_10}} %</td>
+                            <td class="gray-color pr-10">{{item.prime_ancien_15}} %</td>
+                            <td class="gray-color pr-10">{{item.prime_ancien_20}} %</td>
+                            <td class="gray-color pr-10">{{item.prime_ancien_25}} %</td>
+                            <td class="gray-color pr-10">{{item.bareme_3}}</td>
+                            <td class="gray-color pr-10">{{item.bareme_15}}</td>
+                            <td class="gray-color pr-10">{{item.bareme_30}}</td>
+                            <td class="gray-color pr-10">{{item.signature}}</td>
+                            <td class="gray-color pr-10">{{item.created  | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.update_created  | date: 'dd-MM-yyyy'}}</td>
+                            <td class="gray-color pr-10">{{item.entreprise}}</td>
+                            <td class="gray-color pr-10">{{item.code_entreprise}}</td> 
+                            <td class="gray-color pr-10"> 
+                                <button mat-icon-button color="accent" (click)="delete(item.id)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td> 
+                        </tr> 
+                    </tbody>
+                </table>
+            </div>
+        </mat-card-content>
+    </mat-card> 
+</div> 

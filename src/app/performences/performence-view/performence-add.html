@@ -1,0 +1,135 @@
+<div class="create-dialog-box scrollable-dialog">
+    <div class="title d-flex align-items-center justify-content-space-between">
+        <h4 class="mb-0">Ajout performance</h4>
+        <button class="close-btn bg-transparent p-0 border-none" (click)="close()"><i class="flaticon-close"></i></button>
+    </div>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="row d-flex align-items-center justify-content-center">
+                    <div class="col-lg-8 col-md-8 col-sm-9">
+                        <div class="tagus-form-group">
+                            <label class="d-block mb-12 fw-semibold gray-color">Ponctualité </label>
+                            <mat-form-field appearance="fill">
+                                <i class="ri-edit-2-line"></i>
+                                <mat-label>Entrer la note ponctualité </mat-label>
+                                <input matInput type="number"   
+                                    formControlName="ponctualite" name="ponctualite">
+                                <mat-error *ngIf="formGroup.controls['ponctualite'].hasError('required')">
+                                    Ce champs est obligatoire!
+                                </mat-error>
+                                <mat-error *ngIf="formGroup.controls['ponctualite'].hasError('pattern')">
+                                    Uniquement les chiffres ! 
+                                </mat-error>
+                                <mat-error *ngIf="formGroup.controls['ponctualite'].hasError('min')">
+                                    Ce champs doit être supperiere à 0!
+                                </mat-error>
+                                <mat-error *ngIf="formGroup.controls['ponctualite'].hasError('max')">
+                                    Ce champs doit être inferieure à 10!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-3">
+                        <h3>/ 10</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="row d-flex align-items-center justify-content-center">
+                    <div class="col-lg-8 col-md-8 col-sm-9">
+                        <div class="tagus-form-group">
+                            <label class="d-block mb-12 fw-semibold gray-color">Hospitalité </label>
+                            <mat-form-field appearance="fill">
+                                <i class="ri-edit-2-line"></i>
+                                <mat-label>Entrer la note hospitalité </mat-label>
+                                <input matInput type="number"  
+                                    [min]="0" 
+                                    [max]="10"
+                                 formControlName="hospitalite" name="hospitalite">
+                                <mat-error *ngIf="formGroup.controls['hospitalite'].hasError('required')">
+                                    Ce champs est obligatoire!
+                                </mat-error>
+                                <mat-error *ngIf="formGroup.controls['hospitalite'].hasError('pattern')">
+                                    Uniquement les chiffres ! 
+                                </mat-error>
+                                <mat-error *ngIf="formGroup.controls['hospitalite'].hasError('min')">
+                                    Ce champs doit être supperiere à 0!
+                                </mat-error>
+                                <mat-error *ngIf="formGroup.controls['hospitalite'].hasError('max')">
+                                    Ce champs doit être inferieure à 10!
+                                </mat-error>
+                            </mat-form-field> 
+                        </div> 
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-3">
+                        <h3>/ 10</h3>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="row d-flex align-items-center justify-content-center">
+                    <div class="col-lg-8 col-md-8 col-sm-9">
+                        <div class="tagus-form-group">
+                            <label class="d-block mb-12 fw-semibold gray-color">Travail </label>
+                            <mat-form-field appearance="fill">
+                                <i class="ri-edit-2-line"></i>
+                                <mat-label>Entrer la note travail </mat-label>
+                                <input matInput type="number"  
+                                    [min]="0" 
+                                    [max]="10" formControlName="travail" name="travail">
+                                    <mat-error *ngIf="formGroup.controls['travail'].hasError('required')">
+                                        Ce champs est obligatoire!
+                                    </mat-error>
+                                    <mat-error *ngIf="formGroup.controls['travail'].hasError('pattern')">
+                                        Uniquement les chiffres ! 
+                                    </mat-error>
+                                    <mat-error *ngIf="formGroup.controls['travail'].hasError('min')">
+                                        Ce champs doit être supperiere à 0!
+                                    </mat-error>
+                                    <mat-error *ngIf="formGroup.controls['travail'].hasError('max')">
+                                        Ce champs doit être inferieure à 10!
+                                    </mat-error>
+                            </mat-form-field> 
+                        </div> 
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-3">
+                        <h3>/ 10</h3>
+                    </div>
+                </div>
+                
+            </div> 
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Observation </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer l'observation </mat-label>
+                        <input matInput type="text" formControlName="observation" name="observation">
+                        <mat-error *ngIf="formGroup.controls['observation'].hasError('required')">
+                            Ce champs est obligatoire!
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>  
+        </div>
+        <div class="d-flex justify-content-center" *ngIf="isLoading">
+            <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+        </div>
+        <div *ngIf="!isLoading">
+            <div class="text-end" *ngIf="currentUser">
+                <button type="button" class="gray" (click)="close()"><i class="ri-close-fill"></i> Annuler</button>
+                <button type="submit" *ngIf="currentUser.permission === 'C' || 
+                    currentUser.permission === 'CR' ||
+                    currentUser.permission === 'CRU' ||
+                    currentUser.permission === 'CRUD'">
+                    <i class="ri-edit-fill"></i> 
+                    Soumettre
+                </button>
+            </div>
+        </div>
+        
+    </form> 
+</div>
+ 

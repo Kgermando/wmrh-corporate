@@ -1,0 +1,96 @@
+
+<div
+    class="row justify-content-center"
+    [class.component-dark-theme]="themeService.isDark()" 
+>
+    <div class="col-lg-5 col-xl-4 col-md-12">
+        <mat-card class="mb-25 tacking-box tagus-card">
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Ajout entreprise</h5>
+            </mat-card-header>
+            <mat-card-content>
+                <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Nom de l'entreprise</label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer le nom de la companie</mat-label>
+                                    <input matInput type="text" formControlName="service" name="service">
+                                    <mat-error *ngIf="formGroup.controls['service'].hasError('required')">
+                                        Ce champs est obligatoire
+                                    </mat-error>
+                                </mat-form-field> 
+                            </div> 
+                        </div>
+                     </div>
+                     <div class="d-flex justify-content-center" *ngIf="isLoading">
+                        <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+                    </div>
+                    <div *ngIf="!isLoading">
+                        <div *ngIf="currentUser">
+                             <button mat-flat-button class="tagus d-block" *ngIf="currentUser.permission === 'C' || 
+                        currentUser.permission === 'CR' ||
+                        currentUser.permission === 'CRU' ||
+                        currentUser.permission === 'CRUD'">Soumettre</button> 
+                        </div>
+                       
+                    </div> 
+                </form> 
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="col-lg-7 col-xl-8 col-md-12">
+        <mat-card class="mb-25 tagus-card">
+            <mat-card-header>
+                <h5 class="mb-0">Liste des entreprises</h5>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="fw-semibold gray-color">N° </th> 
+                                <th class="fw-semibold gray-color text-start">Nom </th>
+                                <th class="fw-semibold gray-color">Signature </th> 
+                                <th class="fw-semibold gray-color">Action </th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of serviceList; index as i">
+                                <td class="gray-color">{{i + 1}}. </td> 
+                                <td class="text-start">
+                                    <a [routerLink]="['/layouts/preferences/services', item.id, 'detail']" class="d-flex align-items-center product-info"> 
+                                        <h5 class="fw-semibold mb-5">{{item.service}}</h5> 
+                                    </a>
+                                </td>  
+                                <td class="gray-color">{{item.signature}}</td> 
+                                <td class="gray-color" *ngIf="item.personnels.length == 0">
+                                    <button mat-icon-button color="primary" 
+                                    (click)="openEditDialog('300ms', '100ms', item.id)"
+                                    *ngIf="currentUser.permission === 'U' || 
+                                                currentUser.permission === 'RU' ||
+                                                currentUser.permission === 'CRU' ||
+                                                currentUser.permission === 'RUD' ||
+                                                currentUser.permission === 'CRUD'" matTooltip="Modifier">
+                                        <mat-icon>edit</mat-icon>
+                                    </button> 
+                                    <button mat-icon-button color="accent" 
+                                        (click)="delete(item.id)"
+                                        *ngIf="currentUser.permission === 'D' || 
+                                        currentUser.permission === 'RD' ||
+                                        currentUser.permission === 'RUD' || 
+                                        currentUser.permission === 'CRUD'" matTooltip="Supprimer ce document">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td> 
+                            </tr> 
+                        </tbody>
+                    </table>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+   
+</div>

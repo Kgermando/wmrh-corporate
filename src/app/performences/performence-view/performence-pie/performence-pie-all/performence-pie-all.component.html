@@ -1,0 +1,38 @@
+<div class="chart salesAnalyticsChart" *ngIf="prerformencePieList.length > 0">
+    <apx-chart
+        [series]="chartOptions.series!"
+        [chart]="chartOptions.chart!"
+        [dataLabels]="chartOptions.dataLabels!"
+        [plotOptions]="chartOptions.plotOptions!"
+        [responsive]="chartOptions.responsive!"
+        [xaxis]="chartOptions.xaxis!"
+        [grid]="chartOptions.grid!"
+        [yaxis]="chartOptions.yaxis!"
+        [legend]="chartOptions.legend!"
+        [colors]="chartOptions.colors!"
+        [fill]="chartOptions.fill!"
+    ></apx-chart>
+    <ul class="list d-flex align-items-center justify-content-space-between text-center mb-10">
+        <li class="muted-color fw-medium down">
+            <span class="d-block">Ponctualité</span>
+            <span class="gray-color d-inline-block position-relative badge text-soft-primary">
+                <!-- <i class="flaticon-right-arrow"></i>  -->
+                {{ponctualiteTotal}}
+            </span>
+        </li>
+        <li class="muted-color fw-medium">
+            <span class="d-block">Hospitalité</span>
+            <span class="gray-color d-inline-block position-relative badge text-soft-danger">
+                <!-- <i class="flaticon-right-arrow"></i>  -->
+                {{hospitaliteTotal}}
+            </span>
+        </li>
+        <li class="muted-color fw-medium down">
+            <span class="d-block">Travail</span>
+            <span class="gray-color d-inline-block position-relative badge text-soft-success">
+                <!-- <i class="flaticon-right-arrow"></i>  -->
+               {{travailTotal}}
+            </span>
+        </li>
+    </ul>
+</div>

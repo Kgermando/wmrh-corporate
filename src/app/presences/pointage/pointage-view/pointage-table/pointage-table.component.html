@@ -1,0 +1,110 @@
+
+<mat-card class="mb-25 tagus-card" [class.component-dark-theme]="themeService.isDark()">
+    <mat-card-header>
+        <h5 class="mb-0">Registre de presence de {{ personne.prenom}} {{ personne.nom}}</h5> 
+    </mat-card-header>
+    <mat-card-content> 
+        <div class="tagus-form-group">
+            <mat-form-field appearance="fill">
+                <i class="ri-search-line"></i>
+                <mat-label>Rechercher Ex: P</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+        </div>
+        <div class="mat-elevation-z8 tagus-mat-table">
+            <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
+                <!-- Matricule Column -->
+                <ng-container matColumnDef="matricule">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Matricule</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.matricule.toUpperCase()}}
+                    </td>
+                </ng-container>
+
+                 <!-- Nom Column -->
+                 <ng-container matColumnDef="apointement">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Pointage</th>
+                    <td mat-cell *matCellDef="let element"> 
+                        <span class="presence-form present" *ngIf="element.apointement == 'P'">Presence</span>
+                        <span class="presence-form absence-sans-autorisation" *ngIf="element.apointement == 'A'">Absence sans autorisation</span>
+                        <span class="presence-form absence-autorisee" *ngIf="element.apointement == 'AA'">Absence-autorisee</span>
+                        <span class="presence-form absent-maladie" *ngIf="element.apointement == 'AM'">Absent maladie</span>
+                        <span class="presence-form conge-circonstanciel" *ngIf="element.apointement == 'CC'">Congé circonstanciel</span>
+                        <span class="presence-form conge-annuel" *ngIf="element.apointement == 'CA'">Congé annuel</span>
+                        <span class="presence-form suspension" *ngIf="element.apointement == 'S'">Suspension</span>
+                        <span class="presence-form service-off" *ngIf="element.apointement == 'O'">Service OFF</span>
+                        <span class="presence-form mission" *ngIf="element.apointement == 'M'">Mission</span>
+                    </td>
+                </ng-container>
+ 
+                <ng-container matColumnDef="prestation">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Prestation</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.prestation }} 
+                    </td>
+                </ng-container> 
+
+                <ng-container matColumnDef="date_entree">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date d'entrée</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.date_entree | date: 'dd/MM/yyyy HH:mm:ss' }} 
+                    </td>
+                </ng-container> 
+
+                <ng-container matColumnDef="date_sortie">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de Reprise</th>
+                    <td mat-cell *matCellDef="let element">
+                        <div *ngIf="element.apointement === 'P' || element.apointement === 'A' ||
+                            element.apointement === 'AA'">
+                            -
+                        </div>
+                        <div *ngIf="element.apointement !== 'P' && element.apointement !== 'A' &&
+                                element.apointement !== 'AA'">
+                                {{ element.date_sortie | date: 'dd/MM/yyyy' }}
+                        </div>
+                    </td>
+                </ng-container> 
+ 
+                <ng-container matColumnDef="observation">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Observation</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.observation}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button color="primary"
+                         (click)="openEditDialog('300ms', '100ms', element.id)"
+                         *ngIf="currentUser.permission === 'U' || 
+                            currentUser.permission === 'RU' ||
+                            currentUser.permission === 'CRU' ||
+                            currentUser.permission === 'RUD' ||
+                            currentUser.permission === 'CRUD'" matTooltip="Modifier">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="accent" (click)="delete(element.id)"
+                            *ngIf="currentUser.permission === 'D' || 
+                            currentUser.permission === 'RD' ||
+                            currentUser.permission === 'RUD' || 
+                            currentUser.permission === 'CRUD'" matTooltip="Supprimer ce document">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+
+            </table>
+            <mat-paginator [pageSizeOptions]="[15, 30, 45]" showFirstLastButtons></mat-paginator>
+            <div *ngIf="isLoading"
+                style="display: flex; justify-content: center; align-items: center; background: white;">
+                <mat-progress-spinner [diameter]="30" 
+                    color="primary" 
+                    mode="indeterminate">
+                </mat-progress-spinner>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,19 @@
+<mat-card
+    class="mb-25 tagus-card milestones-overview-box"
+>
+    <mat-card-header class="border-bottom">
+        <mat-select type="button" mat-button class="position-relative p-0 bg-transparent border-none" 
+            value="Année"
+             (selectionChange)="onSelectChange($event)">
+            <mat-option *ngFor="let select of ['Année', 'All']" [value]="select">Filtre {{select.toUpperCase()}}</mat-option>
+        </mat-select>
+    </mat-card-header>
+    <mat-card-content>
+        <div *ngIf="isSelect == 'Année'">
+            <app-performence-pie-year [personne]="personne"></app-performence-pie-year>
+         </div>
+         <div *ngIf="isSelect == 'All'">
+            <app-performence-pie-all [personne]="personne"></app-performence-pie-all>
+         </div>
+    </mat-card-content>
+</mat-card>

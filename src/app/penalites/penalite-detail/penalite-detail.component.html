@@ -1,0 +1,112 @@
+ 
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div>
+<div *ngIf="!isLoading">
+    <div class="row" *ngIf="penalite">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header class="border-bottom">
+                    <h4 class="mb-0">Penalités</h4>
+                    <div> 
+                        <button mat-icon-button color="accent" 
+                            (click)="openEditDialog('300ms', '100ms', penalite.id)"
+                            *ngIf="currentUser.permission === 'U' || 
+                            currentUser.permission === 'RU' ||
+                            currentUser.permission === 'CRU' ||
+                            currentUser.permission === 'RUD' ||
+                            currentUser.permission === 'CRUD'" matTooltip="Modifier ce document">
+                                <mat-icon>edit</mat-icon>
+                        </button> 
+                        <button mat-icon-button color="warn" 
+                                (click)="delete(penalite.id)"
+                            *ngIf="currentUser.permission === 'D' || 
+                                currentUser.permission === 'RD' ||
+                                currentUser.permission === 'RUD' || 
+                                currentUser.permission === 'CRUD'" matTooltip="Supprimer ce document">
+                                <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </mat-card-header>
+                <mat-card-content> 
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold d-inline-block">Identifiant: </span>
+                                    <span class="gray-color">{{ penalite.personnel.matricule.toUpperCase() }}</span>
+                                </li>
+                                <li>
+                                    <span class="fw-semibold d-inline-block">Nom complet: </span>
+                                    <span class="gray-color">
+                                        {{ penalite.personnel.nom }}
+                                        {{ penalite.personnel.postnom }}
+                                        {{ penalite.personnel.prenom }}
+                                    </span>
+                                </li> 
+                            </ul>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold d-inline-block">Date: </span>
+                                    <span class="gray-color">{{penalite.created | date: 'dd/MM/yyyy HH:mm'}}</span>
+                                </li>
+                                <li>
+                                    <span class="fw-semibold d-inline-block">Mise à jour: </span>
+                                    <span class="gray-color">{{penalite.update_created | date: 'dd/MM/yyyy HH:mm'}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>  
+                </mat-card-content>
+                <mat-card-content> 
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <ul class="list ps-0 mb-0">
+                                <li>
+                                    <span class="fw-semibold d-inline-block">Intitule: </span>
+                                    <span class="gray-color">{{ penalite.intitule }}</span>
+                                </li>
+                                <!-- <li>
+                                    <span class="fw-semibold d-inline-block">Montant: </span>
+                                    <span class="gray-color">
+                                        <span class="badge text-soft-danger" *ngIf="isMoisSuivantValid || isMoisSuivantANValid">
+                                            {{ penalite.montant | numberFormat:'fr-FR' }} {{ penalite.monnaie }} <sup>+1</sup>
+                                        </span>
+                                        
+                                        <span class="badge text-soft-danger" *ngIf="!isMoisSuivantValid && isValid">
+                                            {{ penalite.montant | numberFormat:'fr-FR' }} {{ penalite.monnaie }}
+                                        </span>
+                                        
+                                        <span *ngIf="isMoisPrecedentValid && !isValid">
+                                           <del>{{ penalite.montant | numberFormat:'fr-FR' }} {{ penalite.monnaie }}</del> 
+                                        </span>
+                                    </span>
+                                </li> -->
+                                <li>
+                                    <span class="fw-semibold d-inline-block">Montant: </span>
+                                    <span class="gray-color">
+                                        <span class="badge text-soft-danger" *ngIf="!isMoisPrecedent">
+                                            {{ penalite.montant | numberFormat:'fr-FR' }} {{ penalite.monnaie }}
+                                        </span>
+                                        <span *ngIf="isMoisPrecedent">
+                                            <del>{{ penalite.montant | numberFormat:'fr-FR' }} {{ penalite.monnaie }}</del> 
+                                         </span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="fw-semibold d-inline-block">Signature: </span>
+                                    <span class="gray-color">{{ penalite.signature }}</span>
+                                </li>
+                            </ul>
+                        </div> 
+                    </div>  
+                </mat-card-content>
+            </mat-card> 
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12"> 
+            <app-penalite-table [penalite]="penalite" [preference]="preference"></app-penalite-table>
+        </div> 
+    </div>
+</div>

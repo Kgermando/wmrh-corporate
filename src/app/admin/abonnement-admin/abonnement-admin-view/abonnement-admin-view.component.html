@@ -1,0 +1,63 @@
+
+
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div>
+<div *ngIf="!isLoading">
+    <div class="row" *ngIf="abonnement">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header class="border-bottom">
+                    <h5 class="mb-0" *ngIf="abonnement.entreprise">{{abonnement.entreprise.company_name}}</h5>
+                    <div>
+                        <button mat-icon-button color="primary" 
+                        (click)="openEditDialog('300ms', '100ms', abonnement.id)" matTooltip="Modifier ce document">
+                        <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="accent" matTooltip="Supprimer ce document">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </mat-card-header>
+                <mat-card-content> 
+                    <ul class="list ps-0 mb-0">
+                        <li>
+                            <span class="fw-semibold d-inline-block">Devise: </span>
+                            <span class="gray-color">{{ abonnement.devise }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Taux devise: </span>
+                            <span class="gray-color">{{ abonnement.taux_devise }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Montant: </span>
+                            <span class="gray-color">{{ abonnement.montant }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Reference: </span>
+                            <span class="gray-color">{{ abonnement.reference }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Responsable: </span>
+                            <span class="gray-color">{{ abonnement.responsable }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Bouquet: </span>
+                            <span class="gray-color">{{ abonnement.bouquet }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Durée paiement: </span>
+                            <span class="gray-color">{{ abonnement.dure_paiement }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block mb-10">Bordereau: </span>
+                            <img [src]="abonnement.bordereau">
+                        </li>
+                      
+                    </ul> 
+                </mat-card-content>
+            </mat-card> 
+        </div>
+         
+    </div>
+</div>

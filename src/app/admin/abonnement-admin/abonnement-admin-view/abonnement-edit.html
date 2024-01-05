@@ -1,0 +1,130 @@
+<div class="create-dialog-box scrollable-dialog">
+    <div class="title d-flex align-items-center justify-content-space-between">
+        <h4 class="mb-0">Infos entreprise</h4>
+        <button class="close-btn bg-transparent p-0 border-none" (click)="close()"><i class="flaticon-close"></i></button>
+    </div>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <div class="row"> 
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Devise</label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer la monnaie</mat-label>
+                        <mat-select formControlName="devise">
+                            <mat-option *ngFor="let monnaie of monnaieList" [value]="monnaie">
+                                {{monnaie}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formGroup.controls['devise'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field>
+                </div> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Taux de devise </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le Taux devise</mat-label>
+                        <input matInput type="text" id="taux_devise" formControlName="taux_devise" required>
+                            <mat-error *ngIf="formGroup.controls['taux_devise'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                    </mat-form-field> 
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Montant </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le montant</mat-label>
+                        <input matInput type="text" formControlName="montant" name="montant">
+                        <mat-error *ngIf="formGroup.controls['montant'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Numéro reference </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le N° reference</mat-label>
+                        <input matInput type="text" formControlName="reference" name="reference">
+                        <mat-error *ngIf="formGroup.controls['reference'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Responsable </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le responsable</mat-label>
+                        <input matInput type="text" formControlName="responsable" name="responsable">
+                        <mat-error *ngIf="formGroup.controls['responsable'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group"> 
+                    <label class="d-block mb-12 fw-semibold gray-color">Bouquet</label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le bouquet</mat-label>
+                        <mat-select formControlName="bouquet">
+                            <mat-option *ngFor="let bouquet of bouquetList" [value]="bouquet">
+                                {{bouquet}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formGroup.controls['bouquet'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field>
+                </div>   
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Durée de paiement </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer la durée de paiement</mat-label>
+                        <input matInput type="text" formControlName="dure_paiement" name="dure_paiement">
+                        <mat-error *ngIf="formGroup.controls['dure_paiement'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Scanner le Bordereau </label>
+                    <div class="tagus-form-group ms-20"> 
+                        <input formControlName="bordereau" hidden type="hidden" name="bordereau"> 
+                        <app-upload (uploadedUrl)="formGroup.patchValue({'bordereau': $event})"></app-upload>  
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center" *ngIf="isLoading">
+            <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+        </div>
+        <div class="text-end" *ngIf="!isLoading && currentUser">
+            <button type="button" class="gray" (click)="close()"><i class="ri-close-fill"></i> Annuler</button>
+            <button type="submit"
+            *ngIf="currentUser.permission === 'C' || 
+                                currentUser.permission === 'CR' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'CRUD'"
+                    ><i class="ri-edit-fill"></i> Soumettre</button>
+        </div>
+    </form> 
+</div>

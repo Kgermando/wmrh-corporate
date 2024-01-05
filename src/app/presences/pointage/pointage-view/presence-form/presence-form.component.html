@@ -1,0 +1,223 @@
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div> 
+<div *ngIf="!isLoading">
+    <div *ngIf="apointementItem">
+        <div class="personal-info-card" *ngIf="
+            isPToday || isAToday || 
+            isAAToday || isAMToday || 
+            isCDToday || isCAToday || 
+            isCOToday || isSToday || isOToday || isMToday"> 
+            <p>PRESENCE SORTIE</p>
+            <ul class="list ps-0 mb-25">
+                <li>
+                    <span class="fw-semibold d-inline-block">Identifiant: </span>
+                    <span class="gray-color">{{ apointementItem.matricule }}</span>
+                </li>
+                <li>
+                    <span class="fw-semibold d-inline-block">Pointage: </span> 
+                    <span class="presence-form present" *ngIf="apointementItem.apointement == 'P'">Present</span>
+                    <span class="presence-form absence-sans-autorisation" *ngIf="apointementItem.apointement == 'A'">Absence sans autorisation</span>
+                    <span class="presence-form absence-autorisee" *ngIf="apointementItem.apointement == 'AA'">Absence autorisee</span>
+                    <span class="presence-form absent-maladie" *ngIf="apointementItem.apointement == 'AM'">Absent maladie</span>
+                    <span class="presence-form conge-circonstanciel" *ngIf="apointementItem.apointement == 'CC'">Congé circonstanciel</span>
+                    <span class="presence-form conge-annuel" *ngIf="apointementItem.apointement == 'CA'">Congé annuel</span> 
+                    <span class="presence-form suspension" *ngIf="apointementItem.apointement == 'S'">Suspension</span>
+                    <span class="presence-form service-off" *ngIf="apointementItem.apointement == 'O'">Service OFF</span>
+                    <span class="presence-form mission" *ngIf="apointementItem.apointement == 'M'">Mission</span>
+                </li>
+                <li *ngIf="apointementItem.prestation != '0'">
+                    <span class="fw-semibold d-inline-block">Prestation: </span>
+                    <span class="gray-color" *ngIf="apointementItem.prestation == '1'">Journée entière</span>
+                    <span class="gray-color" *ngIf="apointementItem.prestation == '0.5'">Demi-journée</span>
+                </li>
+                <li>
+                    <span class="fw-semibold d-inline-block">Date et Heure d'entrée: </span>
+                    <span class="gray-color">{{ apointementItem.date_entree | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+                </li>
+                <li>
+                    <span class="fw-semibold d-inline-block">Observation: </span>
+                    <span class="gray-color">{{ apointementItem.observation }}</span>
+                </li>
+               
+                <li *ngIf="apointementItem.apointement !== 'P' && apointementItem.apointement !== 'A' &&
+                    apointementItem.apointement !== 'AA'">
+                    <span class="fw-semibold d-inline-block">Date de reprise: </span>
+                    <span class="gray-color">{{ apointementItem.date_sortie | date: 'dd/MM/yyyy' }}</span>
+                </li>
+            </ul>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <button mat-flat-button class="tagus d-block" disabled="isAbsense">
+                        <span *ngIf="apointementItem.apointement == 'P'">Present</span>
+                        <span *ngIf="apointementItem.apointement == 'A'">Absence sans autorisation</span>
+                        <span *ngIf="apointementItem.apointement == 'AA'">Absence autorisee</span>
+                        <span *ngIf="apointementItem.apointement == 'AM'">Absent maladie</span>
+                        <span *ngIf="apointementItem.apointement == 'CC'">Congé circonstanciel</span>
+                        <span *ngIf="apointementItem.apointement == 'CA'">Congé annuel</span> 
+                        <span *ngIf="apointementItem.apointement == 'S'">Suspension</span>
+                        <span *ngIf="apointementItem.apointement == 'O'">Service OFF</span>
+                        <span *ngIf="apointementItem.apointement == 'M'">Mission</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+         
+        <div class="tagus-form-group" *ngIf="isPTodayForm || 
+            isATodayForm ||  isAATodayForm ||
+            isAMTodayForm || isCDTodayForm || 
+            isCATodayForm ||isSTodayForm || 
+            isOTodayForm || isMTodayForm">
+
+            <p>PRESENCE ENTRER</p>
+            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="tagus-form-group">
+                            <label class="d-block mb-12 fw-semibold gray-color">Presence </label>
+                            <mat-form-field appearance="fill">
+                                <i class="ri-user-line"></i>
+                                <mat-label>Select apointement</mat-label>
+                                <mat-select formControlName="apointement" (selectionChange)="onPresenceChange($event)">
+                                    <mat-option *ngFor="let apointement of apointementList" [value]="apointement">{{apointement}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formGroup.controls['apointement'].hasError('required')">
+                                    Ce champs est obligatoire
+                                </mat-error>
+                            </mat-form-field>
+                        </div> 
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="isPresence">
+                        <div class="tagus-form-group">
+                            <label class="d-block mb-12 fw-semibold gray-color">Prestation </label>
+                            <mat-form-field appearance="fill">
+                                <i class="ri-user-line"></i>
+                                <mat-label>Select la prestation de la journée</mat-label>
+                                <mat-select formControlName="prestation">
+                                    <mat-option *ngFor="let prestation of prestationList" [value]="prestation.cote">{{prestation.pres}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formGroup.controls['prestation'].hasError('required')">
+                                    Ce champs est obligatoire
+                                </mat-error>
+                            </mat-form-field>
+                        </div> 
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="isAbsense">
+                        <div class="tagus-form-group">
+                            <label class="d-block mb-12 fw-semibold gray-color">Date de reprise</label>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Date de reprise</mat-label>
+                                <input matInput [matDatepicker]="picker" formControlName="date_sortie" required="Champs obligatoire">
+                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker> 
+                                <mat-error *ngIf="formGroup.controls['date_sortie'].hasError('required')">
+                                    Ce champs est obligatoire
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="tagus-form-group">
+                            <label class="d-block mb-12 fw-semibold gray-color">Observation </label>
+                            <mat-form-field appearance="fill">
+                                <i class="ri-edit-2-line"></i>
+                                <mat-label>Entrer l'observation</mat-label>
+                                <textarea matInput rows="2" formControlName="observation" name="observation"></textarea>
+                                <mat-error *ngIf="formGroup.controls['observation'].hasError('required')">
+                                    Ce champs est obligatoire
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center" *ngIf="isLoadingForm">
+                    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+                </div>
+                <div *ngIf="!isLoadingForm">
+                    <button mat-flat-button class="tagus d-block">Soumettre</button> 
+                </div> 
+            </form>
+        </div>
+      
+    </div>
+</div>
+
+<div *ngIf="!apointementItem">
+    <div class="tagus-form-group">
+        <p>PRESENCE ENTRER</p>
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="tagus-form-group">
+                        <label class="d-block mb-12 fw-semibold gray-color">Presence </label>
+                        <mat-form-field appearance="fill">
+                            <i class="ri-user-line"></i>
+                            <mat-label>Select apointement</mat-label>
+                            <mat-select formControlName="apointement" (selectionChange)="onPresenceChange($event)">
+                                <mat-option *ngFor="let apointement of apointementList" [value]="apointement">{{apointement}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="formGroup.controls['apointement'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </mat-form-field>
+                    </div> 
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="isPresence">
+                    <div class="tagus-form-group">
+                        <label class="d-block mb-12 fw-semibold gray-color">Prestation </label>
+                        <mat-form-field appearance="fill">
+                            <i class="ri-user-line"></i>
+                            <mat-label>Select la prestation de la journée</mat-label>
+                            <mat-select formControlName="prestation">
+                                <mat-option *ngFor="let prestation of prestationList" [value]="prestation.cote">{{prestation.pres}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="formGroup.controls['prestation'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </mat-form-field>
+                    </div> 
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="isAbsense">
+                    <div class="tagus-form-group">
+                        <label class="d-block mb-12 fw-semibold gray-color">Date de reprise</label>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Date de reprise</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="date_sortie" required="Champs obligatoire">
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker> 
+                            <mat-error *ngIf="formGroup.controls['date_sortie'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="tagus-form-group">
+                        <label class="d-block mb-12 fw-semibold gray-color">Observation </label>
+                        <mat-form-field appearance="fill">
+                            <i class="ri-edit-2-line"></i>
+                            <mat-label>Entrer l'observation</mat-label>
+                            <textarea matInput rows="2" formControlName="observation" name="observation"></textarea>
+                            <mat-error *ngIf="formGroup.controls['observation'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center" *ngIf="isLoading">
+                <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+            </div>
+            <div *ngIf="currentUser"> 
+                <div *ngIf="!isLoading"> 
+                    <button mat-flat-button class="tagus d-block"
+                        *ngIf="currentUser.permission === 'C' || 
+                                currentUser.permission === 'CR' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'CRUD'"
+                >Soumettre</button>     
+                </div> 
+            </div> 
+        </form>
+    </div>
+</div>

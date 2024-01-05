@@ -1,0 +1,267 @@
+
+<div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayout.md="column" fxLayoutGap="25px" fxLayoutGap.xs="0" fxLayoutGap.sm="0" fxLayoutGap.md="0">
+    <div fxFlex="66.666666%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="col">
+
+        <mat-card class="mb-25 tagus-card audienceOverview-box">
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Total des allocations</h5>
+               
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="isLoading" 
+                    style="display: flex; justify-content: center; align-items: center; background: white;">
+                    <mat-progress-spinner [diameter]="30"
+                        color="primary" 
+                        mode="indeterminate">
+                    </mat-progress-spinner>
+                </div>
+                <div class="chart audienceOverviewChart" *ngIf="!isLoading && allocationList.length > 0">
+                    <apx-chart
+                        [series]="chartOptionAllocations.series!"
+                        [chart]="chartOptionAllocations.chart!"
+                        [dataLabels]="chartOptionAllocations.dataLabels!"
+                        [plotOptions]="chartOptionAllocations.plotOptions!"
+                        [yaxis]="chartOptionAllocations.yaxis!"
+                        [legend]="chartOptionAllocations.legend!"
+                        [fill]="chartOptionAllocations.fill!"
+                        [stroke]="chartOptionAllocations.stroke!"
+                        [tooltip]="chartOptionAllocations.tooltip!"
+                        [xaxis]="chartOptionAllocations.xaxis!"
+                        [colors]="chartOptionAllocations.colors!"
+                        [grid]="chartOptionAllocations.grid!"
+                    ></apx-chart>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mb-25 tagus-card customer-satisfaction-box">
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Performances du personnel</h5> 
+                
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="isLoading" 
+                    style="display: flex; justify-content: center; align-items: center; background: white;">
+                    <mat-progress-spinner [diameter]="30"
+                        color="primary" 
+                        mode="indeterminate">
+                    </mat-progress-spinner>
+                </div>
+                <div class="chart salesAnalyticsChart" *ngIf="!isLoading && prerformencePieList.length > 0">
+                    <apx-chart
+                        [series]="chartOptions.series!"
+                        [chart]="chartOptions.chart!"
+                        [dataLabels]="chartOptions.dataLabels!"
+                        [plotOptions]="chartOptions.plotOptions!"
+                        [responsive]="chartOptions.responsive!"
+                        [xaxis]="chartOptions.xaxis!"
+                        [grid]="chartOptions.grid!"
+                        [yaxis]="chartOptions.yaxis!"
+                        [legend]="chartOptions.legend!"
+                        [colors]="chartOptions.colors!"
+                        [fill]="chartOptions.fill!"
+                    ></apx-chart>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        
+        <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayout.md="column" fxLayoutGap="25px" fxLayoutGap.xs="0" fxLayoutGap.sm="0" fxLayoutGap.md="0">
+            <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="col">
+                <mat-card class="mb-25 tagus-card audienceOverview-box">
+                    <mat-card-header class="border-bottom">
+                        <h5 class="mb-0">Taux de presences</h5>
+                        
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div *ngIf="isLoading" 
+                        style="display: flex; justify-content: center; align-items: center; background: white;">
+                        <mat-progress-spinner [diameter]="30"
+                            color="primary" 
+                            mode="indeterminate">
+                        </mat-progress-spinner>
+                    </div> 
+                        <div class="chart activeCoursesChart" *ngIf="!isLoading && presencePieList.length > 0">
+                            <apx-chart
+                                [series]="chartOptionPresence.series!"
+                                [chart]="chartOptionPresence.chart!"
+                                [colors]="chartOptionPresence.colors!"
+                                [tooltip]="chartOptionPresence.tooltip!"
+                                [stroke]="chartOptionPresence.stroke!"
+                                [dataLabels]="chartOptionPresence.dataLabels!"
+                                [legend]="chartOptionPresence.legend!"
+                                [labels]="chartOptionPresence.labels!"
+                            ></apx-chart>
+                        </div> 
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="col">
+                <mat-card class="mb-25 terminals-box tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                    <mat-card-header class="border-bottom">
+                        <h5 class="mb-0">Taux de recrutements</h5>
+                        
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="terminals-list position-relative">
+                            <div class="terminal-box position-relative rounded-circle text-center">
+                                <div class="text"> 
+                                    <h4>{{recrutements}}</h4>
+                                    <span>Recrutements</span>
+                                </div>
+                            </div>
+                            <div class="terminal-box position-relative rounded-circle text-center">
+                                <div class="text">
+                                    <div *ngIf="isLoading" 
+                                        style="display: flex; justify-content: center; align-items: center; background: white;">
+                                        <mat-progress-spinner [diameter]="10"
+                                            color="primary" 
+                                            mode="indeterminate">
+                                        </mat-progress-spinner>
+                                    </div> 
+                                    <h4>{{postulants}}</h4>
+                                    <span>Postulants</span>
+                                </div>
+                            </div>
+                            <div class="terminal-box position-relative rounded-circle text-center">
+                                <div class="text"> 
+                                    <h4>{{recrus}}</h4>
+                                    <span>Récrus</span>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list text-center ps-0 mb-0">
+                            <li class="position-relative gray-color">Recrutements</li>
+                            <li class="position-relative gray-color">Postulants</li>
+                            <li class="position-relative gray-color">Récrus</li>
+                        </ul>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <div fxFlex="33.333333%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="col">
+        <mat-card
+            class="mb-25 tagus-card impressions-box" 
+            >
+            <mat-card-content>
+                <h6>Masse salariale</h6> 
+                <a routerLink="/layouts/salaires/releve-paie" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <h3>{{ netAPayer  | numberFormat:'fr-FR'}} FC</h3> 
+                    <!-- <p>Dépenses effectuée depuis 10 ans</p> -->
+                </a>
+                
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mb-25 tagus-card  my-profile-box">
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Progression de paie</h5>  
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="isLoading" 
+                    style="display: flex; justify-content: center; align-items: center; background: white;">
+                    <mat-progress-spinner [diameter]="30"
+                        color="primary" 
+                        mode="indeterminate">
+                    </mat-progress-spinner>
+                </div> 
+                <div class="myProfileChart position-relative">
+                    <div class="chart" *ngIf="!isLoading && statutPaieList.length > 0">
+                        <apx-chart
+                            [series]="chartOptionsSTatutPaie.series!"
+                            [chart]="chartOptionsSTatutPaie.chart!"
+                            [labels]="chartOptionsSTatutPaie.labels!"
+                            [tooltip]="chartOptionsSTatutPaie.tooltip!"
+                            [colors]="chartOptionsSTatutPaie.colors!"
+                            [legend]="chartOptionsSTatutPaie.legend!"
+                            [stroke]="chartOptionsSTatutPaie.stroke!"
+                        ></apx-chart>
+                    </div>
+                </div>
+                <ul class="ps-0 list-unstyled mb-25">
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="title d-flex align-items-center"> 
+                            <div class="box-1"></div>
+                            <div class="ms-12">
+                                <h5 class="fw-semibold">Primes anciennetés</h5> 
+                            </div>
+                        </div>
+                        <div class="info text-end">  
+                            <span>{{ primeAnciennete | numberFormat:'fr-FR'}} FC</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="title d-flex align-items-center">
+                            <div class="box-2"></div>
+                            <div class="ms-12">
+                                <h5 class="fw-semibold">Primes divers</h5> 
+                            </div>
+                        </div>
+                        <div class="info text-end"> 
+                            <span>{{ primes | numberFormat:'fr-FR'}} FC</span>
+                        </div>
+                    </li> 
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="title d-flex align-items-center">
+                            <div class="box-3"></div>
+                            <div class="ms-12">
+                                <h5 class="fw-semibold">Heures Supp.</h5> 
+                            </div>
+                        </div>
+                        <div class="info text-end"> 
+                            <span>{{ heureSupp | numberFormat:'fr-FR'}} FC</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="title d-flex align-items-center">
+                            <div class="box-4"></div>
+                            <div class="ms-12">
+                                <h5 class="fw-semibold">Avances salaires</h5> 
+                            </div>
+                        </div>
+                        <div class="info text-end"> 
+                            <span>{{ avanceSalaire  | numberFormat:'fr-FR'}} FC</span>
+                        </div>
+                    </li> 
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="title d-flex align-items-center">
+                            <div class="box-5"></div>
+                            <div class="ms-12">
+                                <h5 class="fw-semibold">Pénalités</h5> 
+                            </div>
+                        </div>
+                        <div class="info text-end"> 
+                            <span>{{ penalite | numberFormat:'fr-FR'}} FC</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="title d-flex align-items-center">
+                            <div class="box-5"></div>
+                            <div class="ms-12">
+                                <h5 class="fw-semibold">Syndicats</h5> 
+                            </div>
+                        </div>
+                        <div class="info text-end">
+                            <span>{{ syndicat  | numberFormat:'fr-FR'}} FC</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="title d-flex align-items-center">
+                            <div class="box-6"></div>
+                            <div class="ms-12">
+                                <h5 class="fw-semibold">Pret entreprise</h5> 
+                            </div>
+                        </div>
+                        <div class="info text-end">
+                            <span>{{ presEntreprise  | numberFormat:'fr-FR'}} FC</span>
+                        </div>
+                    </li> 
+                </ul>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+ 
+
+

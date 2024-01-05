@@ -1,0 +1,171 @@
+<div class="create-dialog-box scrollable-dialog">
+    <div class="title d-flex align-items-center justify-content-space-between">
+        <h4 class="mb-0">Infos entreprise</h4>
+        <button class="close-btn bg-transparent p-0 border-none" (click)="close()"><i class="flaticon-close"></i></button>
+    </div>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Logo </label>
+                    <div class="tagus-form-group ms-20"> 
+                        <input formControlName="logo" hidden type="hidden" name="logo"> 
+                        <app-upload (uploadedUrl)="formGroup.patchValue({'logo': $event})"></app-upload>  
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Entreprise </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer la company</mat-label>
+                        <input matInput type="text" formControlName="company_name" name="company_name">
+                        <mat-error *ngIf="formGroup.controls['company_name'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Nombre des employés </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le nbre des employés</mat-label>
+                        <input matInput type="text" id="nbre_employe" formControlName="nbre_employe" required>
+                            <mat-error *ngIf="formGroup.controls['nbre_employe'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                    </mat-form-field> 
+                </div>
+            </div> 
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Numéro CNSS </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le N° CNSS</mat-label>
+                        <input matInput type="text" formControlName="numero_cnss" name="numero_cnss">
+                        <mat-error *ngIf="formGroup.controls['numero_cnss'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">RCCM </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le rccm</mat-label>
+                        <input matInput type="text" formControlName="rccm" name="rccm">
+                        <mat-error *ngIf="formGroup.controls['rccm'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">ID nat. </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le ID Nat.</mat-label>
+                        <input matInput type="text" formControlName="id_nat" name="id_nat">
+                        <mat-error *ngIf="formGroup.controls['id_nat'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Numéro impôt </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le numero d'impôt</mat-label>
+                        <input matInput type="text" formControlName="numero_impot" name="numero_impot">
+                        <mat-error *ngIf="formGroup.controls['numero_impot'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Responsable </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le responsable</mat-label>
+                        <input matInput type="text" formControlName="responsable" name="responsable">
+                        <mat-error *ngIf="formGroup.controls['responsable'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Telephone </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer le telephone</mat-label>
+                        <input matInput type="text" formControlName="telephone" name="telephone">
+                        <mat-error *ngIf="formGroup.controls['telephone'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Email </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer l'email</mat-label>
+                        <input matInput type="text" formControlName="email" name="email">
+                        <mat-error *ngIf="formGroup.controls['email'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="tagus-form-group">
+                    <label class="d-block mb-12 fw-semibold gray-color">Adresse </label>
+                    <mat-form-field appearance="fill">
+                        <i class="ri-edit-2-line"></i>
+                        <mat-label>Entrer l'adresse</mat-label>
+                        <input matInput type="text" formControlName="adresse" name="adresse">
+                        <mat-error *ngIf="formGroup.controls['adresse'].hasError('required')">
+                            Ce champs est obligatoire
+                        </mat-error>
+                    </mat-form-field> 
+                </div> 
+            </div>
+            
+            <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="currentUser.matricule == 'support-et015'">
+                <div class="tagus-form-group">
+                    <mat-label>Statut entreprise</mat-label>
+                    <div class="tagus-form-group">
+                        <mat-checkbox class="example-margin"  id="statut" 
+                        formControlName="statut">Statut entreprise </mat-checkbox>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div class="text-end" *ngIf="currentUser">
+            <button type="button" class="gray" (click)="close()"><i class="ri-close-fill"></i> Annuler</button>
+            <button type="submit"
+                *ngIf="currentUser.permission === 'U' ||
+                currentUser.permission === 'RU' ||
+                currentUser.permission === 'CRU' ||
+                currentUser.permission === 'RUD' ||
+                currentUser.permission === 'CRUD'">
+                <i class="ri-edit-fill"></i> 
+            Modifier
+        </button>
+        </div>
+    </form> 
+</div>

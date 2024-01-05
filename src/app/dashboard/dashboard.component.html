@@ -1,0 +1,287 @@
+
+<div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutGap="25px" fxLayoutGap.xs="0" fxLayoutGap.sm="0">
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" class="col">
+        <mat-card class="tagus-card mb-25" style="background-color: aquamarine !important; height: 80%;"> 
+            <form [formGroup]="dateRange">
+                <mat-form-field>
+                    <mat-label>Choisir la plage de Date</mat-label>
+                    <mat-date-range-input [rangePicker]="picker">
+                      <input matStartDate formControlName="start" placeholder="Start Date">
+                      <input matEndDate formControlName="end" placeholder="End Date">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker> 
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Choisir le module</mat-label>
+                    <mat-select type="button" mat-button
+                        (selectionChange)="onSelectCategoryChange($event)" formControlName="categorie">
+                        <mat-option *ngFor="let category of categoryList" [value]="category">{{category.toUpperCase()}}</mat-option>
+                    </mat-select> 
+                </mat-form-field>
+            </form>
+        </mat-card>
+
+        <div *ngIf="isSelectCategory == 'Presences'">
+            <mat-card
+                class="mb-25 tagus-card user-activities-box"
+                [class.component-dark-theme]="themeService.isDark()"
+            >
+                <mat-card-content>
+                    <ul class="list-unstyled ps-0 mb-0">
+                        <li class="d-flex align-items-center justify-content-space-between">
+                            <div class="d-flex align-items-center">
+                                <i class="ri-user-line mission"></i>
+                                <div class="ms-12">
+                                    <h5>{{numberM}}</h5>
+                                    <span class="d-block mission">Missions</span>
+                                </div>
+                            </div>
+                        </li> 
+                    </ul>
+                </mat-card-content>
+            </mat-card> 
+        </div> 
+    </div> 
+    
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" class="col"  
+            *ngIf="isSelectCategory == 'Employés' || isSelectCategory == 'All'">
+        <mat-card class="single-stats-box tagus-card mb-25">
+            <a routerLink="/layouts/personnels/personnel-list" 
+                        class="sidebar-menu-link" routerLinkActive="active" 
+                        [routerLinkActiveOptions]="{exact: true}">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg2">
+                        <i class="flaticon flaticon-people"></i> 
+                    </div>
+                    <div class="title">  
+                        <h3>{{totalEmployeAll}}</h3>
+                        <!-- <h3>1720</h3> -->
+                        <span class="gray-color d-block">Total Employés</span>
+                    </div>
+                </div>    
+            </a>
+        </mat-card>
+    </div>
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" class="col"  
+        *ngIf="isSelectCategory == 'Employés' || isSelectCategory == 'All'">
+        <mat-card class="single-stats-box tagus-card mb-25">
+            <a routerLink="/layouts/personnels/personnel-list" 
+                        class="sidebar-menu-link" routerLinkActive="active" 
+                        [routerLinkActiveOptions]="{exact: true}">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg3">
+                        <i class="flaticon flaticon-user"></i>
+                    </div>
+                    <div class="title">  
+                        <h3>{{totalEmployeFemmeAll}}</h3>
+                        <!-- <h3>820</h3> -->
+                        <span class="gray-color d-block">Total Femmes</span>
+                    </div>
+                </div>        
+            </a>
+        </mat-card>
+    </div>
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" class="col"  
+            *ngIf="isSelectCategory == 'Employés' || isSelectCategory == 'All'">
+        <mat-card class="single-stats-box tagus-card mb-25">
+            <a routerLink="/layouts/personnels/personnel-list" 
+            class="sidebar-menu-link" routerLinkActive="active" 
+            [routerLinkActiveOptions]="{exact: true}">
+
+            <div class="d-flex align-items-center">
+                <div class="icon bg4">
+                    <i class="flaticon flaticon-user"></i>
+                </div>
+                <div class="title"> 
+                    <h3>{{totalEmployeHommeAll}}</h3>
+                    <!-- <h3>900</h3> -->
+                    <span class="gray-color d-block">Total Hommes</span>
+                </div>
+            </div>
+        </a>
+        </mat-card>
+    </div>
+
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" class="col"  
+        *ngIf="isSelectCategory == 'Finances'">
+        <mat-card class="single-stats-box tagus-card mb-25">
+            <div class="d-flex justify-content-space-between">
+                <span class="title gray-color fw-semibold">Net à payer</span>
+                <div class="icon">
+                    <i class="ri-money-dollar-circle-line"></i>
+                </div>
+            </div>
+            <h3 class="text-center">{{ netAPayerAll  | numberFormat:'fr-FR'}} FC</h3>  
+        </mat-card>
+    </div>
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" class="col"  
+        *ngIf="isSelectCategory == 'Finances'">
+        <mat-card class="single-stats-box tagus-card mb-25">
+            <div class="d-flex justify-content-space-between">
+                <span class="title gray-color fw-semibold">Total IPR</span>
+                <div class="icon bg2">
+                    <i class="ri-swap-box-line"></i>
+                </div>
+            </div>
+            <h3 class="text-center">{{ iprAll  | numberFormat:'fr-FR'}} FC</h3>  
+        </mat-card>
+    </div>
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" class="col"  
+        *ngIf="isSelectCategory == 'Finances'">
+        <mat-card class="single-stats-box tagus-card mb-25">
+            <div class="d-flex justify-content-space-between">
+                <span class="title gray-color fw-semibold">Total CNSS (QPO)</span>
+                <div class="icon bg3">
+                    <i class="ri-safe-line"></i>
+                </div>
+            </div>
+            <h3 class="text-center">{{ cnssQPOAll  | numberFormat:'fr-FR'}} FC</h3>  
+        </mat-card>
+    </div> 
+
+    <div fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="50%" class="col"  
+        *ngIf="isSelectCategory == 'Presences'">
+        <mat-card
+            class="mb-25 tagus-card user-activities-box"
+            [class.component-dark-theme]="themeService.isDark()"
+        >
+            <mat-card-content>
+                <ul class="list-unstyled ps-0 mb-0">
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="d-flex align-items-center">
+                            <i class="ri-user-line present"></i>
+                            <div class="ms-12">
+                                <h5>{{numberP}}</h5>
+                                <span class="d-block present">Presents</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="d-flex align-items-center">
+                            <i class="ri-user-line absence-autorisee"></i>
+                            <div class="ms-12">
+                                <h5>{{numberAA}}</h5>
+                                <span class="d-block absence-autorisee">Absences autorisées</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </mat-card-content>
+        </mat-card> 
+    </div> 
+    <div fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="50%" class="col"  
+        *ngIf="isSelectCategory == 'Presences'">
+        <mat-card
+            class="mb-25 tagus-card user-activities-box"
+            [class.component-dark-theme]="themeService.isDark()"
+        >
+            <mat-card-content>
+                <ul class="list-unstyled ps-0 mb-0">
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="d-flex align-items-center">
+                            <i class="ri-user-line absence-sans-autorisation"></i>
+                            <div class="ms-12">
+                                <h5>{{numberA}}</h5>
+                                <span class="d-block absence-sans-autorisation">Absences sans autorisations</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="d-flex align-items-center">
+                            <i class="ri-user-line absent-maladie"></i>
+                            <div class="ms-12">
+                                <h5>{{numberAM}}</h5>
+                                <span class="d-block absent-maladie">Absenses maladies</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </mat-card-content>
+        </mat-card> 
+    </div> 
+    <div fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="50%" class="col"  
+        *ngIf="isSelectCategory == 'Presences'">
+        <mat-card
+            class="mb-25 tagus-card user-activities-box"
+            [class.component-dark-theme]="themeService.isDark()"
+        >
+            <mat-card-content>
+                <ul class="list-unstyled ps-0 mb-0">
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="d-flex align-items-center">
+                            <i class="ri-user-line conge-circonstanciel"></i>
+                            <div class="ms-12">
+                                <h5>{{numberCC}}</h5>
+                                <span class="d-block conge-circonstanciel">Congés circonstanciels</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="d-flex align-items-center">
+                            <i class="ri-user-line conge-annuel"></i>
+                            <div class="ms-12">
+                                <h5>{{numberCA}}</h5>
+                                <span class="d-block conge-annuel">Congés annuel</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </mat-card-content>
+        </mat-card> 
+    </div> 
+    <div fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="50%" class="col"  
+                *ngIf="isSelectCategory == 'Presences'">
+        <mat-card
+            class="mb-25 tagus-card user-activities-box"
+            [class.component-dark-theme]="themeService.isDark()"
+        >
+            <mat-card-content>
+                <ul class="list-unstyled ps-0 mb-0">
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="d-flex align-items-center">
+                            <i class="ri-user-line suspension"></i>
+                            <div class="ms-12">
+                                <h5>{{numberS}}</h5>
+                                <span class="d-block suspension">Suspensions</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-space-between">
+                        <div class="d-flex align-items-center">
+                            <i class="ri-user-line service-off"></i>
+                            <div class="ms-12">
+                                <h5>{{numberO}}</h5>
+                                <span class="d-block service-off">Service-off</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </mat-card-content>
+        </mat-card> 
+    </div>  
+
+
+</div>  
+
+
+
+
+<div *ngIf="isSelectCategory == 'All'">
+    <app-dash-all [start_date]="start_date" [end_date]="end_date"></app-dash-all>
+</div>
+<div *ngIf="isSelectCategory == 'Employés'">
+    <app-employes-all [start_date]="start_date" [end_date]="end_date"></app-employes-all>
+</div>
+<div *ngIf="isSelectCategory == 'Finances'">
+    <app-finance-all [start_date]="start_date" [end_date]="end_date"></app-finance-all>
+</div>
+
+
+<!-- <div *ngIf="isSelectCategory == 'Presences'">
+    <app-presence-all></app-presence-all>
+</div>
+<div *ngIf="isSelectCategory == 'Autres'">
+    <app-autre-all></app-autre-all>
+</div> -->
+ 

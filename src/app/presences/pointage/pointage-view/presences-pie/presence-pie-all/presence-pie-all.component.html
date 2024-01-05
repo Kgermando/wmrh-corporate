@@ -1,0 +1,14 @@
+
+
+<div class="chart activeCoursesChart" *ngIf="presencePieList.length > 0">
+    <apx-chart
+        [series]="chartOptions.series!"
+        [chart]="chartOptions.chart!"
+        [colors]="chartOptions.colors!"
+        [tooltip]="chartOptions.tooltip!"
+        [stroke]="chartOptions.stroke!"
+        [dataLabels]="chartOptions.dataLabels!"
+        [legend]="chartOptions.legend!"
+        [labels]="chartOptions.labels!"
+    ></apx-chart>
+</div> 

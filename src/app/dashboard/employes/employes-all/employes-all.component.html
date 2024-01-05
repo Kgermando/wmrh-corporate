@@ -1,0 +1,266 @@
+<div fxLayout="row" fxLayoutGap="25px" fxLayout.xs="column" fxLayoutGap.xs="0" fxLayout.sm="column" fxLayoutGap.sm="0" fxLayout.md="column" fxLayoutGap.md="0">
+    <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="col">
+
+        <mat-card class="mb-25 tagus-card active-courses-box">
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Sexe</h5>
+                
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="isLoading" 
+                    style="display: flex; justify-content: center; align-items: center; background: white;">
+                    <mat-progress-spinner [diameter]="30"
+                        color="primary" 
+                        mode="indeterminate">
+                    </mat-progress-spinner>
+                </div> 
+                <div class="chart activeCoursesChart" *ngIf="!isLoading && sexeList.length > 0">
+                    <apx-chart
+                        [series]="chartOptionPieSexe.series!"
+                        [chart]="chartOptionPieSexe.chart!"
+                        [colors]="chartOptionPieSexe.colors!"
+                        [tooltip]="chartOptionPieSexe.tooltip!"
+                        [stroke]="chartOptionPieSexe.stroke!"
+                        [dataLabels]="chartOptionPieSexe.dataLabels!"
+                        [legend]="chartOptionPieSexe.legend!"
+                        [labels]="chartOptionPieSexe.labels!"
+                    ></apx-chart>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mb-25 tagus-card">
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Anciènneté du personnel</h5> 
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="isLoading" 
+                    style="display: flex; justify-content: center; align-items: center; background: white;">
+                    <mat-progress-spinner [diameter]="30"
+                        color="primary" 
+                        mode="indeterminate">
+                    </mat-progress-spinner>
+                </div> 
+                <div class="chart revenueSummaryChart" *ngIf="!isLoading && ageParContratList.length > 0">
+                    <apx-chart
+                        [series]="chartOptions.series!"
+                        [chart]="chartOptions.chart!"
+                        [dataLabels]="chartOptions.dataLabels!"
+                        [plotOptions]="chartOptions.plotOptions!"
+                        [yaxis]="chartOptions.yaxis!"
+                        [xaxis]="chartOptions.xaxis!"
+                        [colors]="chartOptions.colors!"
+                        [fill]="chartOptions.fill!"
+                        [grid]="chartOptions.grid!"
+                        [title]="chartOptions.title!"
+                    ></apx-chart>
+                </div>
+            </mat-card-content>
+        </mat-card>  
+
+
+        <mat-card class="mb-25 tagus-card customer-satisfaction-box">
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Performances du personnel</h5>  
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="isLoading" 
+                    style="display: flex; justify-content: center; align-items: center; background: white;">
+                    <mat-progress-spinner [diameter]="30"
+                        color="primary" 
+                        mode="indeterminate">
+                    </mat-progress-spinner>
+                </div> 
+                <div class="chart salesAnalyticsChart" *ngIf="!isLoading && prerformencePieList.length > 0">
+                    <apx-chart
+                        [series]="chartOptionPerformence.series!"
+                        [chart]="chartOptionPerformence.chart!"
+                        [dataLabels]="chartOptionPerformence.dataLabels!"
+                        [plotOptions]="chartOptionPerformence.plotOptions!"
+                        [responsive]="chartOptionPerformence.responsive!"
+                        [xaxis]="chartOptionPerformence.xaxis!"
+                        [grid]="chartOptionPerformence.grid!"
+                        [yaxis]="chartOptionPerformence.yaxis!"
+                        [legend]="chartOptionPerformence.legend!"
+                        [colors]="chartOptionPerformence.colors!"
+                        [fill]="chartOptionPerformence.fill!"
+                    ></apx-chart>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+
+    </div>
+    <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="col">
+
+
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="25px" fxLayoutGap.xs="0" fxLayout.sm="column" fxLayoutGap.sm="0" fxLayout.md="column" fxLayoutGap.md="0">
+            <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.sm="50%" fxFlex.md="50%" class="col">
+                <mat-card class="stats-box tagus-card mb-25">
+                    <div class="d-flex justify-content-space-between align-items-center">
+                        <div class="title">
+                            <span class="d-block gray-color">Départements</span> 
+                            <h3>{{depTotal}}</h3>
+                        </div>
+                        <div class="icon">
+                            <i class="ri-stack-line"></i>
+                        </div>
+                    </div> 
+                </mat-card>
+            </div>
+            <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.sm="50%" fxFlex.md="50%" class="col">
+                <mat-card class="stats-box tagus-card mb-25">
+                    <div class="d-flex justify-content-space-between align-items-center">
+                        <div class="title">
+                            <span class="d-block gray-color">Syndicats</span> 
+                            <h3>{{syndicatTotal}}</h3>
+                        </div>
+                        <div class="icon">
+                            <i class="ri-pie-chart-line"></i>
+                        </div>
+                    </div>
+                </mat-card>
+            </div> 
+        </div>
+
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="25px" fxLayoutGap.xs="0" fxLayout.sm="column" fxLayoutGap.sm="0" fxLayout.md="column" fxLayoutGap.md="0">
+            <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.sm="50%" fxFlex.md="50%" class="col">
+                <mat-card class="stats-box tagus-card mb-25">
+                    <div class="d-flex justify-content-space-between align-items-center">
+                        <div class="title">
+                            <span class="d-block gray-color">Sites de travail</span> 
+                            <h3>{{siteLocationTotal}}</h3>
+                        </div>
+                        <div class="icon">
+                            <i class="ri-stack-line"></i>
+                        </div>
+                    </div> 
+                </mat-card>
+            </div>
+            <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.sm="50%" fxFlex.md="50%" class="col">
+                <mat-card class="stats-box tagus-card mb-25">
+                    <div class="d-flex justify-content-space-between align-items-center">
+                        <div class="title">
+                            <span class="d-block gray-color">Comptes actifs </span> 
+                            <h3>{{compteActifTotal}}</h3>
+                        </div>
+                        <div class="icon">
+                            <i class="ri-pie-chart-line"></i>
+                        </div>
+                    </div>
+                </mat-card>
+            </div> 
+        </div>
+
+        <mat-card
+            class="mb-25 tagus-card tasks-performance-box"
+            >
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Employés par entreprise </h5> 
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="isLoading" 
+                            style="display: flex; justify-content: center; align-items: center; background: white;">
+                            <mat-progress-spinner [diameter]="30"
+                                color="primary" 
+                                mode="indeterminate">
+                            </mat-progress-spinner>
+                        </div> 
+                <div class="chart tasksPerformanceChart" *ngIf="!isLoading && employeParService.length > 0">
+                    <apx-chart
+                        [series]="chartOptionService.series!"
+                        [chart]="chartOptionService.chart!"
+                        [plotOptions]="chartOptionService.plotOptions!"
+                        [labels]="chartOptionService.labels!"
+                        [legend]="chartOptionService.legend!"
+                        [colors]="chartOptionService.colors!"
+                    ></apx-chart>
+                </div> 
+            </mat-card-content>
+        </mat-card>
+        <mat-card
+            class="mb-25 tagus-card tasks-performance-box"
+            >
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Employés par département </h5> 
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="isLoading" 
+                            style="display: flex; justify-content: center; align-items: center; background: white;">
+                            <mat-progress-spinner [diameter]="30"
+                                color="primary" 
+                                mode="indeterminate">
+                            </mat-progress-spinner>
+                        </div> 
+                <div class="chart tasksPerformanceChart" *ngIf="!isLoading && employeParDepartement.length > 0">
+                    <apx-chart
+                        [series]="chartOptionDepartement.series!"
+                        [chart]="chartOptionDepartement.chart!"
+                        [plotOptions]="chartOptionDepartement.plotOptions!"
+                        [labels]="chartOptionDepartement.labels!"
+                        [legend]="chartOptionDepartement.legend!"
+                        [colors]="chartOptionDepartement.colors!"
+                    ></apx-chart>
+                </div> 
+            </mat-card-content>
+        </mat-card>
+        <mat-card
+            class="mb-25 tagus-card tasks-performance-box"
+            >
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Employés par site de travail </h5> 
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="isLoading" 
+                            style="display: flex; justify-content: center; align-items: center; background: white;">
+                            <mat-progress-spinner [diameter]="30"
+                                color="primary" 
+                                mode="indeterminate">
+                            </mat-progress-spinner>
+                        </div> 
+                <div class="chart tasksPerformanceChart" *ngIf="!isLoading && employeParSiteTravail.length > 0">
+                    <apx-chart
+                        [series]="chartOptionSiteTravail.series!"
+                        [chart]="chartOptionSiteTravail.chart!"
+                        [plotOptions]="chartOptionSiteTravail.plotOptions!"
+                        [labels]="chartOptionSiteTravail.labels!"
+                        [legend]="chartOptionSiteTravail.legend!"
+                        [colors]="chartOptionSiteTravail.colors!"
+                    ></apx-chart>
+                </div> 
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mb-25 tagus-card">
+            <mat-card-header class="border-bottom">
+                <h5 class="mb-0">Tranches d'âges des employés</h5>
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="isLoading" 
+                    style="display: flex; justify-content: center; align-items: center; background: white;">
+                    <mat-progress-spinner [diameter]="30"
+                        color="primary" 
+                        mode="indeterminate">
+                    </mat-progress-spinner>
+                </div> 
+                <div class="chart sessionsByCountriesChart" *ngIf="!isLoading && ageParEmployeList.length > 0">
+                    <apx-chart
+                    [series]="chartOptionAgeMoyenneEmployes.series!"
+                    [chart]="chartOptionAgeMoyenneEmployes.chart!"
+                    [dataLabels]="chartOptionAgeMoyenneEmployes.dataLabels!"
+                    [plotOptions]="chartOptionAgeMoyenneEmployes.plotOptions!"
+                    [yaxis]="chartOptionAgeMoyenneEmployes.yaxis!"
+                    [xaxis]="chartOptionAgeMoyenneEmployes.xaxis!"
+                    [colors]="chartOptionAgeMoyenneEmployes.colors!"
+                    [fill]="chartOptionAgeMoyenneEmployes.fill!"
+                    [grid]="chartOptionAgeMoyenneEmployes.grid!"
+                    [title]="chartOptionAgeMoyenneEmployes.title!"
+                ></apx-chart>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+
+    </div>
+</div>
+

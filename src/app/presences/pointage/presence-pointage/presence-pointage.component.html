@@ -1,0 +1,67 @@
+
+<div *ngIf="presence"> 
+    <div *ngIf="isPToday">
+        <div class="position-relative plus-btn present p-5 border-none rounded-circle"
+            *ngIf="presence.apointement == 'P'">
+            P
+        </div>
+    </div>
+
+    <div *ngIf="isAToday">
+        <div class="position-relative plus-btn absence-sans-autorisation p-5 border-none rounded-circle"
+            *ngIf="presence.apointement == 'A'">
+            A
+        </div>  
+    </div> 
+
+    <div *ngIf="isAAToday">
+        <div class="position-relative plus-btn absence-autorisee p-5 border-none rounded-circle"
+            *ngIf="presence.apointement == 'AA'">
+            AA
+        </div>
+    </div>
+    
+    <div *ngIf="isAMToday">
+        <div class="position-relative plus-btn absent-maladie p-5 border-none rounded-circle"
+            *ngIf="presence.apointement == 'AM'">
+            AM
+        </div>
+    </div>
+    
+    <div *ngIf="isCCToday">
+        <div class="position-relative plus-btn conge-circonstanciel p-5 border-none rounded-circle"
+            *ngIf="presence.apointement == 'CC'">
+            CC
+        </div>
+    </div>
+    
+    <div *ngIf="isCAToday">
+        <div class="position-relative plus-btn conge-annuel p-5 border-none rounded-circle"
+            *ngIf="presence.apointement == 'CA'">CA</div>
+    </div>
+ 
+    <div *ngIf="isSToday">
+        <div class="position-relative plus-btn suspension p-5 border-none rounded-circle"
+            *ngIf="presence.apointement == 'S'">
+            S
+        </div> 
+    </div>
+
+    <div *ngIf="isOToday">
+        <div class="position-relative plus-btn service-off p-5 border-none rounded-circle"
+            *ngIf="presence.apointement == 'O'">
+            O
+        </div>
+    </div>
+    
+ 
+    <div *ngIf="isMToday">
+        <div class="position-relative plus-btn mission p-5 border-none rounded-circle"
+            *ngIf="presence.apointement == 'M'">
+            M
+        </div>
+    </div>
+     
+</div>
+ 
+ 

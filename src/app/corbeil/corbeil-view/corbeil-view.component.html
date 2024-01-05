@@ -1,0 +1,96 @@
+
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div>
+<div *ngIf="!isLoading">
+    <div class="row mb-25" *ngIf="personne">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header class="border-bottom">
+                    <h5 class="mb-0">Identité</h5>
+                    <button mat-icon-button color="accent"  
+                    [routerLink]="['/layouts/personnels', personne.id, 'personnel-edit']"
+                    *ngIf="currentUser.permission === 'U' || 
+                        currentUser.permission === 'RU' ||
+                        currentUser.permission === 'CRU' || 
+                        currentUser.permission === 'RUD' || 
+                        currentUser.permission === 'CRUD'" matTooltip="Restaurer ce document">
+                        <mat-icon>edit</mat-icon>
+                </button>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-card-header class="border-bottom">
+                        <div class="d-flex align-items-center">
+                            <img [src]="personne.photo" width="57" class="rounded-circle" alt="user" *ngIf="personne.photo">
+                            <img src="assets/img/user/user22.jpg" width="57" class="rounded-circle" alt="user"  *ngIf="!personne.photo">
+                            <div class="ms-15">
+                                <h5 class="mb-5">{{ personne.matricule }}</h5>
+                                <span class="d-block gray-color text-success" *ngIf="personne.statut_personnel">Actif</span>
+                                <span class="d-block gray-color" *ngIf="!personne.statut_personnel">Inactif</span>
+                            </div>
+                        </div>
+                    </mat-card-header>
+                    <ul class="list ps-0 mb-0">
+                        <li>
+                            <span class="fw-semibold d-inline-block">Nom: </span>
+                            <span class="gray-color">{{ personne.nom }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Postnom: </span>
+                            <span class="gray-color">{{ personne.postnom }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Prenom: </span>
+                            <span class="gray-color">{{ personne.prenom }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Email: </span>
+                            <span class="gray-color">{{ personne.email }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Telephone: </span>
+                            <span class="gray-color">{{ personne.telephone }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Sexe: </span>
+                            <span class="gray-color">{{ personne.sexe }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Adresse: </span>
+                            <span class="gray-color">{{ personne.adresse }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Matricule: </span>
+                            <span class="gray-color">{{ personne.matricule }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Categorie: </span>
+                            <span class="gray-color">{{ personne.category }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Departement: </span>
+                            <span class="gray-color" *ngIf="personne.departements">{{ personne.departements.departement }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Titre: </span>
+                            <span class="gray-color" *ngIf="personne.titles">{{ personne.titles.title }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Fonction: </span>
+                            <span class="gray-color" *ngIf="personne.fonctions">{{ personne.fonctions.fonction }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Entreprise: </span>
+                            <span class="gray-color" *ngIf="personne.services">{{ personne.services.service }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Site de travail: </span>
+                            <span class="gray-color" *ngIf="personne.site_locations">{{ personne.site_locations.site_location }}</span>
+                        </li> 
+                    </ul>  
+                </mat-card-content>
+            </mat-card> 
+        </div>
+         
+    </div>
+</div>

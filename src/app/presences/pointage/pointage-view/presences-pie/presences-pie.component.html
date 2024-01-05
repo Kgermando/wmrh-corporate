@@ -1,0 +1,31 @@
+<p>STATISTIQUE</p>
+<mat-card class="mb-25 tagus-card active-courses-box">
+    <mat-card-header class="border-bottom">
+        
+        <!-- <button type="button" mat-button class="position-relative dot-btn p-0 bg-transparent border-none" [matMenuTriggerFor]="monthMenu">
+            <i class="ri-more-fill"></i>
+        </button>
+        <mat-menu #monthMenu="matMenu" class="monthMenu" xPosition="before" (selectionChange)="onSelectChange($event)"> 
+            <button mat-menu-item type="button" class="bg-transparent border-none">Par Mois</button>
+            <button mat-menu-item type="button" class="bg-transparent border-none">Par AN</button> 
+            <button mat-menu-item type="button" class="bg-transparent border-none">All</button>
+        </mat-menu> -->
+        
+        <mat-select type="button" mat-button class="position-relative p-0 bg-transparent border-none" 
+            value="Mois" 
+            (selectionChange)="onSelectChange($event)">
+            <mat-option *ngFor="let select of ['Mois', 'Année', 'All']" [value]="select">Filtre par {{select.toUpperCase()}}</mat-option>
+        </mat-select> 
+    </mat-card-header>
+    <mat-card-content>
+         <div *ngIf="isSelect == 'Mois'">
+            <app-presence-pie-month [personne]="personne"></app-presence-pie-month>
+         </div>
+         <div *ngIf="isSelect == 'Année'">
+            <app-presence-pie-year [personne]="personne"></app-presence-pie-year>
+         </div>
+         <div *ngIf="isSelect == 'All'">
+            <app-presence-pie-all [personne]="personne"></app-presence-pie-all>
+         </div>
+    </mat-card-content>
+</mat-card>

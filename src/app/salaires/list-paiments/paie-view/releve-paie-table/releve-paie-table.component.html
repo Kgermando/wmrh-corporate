@@ -1,0 +1,125 @@
+
+<div class="reports-table table-responsive mt-25">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="fw-semibold gray-color">Date</th>
+                <th class="fw-semibold main-color">Statut</th>
+                <th class="fw-semibold gray-color">Alloc. logement</th>
+                <th class="fw-semibold gray-color">Alloc. transport</th>
+                <th class="fw-semibold gray-color">Alloc. familliale</th>
+                <th class="fw-semibold gray-color">Soins medicaux</th>
+                <th class="fw-semibold gray-color">Salaire de base</th>
+                <th class="fw-semibold gray-color">Primes</th>
+                <th class="fw-semibold gray-color">Ancienneté</th>
+                <th class="fw-semibold gray-color">Heures supp</th> 
+                <th class="fw-semibold gray-color">Penalités</th>
+                <th class="fw-semibold gray-color">Syndicat</th>
+                <th class="fw-semibold gray-color">Congé payés</th>
+                <th class="fw-semibold gray-color">Nbre de jrs prestés</th>
+                <th class="fw-semibold gray-color">Net à payer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let fiche of personne.salaires">
+                <td class="gray-color fw-semibold">{{fiche.created | date: 'dd/MM/yyyy'}}</td>
+                <td class="main-color fw-semibold disponible" *ngIf="fiche.statut == 'Disponible'">
+                    {{fiche.statut}}
+                </td>
+                <td class="main-color fw-semibold traitement" *ngIf="fiche.statut == 'Traitement'">
+                    {{fiche.statut}}
+                </td>
+
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'CDF'">
+                    {{ fiche.alloc_logement | numberFormat:'fr-FR'}} FC
+                </td>
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'USD'">
+                    {{ +fiche.alloc_logement / +fiche.taux_dollard | numberFormat:'fr-FR'}} $
+                </td>
+
+
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'CDF'">
+                    {{ fiche.alloc_transport | numberFormat:'fr-FR'}} FC
+                </td>
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'USD'">
+                    {{ +fiche.alloc_transport / +fiche.taux_dollard | numberFormat:'fr-FR'}} $
+                </td>
+
+
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'CDF'">
+                    {{ fiche.alloc_familliale | numberFormat:'fr-FR'}} FC
+                </td> 
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'USD'">
+                    {{ +fiche.alloc_familliale / +fiche.taux_dollard | numberFormat:'fr-FR'}} $
+                </td>
+
+
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'CDF'">
+                    {{ fiche.soins_medicaux | numberFormat:'fr-FR'}} FC
+                </td> 
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'USD'">
+                    {{ +fiche.soins_medicaux / +fiche.taux_dollard | numberFormat:'fr-FR'}} $
+                </td>
+
+
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'CDF'">
+                    {{ fiche.salaire_base | numberFormat:'fr-FR'}} FC
+                </td>
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'USD'">
+                    {{ +fiche.salaire_base / +fiche.taux_dollard | numberFormat:'fr-FR'}} $
+                </td>
+
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'CDF'">
+                    {{ fiche.primes | numberFormat:'fr-FR'}} FC
+                </td> 
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'USD'">
+                    {{ +fiche.primes / +fiche.taux_dollard | numberFormat:'fr-FR'}} $
+                </td>
+
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'CDF'">
+                    {{ fiche.prime_anciennete | numberFormat:'fr-FR'}} FC
+                </td>
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'USD'">
+                    {{ +fiche.prime_anciennete / +fiche.taux_dollard | numberFormat:'fr-FR'}} $
+                </td>
+
+
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'CDF'">
+                    {{ fiche.heure_supplementaire_monnaie | numberFormat:'fr-FR' }} FC
+                </td>
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'USD'">
+                    {{ +fiche.heure_supplementaire_monnaie / +fiche.taux_dollard | numberFormat:'fr-FR' }} $
+                </td>
+
+
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'CDF'">
+                    {{ fiche.penalites | numberFormat:'fr-FR'}} FC
+                </td>
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'USD'">
+                    {{ +fiche.penalites / +fiche.taux_dollard | numberFormat:'fr-FR'}} $
+                </td>
+
+
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'CDF'">
+                    {{ fiche.syndicat | numberFormat:'fr-FR'}} FC
+                </td>
+                <td class="gray-color fw-semibold" *ngIf="fiche.monnaie == 'USD'">
+                    {{ +fiche.syndicat / +fiche.taux_dollard | numberFormat:'fr-FR'}} $
+                </td>
+
+                <td class="gray-color fw-semibold">{{fiche.conge_paye}}</td>
+
+                <td class="gray-color fw-semibold">{{fiche.nbre_jrs_preste}}</td>
+
+                <td class="gray-color fw-semibold net_a_payer" *ngIf="fiche.monnaie == 'CDF'">
+                    {{ fiche.net_a_payer | numberFormat:'fr-FR'}} FC
+                </td>
+                <td class="gray-color fw-semibold net_a_payer" *ngIf="fiche.monnaie == 'USD'">
+                    {{ +fiche.net_a_payer / +fiche.taux_dollard | numberFormat:'fr-FR'}} $
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div> 
+
+

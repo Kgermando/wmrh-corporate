@@ -1,0 +1,18 @@
+<mat-card class="mb-25 tagus-card">
+    <mat-card-header class="border-bottom">
+        <h5 class="mb-0">Notifications</h5>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-list>
+            <!-- <div mat-subheader class="fw-semibold">Folders</div> -->
+            <mat-list-item *ngFor="let notify of notifyList" [ngClass]="{'isread': notify.is_read}">
+                <a [routerLink]="[notify.route]">
+                    <mat-icon matListItemIcon>notifications</mat-icon>
+                    <div matListItemTitle class="fw-semibold">{{notify.title}}</div>
+                    <div matListItemLine>{{notify.created | date}}</div>
+                </a> 
+               
+            </mat-list-item>
+        </mat-list>
+    </mat-card-content>
+</mat-card>

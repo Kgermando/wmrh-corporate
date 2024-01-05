@@ -1,0 +1,292 @@
+<div
+    class="sidebar-area bg-white box-shadow"
+    [ngClass]="{'active': isToggled}"
+    [class.dark-sidebar]="themeService.isSidebarDark()"
+    [class.right-sidebar]="themeService.isRightSidebar()"
+    [class.hide-sidebar]="themeService.isHideSidebar()"
+>
+    <div class="logo bg-white">
+        <a routerLink="/layouts" class="d-flex align-items-center">
+            <img src="assets/img/logo-icon.png" alt="logo">
+            <span>Ressources Humaines</span>
+        </a>
+    </div>
+    <div class="burger-menu" (click)="toggle()" [ngClass]="{'active': isToggled}">
+        <span class="top-bar"></span>
+        <span class="middle-bar"></span>
+        <span class="bottom-bar"></span>
+    </div>
+    <ng-scrollbar visibility="hover" style="height: 100vh;">
+        <div class="sidebar-inner" *ngIf="currentUser"> 
+            <div class="sidebar-menu">
+                <mat-accordion>
+                    <a routerLink="/layouts/dashboard" class="sidebar-menu-link" 
+                        routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                        *ngIf="currentUser.roles.includes('Dashboard')">
+                        <i class="flaticon-menu-1"></i>
+                        <span class="title">Dashboard</span>
+                    </a>
+                    <a routerLink="/layouts/personnels/personnel-list" 
+                        class="sidebar-menu-link" routerLinkActive="active" 
+                        [routerLinkActiveOptions]="{exact: true}"
+                        *ngIf="currentUser.roles.includes('Personnels')">
+                        <i class="ri-group-line"></i>
+                        <span class="title">Personnel</span>
+                    </a>
+                    <a routerLink="/layouts/horaires" class="sidebar-menu-link" 
+                        routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                        *ngIf="currentUser.roles.includes('Horaires')">
+                        <i class="ri-calendar-todo-line"></i>
+                        <span class="title">Horaire</span>
+                    </a>
+                    <mat-expansion-panel (opened)="panelOpenState = true" 
+                    (closed)="panelOpenState = true"
+                    *ngIf="currentUser.roles.includes('Pointages' || 
+                        'Registre de presences' ||
+                        'Heure suplementaires')">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <i class="ri-user-follow-line"></i>
+                                <span class="title">Présences</span> 
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ul class="sidebar-sub-menu">
+                            
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Pointages')">
+                                <a routerLink="/layouts/presences/pointage" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Pointage presence
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Registre de presences')">
+                                <a routerLink="/layouts/presences/registre-presences" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Registre de presences
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Heure suplementaires')">
+                                <a routerLink="/layouts/presences/heures-supp" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Heures supplementaires
+                                </a>
+                            </li> 
+                        </ul>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel (opened)="panelOpenState = true" 
+                    (closed)="panelOpenState = true"
+                    *ngIf="currentUser.roles.includes(
+                        'Liste de paiements' || 
+                        'Avances salaires' ||
+                        'Primes divers' ||
+                        'Pénalites' ||
+                        'Pret entreprise' ||
+                        'Statuts de paies' ||
+                        'Mes Bulletins' ||
+                        'Relevés de paies' ||
+                        'Indemnités')">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <i class="ri-wallet-2-line"></i>
+                                <span class="title">Rémunérations</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ul class="sidebar-sub-menu">
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Liste de paiements')">
+                                <a routerLink="/layouts/salaires/liste-paiements" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Liste de paie
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Avances salaires')">
+                                <a routerLink="/layouts/salaires/avance-salaire" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Avance sur salaire
+                                </a>
+                            </li>  
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Primes divers')">
+                                <a routerLink="/layouts/salaires/primes" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Primes diverses
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Pénalites')">
+                                <a routerLink="/layouts/salaires/penalites" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Penalités
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Pret entreprise')">
+                                <a routerLink="/layouts/salaires/pres-entreprise" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Prêt entreprise
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Statuts de paies')">
+                                <a routerLink="/layouts/salaires/statuts-paies" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Statuts de paie
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Mes Bulletins')">
+                                <a routerLink="/layouts/salaires/mes-bulletins-salaires" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Mes bulletins de paie
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Relevés de paies')">
+                                <a routerLink="/layouts/salaires/releve-paie" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Relevé de paie
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Indemnités')">
+                                <a routerLink="/layouts/salaires/indemnites" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Indemnités de paie
+                                </a>
+                            </li>
+                            <!-- <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Relevés de paies')">
+                                <a routerLink="/layouts/salaires/releve-frais-divers" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Relevé de frais divers
+                                </a>
+                            </li> -->
+                        </ul>
+                    </mat-expansion-panel>
+                  
+                    
+                    <a routerLink="/layouts/performences" class="sidebar-menu-link" 
+                        routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                        *ngIf="currentUser.roles.includes('Performences')">
+                        <i class="ri-creative-commons-nd-line"></i>
+                        <span class="title">Performances</span>
+                    </a>
+                    <mat-expansion-panel (opened)="panelOpenState = true" 
+                    (closed)="panelOpenState = true"
+                    *ngIf="currentUser.roles.includes('Postes' || 'Candidatures')">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <i class="ri-account-pin-box-line"></i>
+                                <span class="title">Recrutements</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ul class="sidebar-sub-menu">
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Postes')">
+                                <a routerLink="/layouts/recrutements/postes" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Postes
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Candidatures')">
+                                <a routerLink="/layouts/recrutements/candidatures" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Candidatures
+                                </a>
+                            </li>
+                        </ul>
+                    </mat-expansion-panel>
+                    <a routerLink="/layouts/personnels/syndicats" class="sidebar-menu-link" 
+                        routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                        *ngIf="currentUser.roles.includes('Syndicats')">
+                        <i class="ri-user-4-line"></i>
+                        <span class="title">Syndicats</span>
+                    </a>
+                    <!-- <a routerLink="/layouts/mail/inbox" 
+                        class="sidebar-menu-link" routerLinkActive="active" 
+                        [routerLinkActiveOptions]="{exact: true}"
+                        *ngIf="currentUser.roles.includes('Emails')">
+                        <i class="ri-mail-line"></i>
+                        <span class="title">Mails</span>
+                    </a>  -->
+                    <span class="sub-title gray-color">Configurations</span>
+                    <mat-expansion-panel (opened)="panelOpenState = true" 
+                        (closed)="panelOpenState = true"
+                        *ngIf="currentUser.roles.includes('Preferences')">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <i class="flaticon-setting"></i>
+                                <span class="title">Preferences</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ul class="sidebar-sub-menu">
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Reglages')">
+                                <a routerLink="/layouts/preferences/reglages" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Reglages
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Services')">
+                                <a routerLink="/layouts/preferences/services" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Entreprises
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Sites location')">
+                                <a routerLink="/layouts/preferences/site-location" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Sites de travail
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Departements')">
+                                <a routerLink="/layouts/preferences/departement" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Départements
+                                </a>
+                            </li>
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Fonctions')">
+                                <a routerLink="/layouts/preferences/fonction" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Fonctions
+                                </a>
+                            </li>
+                            
+                            <li class="sidemenu-item" *ngIf="currentUser.roles.includes('Titres')">
+                                <a routerLink="/layouts/preferences/titles" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Titres
+                                </a>
+                            </li>
+                        </ul>
+                    </mat-expansion-panel>
+                    <!-- <a routerLink="/layouts/archives" class="sidebar-menu-link" 
+                        routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                        *ngIf="currentUser.roles.includes('Archives')">
+                        <i class="ri-archive-line"></i>
+                        <span class="title">Archives</span>
+                    </a> -->
+                    <mat-expansion-panel (opened)="panelOpenState = true" 
+                    (closed)="panelOpenState = true"
+                    *ngIf="currentUser.roles.includes('Personnels')">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <i class="ri-delete-bin-7-line"></i>
+                            <span class="title">Autres</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <ul class="sidebar-sub-menu"> 
+                        <li class="sidemenu-item">
+                            <a routerLink="/layouts/personnels/hors-usages" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                Personnel retiré
+                            </a>
+                        </li>
+                    </ul>
+                </mat-expansion-panel>
+                    <mat-expansion-panel (opened)="panelOpenState = true" 
+                        (closed)="panelOpenState = true"
+                        *ngIf="currentUser.roles.includes('Support')">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <i class="ri-admin-line"></i>
+                                <span class="title">Support</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ul class="sidebar-sub-menu"> 
+                            <li class="sidemenu-item">
+                                <a routerLink="/layouts/support/entreprises" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Entreprises
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a routerLink="/layouts/support/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Users
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a routerLink="/layouts/support/reglages-admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Reglage admin
+                                </a>
+                            </li>
+                            <li class="sidemenu-item">
+                                <a routerLink="/layouts/support/abonnements" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="sidemenu-link">
+                                    Abonnements clients
+                                </a>
+                            </li> 
+                        </ul>
+                    </mat-expansion-panel> 
+                   
+                </mat-accordion>
+                
+
+            </div>
+        </div>
+    </ng-scrollbar>
+</div>

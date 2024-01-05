@@ -1,0 +1,147 @@
+
+<mat-card class="mb-25 tagus-card" [class.component-dark-theme]="themeService.isDark()">
+    <mat-card-header class="mb-0">
+        <div *ngIf="currentUser">
+            <h4 class="mb-0">Registre de presence</h4> 
+            <p class="position-relative" *ngIf="currentUser.site_locations">
+               Site: {{ currentUser.site_locations.site_location }}
+            </p>
+        </div> 
+        <div class="row justify-content-end">
+            <div class="col align-self-end mb-10">
+                <button type="button" mat-button class="dot-btn p-10 bg-transparent border-none" 
+                    [matMenuTriggerFor]="iconMenu">
+                    <i class="ri-printer-line"></i>
+                </button>
+                <mat-menu #iconMenu="matMenu" class="dotMenu monthMenu" xPosition="before">
+                    <button mat-menu-item type="button" (click)="downloadModelReport()"
+                        class="bg-transparent border-none position-relative"> 
+                            <i class="ri-file-download-line"></i> Modèle
+                        </button>
+                        <button mat-menu-item type="button" 
+                            class="bg-transparent border-none position-relative" 
+                            (click)="openUploadDialog('300ms', '100ms')">
+                            <i class="ri-upload-2-line"></i> Importer
+                        </button>
+                        <button mat-menu-item type="button" 
+                            class="bg-transparent border-none position-relative"
+                            (click)="openExportDialog('300ms', '100ms')">
+                            <i class="ri-download-2-line"></i> Exporter
+                        </button>
+                </mat-menu>
+            </div>
+            <div class="col">
+                <div class="tagus-form-group">
+                    <mat-form-field appearance="fill" class="date-input" [formGroup]="formGroup">
+                        <mat-label>MM/DD/YYYY</mat-label>
+                        <input matInput [matDatepicker]="picker" id="date_presence"
+                            formControlName="date_presence">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+          </div>  
+    </mat-card-header>
+    <mat-card-content>
+        <div class="tagus-form-group">
+            <mat-form-field appearance="fill">
+                <i class="ri-search-line"></i>
+                <mat-label>Rechercher Ex: P</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+        </div>
+        <div class="mat-elevation-z8 tagus-mat-table">
+            <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
+                
+                <ng-container matColumnDef="site_location">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Site de travail</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/presences/pointage-profil',element.matricule, 'detail']">
+                            {{element.site_location}}
+                        </a> 
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="matricule">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Matricule</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/presences/pointage-profil',element.matricule, 'detail']">
+                            {{element.matricule.toUpperCase()}}
+                        </a>
+                    </td>
+                </ng-container>
+
+                 <!-- apointement Column -->
+                 <ng-container matColumnDef="apointement">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Pointage</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/presences/pointage-profil',element.matricule, 'detail']">
+                            <span class="presence-form present" *ngIf="element.apointement == 'P'">Presence</span>
+                            <span class="presence-form absence-sans-autorisation" *ngIf="element.apointement == 'A'">Absence sans autorisation</span>
+                            <span class="presence-form absence-autorisee" *ngIf="element.apointement == 'AA'">Absence-autorisee</span>
+                            <span class="presence-form absent-maladie" *ngIf="element.apointement == 'AM'">Absent maladie</span>
+                            <span class="presence-form conge-circonstanciel" *ngIf="element.apointement == 'CC'">Congé circonstanciel</span>
+                            <span class="presence-form conge-annuel" *ngIf="element.apointement == 'CA'">Congé annuel</span>
+                            <span class="presence-form suspension" *ngIf="element.apointement == 'S'">Suspension</span>
+                            <span class="presence-form service-off" *ngIf="element.apointement == 'O'">Service OFF</span>
+                            <span class="presence-form mission" *ngIf="element.apointement == 'M'">Mission</span>
+                        </a> 
+                    </td>
+                </ng-container>
+ 
+                <ng-container matColumnDef="prestation">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Prestation</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/presences/pointage-profil',element.matricule, 'detail']">
+                            {{ element.prestation }}  
+                        </a>
+                    </td>
+                </ng-container> 
+
+                <ng-container matColumnDef="date_entree">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date d'entrée / d'absence</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/presences/pointage-profil',element.matricule, 'detail']">
+                            {{ element.date_entree | date: 'dd/MM/yyyy HH:mm:ss' }} 
+                        </a>
+                    </td>
+                </ng-container> 
+
+                <ng-container matColumnDef="date_sortie">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de reprise</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/presences/pointage-profil',element.matricule, 'detail']">
+                            <div *ngIf="element.apointement === 'P' || element.apointement === 'A' ||
+                                element.apointement === 'AA'">
+                                -
+                            </div>  
+                            <div *ngIf="element.apointement !== 'P' && element.apointement !== 'A' &&
+                                    element.apointement !== 'AA'">
+                                    {{ element.date_sortie | date: 'dd/MM/yyyy' }}
+                            </div>
+                        </a> 
+                    </td>
+                </ng-container> 
+ 
+                <ng-container matColumnDef="observation">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Observation</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.observation}}
+                    </td>
+                </ng-container> 
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+
+            </table>
+            <mat-paginator [pageSizeOptions]="[15, 30, 45]" showFirstLastButtons></mat-paginator>
+            <div *ngIf="isLoading" 
+                            style="display: flex; justify-content: center; align-items: center; background: white;">
+                            <mat-progress-spinner [diameter]="30" 
+                                color="primary" 
+                                mode="indeterminate">
+                            </mat-progress-spinner>
+                        </div>
+        </div>
+    </mat-card-content>
+</mat-card>

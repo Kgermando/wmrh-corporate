@@ -1,0 +1,84 @@
+<mat-card class="mb-25 tagus-card" [class.component-dark-theme]="themeService.isDark()">
+    <mat-card-header>
+        <h4 class="mb-0">Postes solicités</h4>
+        <div>
+            <button mat-flat-button class="default-btn tagus" routerLink="/layouts/recrutements/postes/poste-add">
+                <i class="ri-add-fill"></i> Ajouter un nouveau post
+            </button>
+            <!-- <button mat-icon-button class="tagus">
+                <mat-icon>print</mat-icon>
+            </button> -->
+        </div> 
+    </mat-card-header>
+    <mat-card-content> 
+        <div class="tagus-form-group">
+            <mat-form-field appearance="fill">
+                <i class="ri-search-line"></i>
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+        </div>
+        <div class="mat-elevation-z8 tagus-mat-table">
+            <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
+ 
+                <ng-container matColumnDef="statut">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/recrutements/postes', element.id, 'poste-view']"> 
+                            <span class="badge text-soft-success" *ngIf="element.statut === 'Disponible'">Disponible</span>
+                            <span class="badge text-soft-danger" *ngIf="element.statut === 'Cloturé'">Cloturé</span>
+                        </a>
+                    </td>
+                </ng-container> 
+  
+                 <ng-container matColumnDef="search_profil">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Profil</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/recrutements/postes', element.id, 'poste-view']">
+                            {{element.search_profil}}
+                        </a>
+                    </td>
+                </ng-container>
+
+ 
+                <ng-container matColumnDef="type_contrat">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Type de contrat</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/recrutements/postes', element.id, 'poste-view']">
+                            {{element.type_contrat}}
+                        </a> 
+                    </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="echeance">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Echéance</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/personnels', element.id, 'personnel-view']">
+                            {{element.echeance | date: 'dd/MM/yyyy'}}
+                        </a> 
+                    </td>
+                </ng-container>
+ 
+                <ng-container matColumnDef="created">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de mise en ligne</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.created | date: 'dd/MM/yyyy'}}
+                    </td>
+                </ng-container> 
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+
+            </table>
+            <mat-paginator [pageSizeOptions]="[15, 30, 45]" showFirstLastButtons></mat-paginator>
+            <div *ngIf="isLoading" 
+                            style="display: flex; justify-content: center; align-items: center; background: white;">
+                            <mat-progress-spinner [diameter]="30" 
+                                color="primary" 
+                                mode="indeterminate">
+                            </mat-progress-spinner>
+                        </div>
+        </div>
+    </mat-card-content>
+</mat-card>

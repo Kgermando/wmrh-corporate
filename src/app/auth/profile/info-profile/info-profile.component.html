@@ -1,0 +1,191 @@
+<mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+    <mat-card-header class="border-bottom">
+        <h5 class="mb-0">Informations Personnelles</h5>  
+    </mat-card-header>
+    <mat-card-content>
+        <owl-carousel-o [options]="imageSlides2">
+            <ng-template carouselSlide>
+                <ul class="list ps-0 mb-0">
+                    <li>
+                        <span class="fw-semibold">Nom: </span>
+                        <span class="gray-color">{{ currentUser.nom }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Postnom: </span>
+                        <span class="gray-color">{{ currentUser.postnom }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Prenom: </span>
+                        <span class="gray-color">{{ currentUser.prenom }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Sexe: </span>
+                        <span class="gray-color">{{ currentUser.sexe }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Adresse:</span>
+                        <span class="gray-color">{{ currentUser.adresse }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Email: </span>
+                        <span class="gray-color">{{ currentUser.email }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Telephone: </span>
+                        <span class="gray-color">{{ currentUser.telephone }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Identifiant: </span>
+                        <span class="gray-color">{{ currentUser.matricule }}</span>
+                    </li>
+                </ul>
+            </ng-template>
+            <ng-template carouselSlide>
+                <ul class="list ps-0 mb-0">
+                    <li>
+                        <span class="fw-semibold">Numero CNSS: </span>
+                        <span class="gray-color">{{ currentUser.numero_cnss }}</span>
+                    </li> 
+                    <li>
+                        <span class="fw-semibold">Date de naissance: </span>
+                        <span class="gray-color">{{ currentUser.date_naissance | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Lieu de naissance: </span>
+                        <span class="gray-color">{{ currentUser.lieu_naissance }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Nationalité: </span>
+                        <span class="gray-color">{{ currentUser.nationalite }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Etat civil: </span>
+                        <span class="gray-color">{{ currentUser.etat_civile }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Nombre de dependants: </span>
+                        <span class="gray-color">{{ currentUser.nbr_dependants }}</span>
+                    </li> 
+                </ul>
+            </ng-template>
+            <ng-template carouselSlide>
+                <ul class="list ps-0 mb-0">
+                    <li>
+                        <span class="fw-semibold d-inline-block">Departement: </span>
+                        <span class="gray-color" *ngIf="currentUser.departements">
+                            {{ currentUser.departements.departement }}
+                        </span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold d-inline-block">Fonction: </span>
+                        <span class="gray-color" *ngIf="currentUser.fonctions">
+                            {{ currentUser.fonctions.fonction }}
+                        </span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold d-inline-block">Titre: </span>
+                        <span class="gray-color" *ngIf="currentUser.titles">
+                            {{ currentUser.titles.title }}
+                        </span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold d-inline-block">Service: </span>
+                        <span class="gray-color" *ngIf="currentUser.services">
+                            {{ currentUser.services.service }}
+                        </span>
+                    </li> 
+                    <li>
+                        <span class="fw-semibold d-inline-block">Site de travail: </span>
+                        <span class="gray-color" *ngIf="currentUser.site_locations">
+                            {{ currentUser.site_locations.site_location }}
+                        </span>
+                    </li> 
+                    <li>
+                        <span class="fw-semibold">Type de contrat: </span>
+                        <span class="gray-color">{{ currentUser.type_contrat }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Date de debut decontrat: </span>
+                        <span class="gray-color">{{ currentUser.date_debut_contrat | date: 'dd/MM/yyyy' }}</span>
+                    </li>
+                    <li *ngIf="currentUser.date_fin_contrat">
+                        <span class="fw-semibold">Date de fin de contrat: </span>
+                        <span class="gray-color">{{ currentUser.date_fin_contrat | date: 'dd/MM/yyyy' }}</span>
+                    </li> 
+                </ul>
+            </ng-template>
+            <ng-template carouselSlide>
+                <ul class="list ps-0 mb-0">
+                    <li>
+                        <span class="fw-semibold">Salaire de base: </span>
+                        <span class="gray-color">{{ currentUser.salaire_base }} {{ currentUser.monnaie }} </span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Allocation logement: </span>
+                        <span class="gray-color">{{ currentUser.alloc_logement }} {{ currentUser.monnaie }} </span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Allocation transport: </span>
+                        <span class="gray-color">{{ currentUser.alloc_transport }} {{ currentUser.monnaie }} </span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Allocation familliale: </span>
+                        <span class="gray-color">{{ currentUser.alloc_familliale }} {{ currentUser.monnaie }} </span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Compte bancaire: </span>
+                        <span class="gray-color">{{ currentUser.compte_bancaire }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Nom de la banque: </span>
+                        <span class="gray-color">{{ currentUser.nom_banque }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Frais bancaire: </span>
+                        <span class="gray-color">{{ currentUser.frais_bancaire }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Syndicat: </span>
+                        <span class="gray-color" *ngIf="currentUser.syndicat">OUI</span>
+                        <span class="gray-color" *ngIf="!currentUser.syndicat">NON</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Entreprise: </span>
+                        <span class="gray-color">{{ currentUser.entreprise }}</span>
+                    </li>
+                </ul>
+            </ng-template>
+            <ng-template carouselSlide>
+                <ul class="list ps-0 mb-0">
+                    <li>
+                        <span class="fw-semibold">Statut du personnel: </span>
+                        <span class="gray-color" *ngIf="currentUser.statut_personnel"> Actif</span>
+                            <span class="gray-color" *ngIf="!currentUser.statut_personnel"> Inactif</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Vous avez accès à: </span>
+                        <div *ngFor="let role of currentUser.roles; index as i">
+                            <span class="gray-color">{{ i + 1 }}. {{ role }}</span>
+                        </div> 
+                    </li> 
+                    <li>
+                        <span class="fw-semibold">Permission: </span> 
+                            <span class="gray-color"> {{ currentUser.permission }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Signature: </span>
+                        <span class="gray-color">{{ currentUser.signature }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Créé le: </span>
+                        <span class="gray-color">{{ currentUser.created | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+                    </li>
+                    <li>
+                        <span class="fw-semibold">Mis à jour le: </span>
+                        <span class="gray-color">{{ currentUser.update_created | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+                    </li>
+                </ul>
+            </ng-template>
+        </owl-carousel-o> 
+    </mat-card-content>
+</mat-card>

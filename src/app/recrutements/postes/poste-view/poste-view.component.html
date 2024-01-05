@@ -1,0 +1,115 @@
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div>
+<div *ngIf="!isLoading">
+    <div class="row" *ngIf="poste">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <mat-card class="mb-25 personal-info-card tagus-card" [class.component-dark-theme]="themeService.isDark()">
+                <mat-card-header class="border-bottom">
+                    <h4 class="mb-0">
+                        {{ poste.search_profil }}
+                    </h4>
+                    <div *ngIf="currentUser">
+                        <button mat-flat-button class="default-btn tagus"
+                         [routerLink]="['/layouts/recrutements/candidatures', poste.id, 'candidature-add']"
+                        >
+                            <i class="ri-add-fill"></i> Add nouveau candidat
+                        </button>
+                         
+                        <button mat-icon-button color="accent"  
+                        [routerLink]="['/layouts/recrutements/postes', poste.id, 'poste-edit']"
+                        *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' ||
+                                currentUser.permission === 'RUD' ||
+                                currentUser.permission === 'CRUD'" matTooltip="Modifier">
+                                <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" 
+                                (click)="delete(poste.id)" matTooltip="Supprimer ce document">
+                                <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </mat-card-header>
+                <mat-card-content>
+                    <ul class="list ps-0 mb-25">
+                        <li>
+                            <span class="fw-semibold d-inline-block">Statut: </span> 
+                            <span class="badge text-soft-success" *ngIf="poste.statut === 'Disponible'">Disponible</span>
+                            <span class="badge text-soft-danger" *ngIf="poste.statut === 'Cloturé'">Cloturé</span>
+                        </li>
+                        <li> 
+                            <span class="fw-semibold d-inline-block">Profil recherché: </span>
+                            <span class="gray-color">{{ poste.search_profil }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Type de contrat: </span>
+                            <span class="gray-color">{{ poste.type_contrat }}</span>
+                        </li> 
+                        <li>
+                            <span class="fw-semibold d-inline-block">Echéance depôt de candidature: </span>
+                            <span class="gray-color">{{ poste.echeance | date: 'dd/MM/yyyy' }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Signature: </span>
+                            <span class="gray-color">{{ poste.signature }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Créé le: </span>
+                            <span class="gray-color">{{ poste.created | date: 'dd/MM/yyyy  HH:mm:ss' }}</span>
+                        </li>
+                        <li>
+                            <span class="fw-semibold d-inline-block">Mise à jour le: </span>
+                            <span class="gray-color">{{ poste.update_created | date: 'dd/MM/yyyy  HH:mm:ss' }}</span>
+                        </li> 
+                    </ul>  
+
+                    <div [innerHTML]="poste.resume"></div>
+
+                </mat-card-content>
+            </mat-card> 
+
+            <mat-card class="mb-25 tagus-card">
+                <mat-card-header>
+                    <h5 class="mb-0">Liste des candidats</h5>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="reports-table table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="fw-semibold main-color">N° </th>
+                                    <th class="fw-semibold gray-color">Statut </th>
+                                    <th class="fw-semibold gray-color">Full name </th>
+                                    <th class="fw-semibold gray-color">Sexe </th>
+                                    <th class="fw-semibold gray-color">Département </th>
+                                    <th class="fw-semibold gray-color">Created </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let candidat of poste.candidatures; index as i" >
+                                    <td class="main-color fw-semibold">{{ i + 1 }}</td>
+                                    <td class="gray-color fw-semibold"> 
+                                        <a [routerLink]="['/layouts/recrutements/candidatures', candidat.id, 'candidature-view']"> 
+                                            <span class="badge text-soft-success" *ngIf="candidat.statut === 'Recrue'">Recrue</span>
+                                            <span class="badge text-soft-primary" *ngIf="candidat.statut === 'Postulant'">Postulant</span>
+                                        </a>
+                                    </td>
+                                    <td class="gray-color fw-semibold"> 
+                                        <a [routerLink]="['/layouts/recrutements/candidatures', candidat.id, 'candidature-view']"> 
+                                            {{ candidat.full_name}}
+                                        </a>
+                                    </td>
+                                    <td class="gray-color fw-semibold">{{ candidat.sexe}}</td>
+                                    <td class="gray-color fw-semibold">{{ candidat.departement}}</td>
+                                    <td class="gray-color fw-semibold">{{ candidat.created}}</td>
+                                </tr> 
+                            </tbody>
+                        </table>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+         
+    </div>
+</div>

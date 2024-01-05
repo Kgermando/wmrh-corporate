@@ -1,0 +1,29 @@
+<div class="d-flex justify-content-center" *ngIf="isLoading">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+</div>
+
+<div *ngIf="!isLoading">
+    <div *ngIf="personne">
+        <mat-card
+            class="mb-25 tagus-card"
+            [class.component-dark-theme]="themeService.isDark()"
+        >
+            <mat-card-header class="mb-5">
+                <h5 class="mb-0">{{ personne.prenom.toUpperCase() }} {{ personne.nom.toUpperCase() }}</h5>
+            </mat-card-header> 
+            <mat-card-content>
+                <div class="myTasksTable tagus-mat-table">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <app-presence-calendar [personne]="personne"></app-presence-calendar>
+                        </div> 
+                        <div class="col-lg-6 col-md-6">
+                           <app-presences-pie [personne]="personne"></app-presences-pie>
+                        </div> 
+                    </div> 
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    
+</div>

@@ -1,0 +1,64 @@
+<mat-card class="mb-25 tagus-card" [class.component-dark-theme]="themeService.isDark()">
+    <mat-card-header>
+        <h4 class="mb-0">Liste des abonnements</h4>
+        
+    </mat-card-header>
+    <mat-card-content> 
+        <div class="tagus-form-group">
+            <mat-form-field appearance="fill">
+                <i class="ri-search-line"></i>
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+        </div>
+        <div class="mat-elevation-z8 tagus-mat-table">
+            <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
+ 
+                <ng-container matColumnDef="company_name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Entreprise</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/support/abonnements', element.id, 'abonnement-admin-view']" *ngIf="element.entreprise">
+                            {{element.entreprise.company_name}} 
+                        </a>
+                    </td>
+                </ng-container>  
+
+                <ng-container matColumnDef="code_entreprise">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Code entreprise</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a [routerLink]="['/layouts/support/abonnements', element.id, 'abonnement-admin-view']" *ngIf="element.entreprise">
+                            {{element.entreprise.code_entreprise}}
+                        </a> 
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="devise">
+                    <th mat-header-cell *matHeaderCellDef>Devise</th>
+                    <td mat-cell *matCellDef="let element">{{element.devise}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="taux_devise">
+                    <th mat-header-cell *matHeaderCellDef>Taux devise</th>
+                    <td mat-cell *matCellDef="let element">1$ = {{element.taux_devise}} FC</td>
+                </ng-container> 
+
+                <ng-container matColumnDef="responsable">
+                    <th mat-header-cell *matHeaderCellDef>Responsable de paie </th>
+                    <td mat-cell *matCellDef="let element">{{element.responsable}}</td>
+                </ng-container>  
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+ 
+            </table>
+            <mat-paginator [pageSizeOptions]="[15, 30, 45]" showFirstLastButtons></mat-paginator>
+            <div *ngIf="isLoading" 
+                style="display: flex; justify-content: center; align-items: center; background: white;">
+                <mat-progress-spinner [diameter]="30"
+                    color="primary" 
+                    mode="indeterminate">
+                </mat-progress-spinner>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

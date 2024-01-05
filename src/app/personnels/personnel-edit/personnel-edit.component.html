@@ -1,0 +1,502 @@
+
+<mat-card class="mb-25 tagus-card" *ngIf="currentUser">
+    <mat-card-header>
+        <h5 class="mb-0" *ngIf="personne">{{ personne.nom.toUpperCase() }} {{ personne.postnom.toUpperCase() }} {{ personne.prenom.toUpperCase() }}</h5>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-stepper #stepper class="tagus-wizard mb-25">
+            <mat-step>
+                <ng-template matStepLabel>Identité</ng-template>
+                <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+                    <div class="row"> 
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Nom <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer le nom</mat-label>
+                                    <input matInput type="text" id="nom" formControlName="nom" required>
+                                     
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Postnom <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer le Postnom</mat-label>
+                                    <input matInput formControlName="postnom" name="postnom">
+                                     
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Prenom <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer le prenom</mat-label>
+                                    <input matInput formControlName="prenom" name="prenom">
+                                    
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Email <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer l'adresse email</mat-label>
+                                    <input matInput type="email" formControlName="email" name="email">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Telephone <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <input matInput type="tel" formControlName="telephone" name="telephone">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Sexe <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Select sexe</mat-label>
+                                    <mat-select formControlName="sexe">
+                                        <mat-option *ngFor="let sexe of sexeList" [value]="sexe">{{sexe}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Categorie employé</label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Select la categorie de l'employé</mat-label>
+                                    <mat-select formControlName="category">
+                                        <mat-option *ngFor="let category of categoriList" [value]="category">{{category}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div> 
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Adresse </label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Adresse...</mat-label>
+                                    <textarea matInput rows="2" formControlName="adresse"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="d-flex justify-content-cEntrer" *ngIf="isLoading">
+                        <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+                    </div>
+                    <div class="mt-5" *ngIf="!isLoading">
+                        <button mat-flat-button matStepperNext class="tagus"
+                            *ngIf="currentUser.permission === 'U' || 
+                            currentUser.permission === 'RU' ||
+                            currentUser.permission === 'CRU' || 
+                            currentUser.permission === 'RUD' || 
+                            currentUser.permission === 'CRUD'">Suivant</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Infos Pers.</ng-template>
+                <form [formGroup]="formGroup2" (ngSubmit)="onSubmit2()">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Numero CNSS </label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer le Numero CNSS</mat-label>
+                                    <input matInput type="text" id="numero_cnss" formControlName="numero_cnss" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Date de naissance </label>
+                                <mat-form-field appearance="fill" class="date-input">
+                                    <mat-label>MM/DD/YYYY</mat-label>
+                                    <input matInput [matDatepicker]="pickerNaissance" id="date_naissance" 
+                                            formControlName="date_naissance" required>
+                                    <mat-datepicker-toggle matIconSuffix [for]="pickerNaissance"></mat-datepicker-toggle>
+                                    <mat-datepicker #pickerNaissance></mat-datepicker> 
+                                </mat-form-field> 
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Lieu de naissance <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer le lieu de naissance</mat-label>
+                                    <input matInput type="text" id="lieu_naissance" formControlName="lieu_naissance" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Nationalité</label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer la nationalité</mat-label>
+                                    <input matInput type="text" id="nationalite" formControlName="nationalite" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Etat civil <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Select état civil</mat-label>
+                                    <mat-select formControlName="etat_civile">
+                                        <mat-option *ngFor="let etatCivile of etatCivileList" [value]="etatCivile">{{etatCivile}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Nombre de dependants</label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer le Nombre de personnes dependantes</mat-label>
+                                    <input matInput type="number" id="nbr_dependants" formControlName="nbr_dependants" required>
+                                </mat-form-field>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="d-flex justify-content-center" *ngIf="isLoading">
+                        <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+                    </div>
+                    <div class="mt-5" *ngIf="!isLoading">
+                        <button mat-flat-button matStepperPrevious class="gray me-15">Retour</button>
+                        <button mat-flat-button matStepperNext class="tagus"
+                        *ngIf="currentUser.permission === 'U' || 
+                            currentUser.permission === 'RU' ||
+                            currentUser.permission === 'CRU' || 
+                            currentUser.permission === 'RUD' || 
+                            currentUser.permission === 'CRUD'">Suivant</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Fonctions</ng-template>
+                <form class="mb-25" [formGroup]="formGroup3" (ngSubmit)="onSubmit3()">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Entreprise <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Select entreprise</mat-label>
+                                    <mat-select [compareWith]="compareFnServicePref" formControlName="services">
+                                        <mat-option *ngFor="let services of serviceList" [value]="services">
+                                            {{services.service}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Departement <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Select departement</mat-label>
+                                    <mat-select [compareWith]="compareFn" formControlName="departements">
+                                        <mat-option *ngFor="let departement of departementList" [value]="departement">
+                                            {{departement.departement}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Titre <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Select titre</mat-label>
+                                    <mat-select [compareWith]="compareFnTitle" formControlName="titles">
+                                        <mat-option *ngFor="let title of titleList" [value]="title">
+                                            {{title.title}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Fonction <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Select fonction</mat-label>
+                                    <mat-select [compareWith]="compareFnFonction" formControlName="fonctions">
+                                        <mat-option *ngFor="let fonction of fonctionList" [value]="fonction">
+                                            {{fonction.fonction}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Site de travail <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Select de site location</mat-label>
+                                    <mat-select [compareWith]="compareFnSiteLocation" formControlName="site_locations">
+                                        <mat-option *ngFor="let site_location of siteLocationList" [value]="site_location">
+                                            {{site_location.site_location }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Type de contrat <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Select type de contrat</mat-label>
+                                    <mat-select formControlName="type_contrat" (selectionChange)="onChange($event)">
+                                        <mat-option *ngFor="let type_contrat of typeContratList" [value]="type_contrat">
+                                            {{type_contrat}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Date de debut du contrat </label>
+                                <mat-form-field appearance="fill" class="date-input">
+                                    <mat-label>MM/DD/YYYY</mat-label>
+                                    <input matInput [matDatepicker]="pickerDebut" id="date_debut_contrat" 
+                                            formControlName="date_debut_contrat" required>
+                                    <mat-datepicker-toggle matIconSuffix [for]="pickerDebut"></mat-datepicker-toggle>
+                                    <mat-datepicker #pickerDebut></mat-datepicker> 
+                                </mat-form-field> 
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6" *ngIf="typeContrat==='CDD'">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Date de fin du contrat </label>
+                                <mat-form-field appearance="fill" class="date-input">
+                                    <mat-label>MM/DD/YYYY</mat-label>
+                                    <input matInput [matDatepicker]="pickerFin" id="date_fin_contrat" 
+                                            formControlName="date_fin_contrat" required>
+                                    <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
+                                    <mat-datepicker #pickerFin></mat-datepicker> 
+                                </mat-form-field> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center" *ngIf="isLoading">
+                        <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+                    </div>
+                    <div class="mt-5" *ngIf="!isLoading">
+                        <button mat-flat-button matStepperPrevious class="gray me-15">Retour</button>
+                        <button mat-flat-button matStepperNext class="tagus"
+                            *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' || 
+                                currentUser.permission === 'RUD' || 
+                                currentUser.permission === 'CRUD'">Suivant</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Finances</ng-template>
+                <form [formGroup]="formGroup4" (ngSubmit)="onSubmit4()">
+                    <div class="row mb-25">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Monnaie <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Monnaie</mat-label>
+                                    <mat-select formControlName="monnaie">
+                                        <mat-option *ngFor="let monnaie of monnaieList" [value]="monnaie">
+                                            {{monnaie}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Salaire de base</label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer le salaire de base</mat-label>
+                                    <input matInput type="number" id="salaire_base" formControlName="salaire_base" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Allocation logement</label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer l'allocation logement nette par mois</mat-label>
+                                    <input matInput type="number" id="alloc_logement" formControlName="alloc_logement" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Allocation transport</label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer l'Allocation transport</mat-label>
+                                    <input matInput type="number" id="alloc_transport" formControlName="alloc_transport" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Allocation familliale</label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer l'Allocation familliale</mat-label>
+                                    <input matInput type="number" id="alloc_familliale" formControlName="alloc_familliale" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Soins medicaux</label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer montant du soins medicaux</mat-label>
+                                    <input matInput type="number" id="soins_medicaux" formControlName="soins_medicaux" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Compte bancaire</label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer le numéro du compte</mat-label>
+                                    <input matInput type="text" id="compte_bancaire" formControlName="compte_bancaire" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Nom la banque <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer le nom banque</mat-label>
+                                    <input matInput type="text" id="nom_banque" formControlName="nom_banque" required>
+                                    
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Frais bancaire</label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Entrer le Montant de Frais bancaire</mat-label>
+                                    <input matInput type="number" id="frais_bancaire" formControlName="frais_bancaire" required>
+                                </mat-form-field>
+                            </div>
+                        </div> 
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Souscrire au syndicat</label>
+                                <mat-checkbox class="example-margin" id="syndicat" formControlName="syndicat" >Syndicat </mat-checkbox>
+                            </div>
+                        </div> 
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label class="d-block mb-12 fw-semibold gray-color">Attacher le CV scanner</label>
+                            <div class="input-group">
+                              <input type="file" formControlName="cv_url" class="form-control" name="cv_url">
+                              <app-upload (uploadedUrl)="formGroup.patchValue({'cv_url': $event})"></app-upload> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center" *ngIf="isLoading">
+                        <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+                    </div>
+                    <div class="mt-5" *ngIf="!isLoading">
+                        <button mat-flat-button matStepperPrevious class="gray me-15">Retour</button>
+                        <button mat-flat-button matStepperNext class="tagus"
+                        *ngIf="currentUser.permission === 'U' || 
+                            currentUser.permission === 'RU' ||
+                            currentUser.permission === 'CRU' || 
+                            currentUser.permission === 'RUD' || 
+                            currentUser.permission === 'CRUD'">Suivant</button>
+                    </div>
+                </form> 
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Sécurité</ng-template>
+                <form [formGroup]="formGroup5" (ngSubmit)="onSubmit5()">
+                    <div class="row mb-25">
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Statut personnel</label>
+                                <mat-checkbox class="example-margin"  id="statut_personnel" formControlName="statut_personnel">Statut </mat-checkbox>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Acreditation</label>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Select acreditation</mat-label>
+                                    <i class="ri-list-check"></i>
+                                    <mat-select formControlName="roles" multiple>
+                                        <mat-option *ngFor="let role of roleList" [value]="role">{{role}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div> 
+                        </div> 
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="tagus-form-group">
+                                <label class="d-block mb-12 fw-semibold gray-color">Permission <span>*</span></label>
+                                <mat-form-field appearance="fill">
+                                    <i class="ri-edit-2-line"></i>
+                                    <mat-label>Permission</mat-label>
+                                    <mat-select formControlName="permission" (selectionChange)="onChange($event)">
+                                        <mat-option *ngFor="let permission of permissionList" [value]="permission">
+                                            {{permission}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center" *ngIf="isLoading">
+                        <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-2"> Patientez-svp...</p>
+                    </div>
+                    <div class="mt-5" *ngIf="!isLoading">
+                        <button mat-flat-button matStepperPrevious class="gray me-15">Retour</button>
+                        <button mat-flat-button matStepperNext class="tagus"
+                            *ngIf="currentUser.permission === 'U' || 
+                                currentUser.permission === 'RU' ||
+                                currentUser.permission === 'CRU' || 
+                                currentUser.permission === 'RUD' || 
+                                currentUser.permission === 'CRUD'">Terminer</button> 
+                    </div>
+                </form> 
+            </mat-step>
+        </mat-stepper>
+    </mat-card-content>
+</mat-card>

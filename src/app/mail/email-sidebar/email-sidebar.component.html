@@ -1,0 +1,30 @@
+<mat-card
+    class="mb-25 tagus-card" 
+>
+    <mat-card-content>
+        <a mat-flat-button class="tagus fw-semibold d-block" routerLink="/layouts/mail/compose">Nouveau mail</a>
+        <span class="sub-title d-block muted-color fw-normal fs-14">MAILBOX</span>
+        <ul class="email-sidebar ps-0 list-unstyled mb-0">
+            <li class="position-relative">
+                <i class="ri-mail-line"></i>
+                <a routerLink="/layouts/mail/inbox" class="fw-semibold position-relative d-block" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    Boite de reception
+                    <span class="d-block">(20)</span>
+                </a>
+            </li>
+            <li class="position-relative">
+                <i class="ri-time-line"></i>
+                <a routerLink="/layouts/mail/read-mail" class="fw-semibold position-relative d-block" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    Mails lus
+                </a>
+            </li> 
+            <li class="position-relative">
+                <i class="ri-login-box-line"></i>
+                <a routerLink="/layouts/mail/mail-sent"  class="fw-semibold position-relative d-block" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    Mails envoyés
+                </a>
+            </li> 
+        </ul>
+       
+    </mat-card-content>
+</mat-card>

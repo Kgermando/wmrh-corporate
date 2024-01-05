@@ -1,0 +1,106 @@
+<mat-card class="mb-25 tagus-card">
+    <mat-card-header class="border-bottom">
+        <h5 class="mb-0">Liste des horaires</h5>
+    </mat-card-header>
+    <mat-card-content [class.component-dark-theme]="themeService.isDark()">
+        <cdk-accordion class="example-accordion">
+            <cdk-accordion-item
+                *ngFor="let item of horaireList; let index = index;"
+                #accordionItem="cdkAccordionItem"
+                class="example-accordion-item"
+                role="button"
+                tabindex="0"
+                [attr.id]="'accordion-header-' + index"
+                [attr.aria-expanded]="accordionItem.expanded"
+                [attr.aria-controls]="'accordion-body-' + index"
+            >
+                <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
+                    {{ item.name_horaire }}
+                    <!-- <span class="example-accordion-item-description">
+                        Click to {{ accordionItem.expanded ? 'close' : 'open' }}
+                    </span> -->
+                    <span> 
+                        <button mat-icon-button color="accent" 
+                         (click)="edit(item.id)"
+                            *ngIf="currentUser.permission === 'U' || 
+                            currentUser.permission === 'RU' ||
+                            currentUser.permission === 'CRU' ||
+                            currentUser.permission === 'RUD' ||
+                            currentUser.permission === 'CRUD'" 
+                            matTooltip="Modifier l'horaire"
+                            class="mat-icon">
+                                <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" 
+                                (click)="delete(item.id)"
+                            *ngIf="currentUser.permission === 'D' || 
+                                currentUser.permission === 'RD' ||
+                                currentUser.permission === 'RUD' || 
+                                currentUser.permission === 'CRUD'" 
+                                matTooltip="Supprimer cette horaire"
+                                class="mat-icon">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </span>
+                </div>
+                <div
+                    class="example-accordion-item-body personal-info-card"
+                    role="region"
+                    [style.display]="accordionItem.expanded ? '' : 'none'"
+                    [attr.id]="'accordion-body-' + index"
+                    [attr.aria-labelledby]="'accordion-header-' + index"
+                >
+                    <ul class="list ps-0 mb-0">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 mb-25">
+                                <h6>Shift 1</h6>
+                                <li>
+                                    <span class="fw-semibold">Total agent: </span>
+                                    <span class="gray-color"> {{ item.personnel_shift_1.length }}</span>
+                                </li>
+                                <li>
+                                    <span class="fw-semibold">Dates selectionnées: </span> 
+                                    <span class="gray-color"> {{ item.date_shift_1.length }}</span>
+                                </li>
+                                <li>
+                                    <span class="fw-semibold">Heure: </span>
+                                    <span class="gray-color"> {{ item.time_1 }}</span>
+                                </li>
+                            </div>
+                            <div class="col-lg-4 col-md-12 mb-25">
+                                <h6>Shift 2</h6>
+                                <li>
+                                    <span class="fw-semibold">Total agent: </span> 
+                                    <span class="gray-color"> {{ item.personnel_shift_2.length }}</span>
+                                </li>
+                                <li>
+                                    <span class="fw-semibold">Dates selectionnées: </span> 
+                                    <span class="gray-color"> {{ item.date_shift_2.length }}</span>
+                                </li>
+                                <li>
+                                    <span class="fw-semibold">Heure: </span> 
+                                    <span class="gray-color"> {{ item.time_2 }}</span>
+                                </li>
+                            </div>
+                            <div class="col-lg-4 col-md-12 mb-25">
+                                <h6>Shift 3</h6>
+                                <li>
+                                    <span class="fw-semibold">Total agent: </span> 
+                                    <span class="gray-color"> {{ item.personnel_shift_3.length }}</span>
+                                </li>
+                                <li>
+                                    <span class="fw-semibold">Dates selectionnées: </span> 
+                                    <span class="gray-color"> {{ item.date_shift_3.length }}</span>
+                                </li>
+                                <li>
+                                    <span class="fw-semibold">Heure: </span> 
+                                    <span class="gray-color"> {{ item.time_3 }}</span>
+                                </li>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </cdk-accordion-item>
+        </cdk-accordion>
+    </mat-card-content>
+</mat-card>

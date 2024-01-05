@@ -1,0 +1,20 @@
+<!-- <span class="badge text-soft-danger" *ngIf="isMoisSuivantValid || isMoisSuivantANValid">
+    {{ element.montant | numberFormat:'fr-FR' }} {{ element.monnaie }} <sup>+1</sup>
+</span>
+
+<span class="badge text-soft-danger" *ngIf="!isMoisSuivantValid && isValid">
+    {{ element.montant | numberFormat:'fr-FR' }} {{ element.monnaie }}
+</span>
+
+<span *ngIf="isMoisPrecedentValid && !isValid">
+   <del>{{ element.montant | numberFormat:'fr-FR' }} {{ element.monnaie }}</del> 
+</span> -->
+
+
+ 
+<span class="badge text-soft-danger" *ngIf="!isMoisPrecedent">
+    {{ element.montant | numberFormat:'fr-FR' }} {{ element.monnaie }}  
+</span>
+<span *ngIf="isMoisPrecedent">
+    <del>{{ element.montant | numberFormat:'fr-FR' }} {{ element.monnaie }}</del> 
+ </span>
