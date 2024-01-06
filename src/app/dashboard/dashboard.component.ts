@@ -18,7 +18,7 @@ import { CorporateService } from 'src/app/preferences/corporates/corporate.servi
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-
+  isLoad = false;
   panelOpenState = false;
 
   categoryList = [
@@ -104,7 +104,7 @@ export class DashboardComponent {
     tomorrow.setDate(date.getDate()+1); 
 
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-
+    this.isLoad = true;
     this.authService.user().subscribe({
       next: (user) => {
         this.currentUser = user;
@@ -116,6 +116,7 @@ export class DashboardComponent {
             this.end_date = formatDate(tomorrow, 'yyyy-MM-dd', 'en-US');
             this.getTotalEmployE(this.corporate); 
           } 
+          this.isLoad = false;
         });
       },
       error: (error) => {

@@ -367,6 +367,18 @@
                 <mat-card-content>
                     <ul class="list ps-0 mb-0">
                         <li>
+                            <span class="fw-semibold">Total des jours à prester: </span>
+                            <span class="gray-color">{{ preference.total_jours_a_prester }}</span>
+                            <button mat-icon-button color="warn" 
+                                (click)="openEditDialog('300ms', '100ms', 'Total des jours à prester', preference.total_jours_a_prester)" *ngIf="currentUser.permission === 'U' || 
+                                    currentUser.permission === 'RU' ||
+                                    currentUser.permission === 'CRU' ||
+                                    currentUser.permission === 'RUD' ||
+                                    currentUser.permission === 'CRUD'">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </li>
+                        <li>
                             <span class="fw-semibold">Date de paie: </span>
                             <span class="gray-color">{{ preference.date_paie  | date: 'dd-MM-yyyy' }}</span>
                             <button mat-icon-button color="warn" 
@@ -378,18 +390,6 @@
                                 <mat-icon>edit</mat-icon>
                             </button>
                         </li>
-                        <!-- <li>
-                            <span class="fw-semibold">Monnaie: </span>
-                            <span class="gray-color">{{ preference.monnaie }}</span>
-                            <button mat-icon-button color="warn" 
-                                (click)="openEditDialog('300ms', '100ms', 'Monnaie', preference.monnaie)" *ngIf="currentUser.permission === 'U' || 
-                                    currentUser.permission === 'RU' ||
-                                    currentUser.permission === 'CRU' ||
-                                    currentUser.permission === 'RUD' ||
-                                    currentUser.permission === 'CRUD'">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                        </li> -->
                         <li>
                             <span class="fw-semibold">Nbre d'heures de travail: </span>
                             <span class="gray-color">{{ preference.nbre_heure_travail }} Heures</span>

@@ -37,6 +37,7 @@ export class RegistrePresenceComponent implements OnInit {
   selection = new SelectionModel<ApointementModel>(true, []);
 
   isLoading = false;
+  isLoad = false;
   currentUser: PersonnelModel; 
 
   corporateList: CorporateModel[] = [];
@@ -116,9 +117,6 @@ export class RegistrePresenceComponent implements OnInit {
               this.corporateList = res;
               this.isLoading = false;
             });
-            // if (this.currentUser.site_locations) {
-            //   this.onChange();
-            // }
           },
           error: (error) => {
             this.isLoading = false;
@@ -133,17 +131,16 @@ export class RegistrePresenceComponent implements OnInit {
     this.corporate = event.value;
     this.siteLocationList = this.corporate.site_locations;
 
-    // this.siteLocation = new SiteLocationModel();
-
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<ApointementModel>(this.ELEMENT_DATA);
   }
 
-  onChangeSiteLocation(event: any) {
-    console.log('siteLocation', event.value);
+  onChangeSiteLocation(event: any) { 
+    this.isLoad = true;
     this.siteLocation = event.value;
 
     this.onChange(this.siteLocation);
+    this.isLoad = false;
   }
 
  

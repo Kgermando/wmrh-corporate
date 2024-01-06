@@ -21,7 +21,7 @@
                             <button mat-icon-button color="warn" 
                                 (click)="delete(salaire.id)" matTooltip="Supprimer ce bulletin">
                                 <mat-icon>delete</mat-icon>
-                            </button> 
+                            </button>
                         </div>
                     </mat-card-header>
                     <mat-card-content class="example-buttons">
@@ -139,7 +139,9 @@
                                             <td class="text-start">
                                                 Jours prestés :
                                             </td> 
-                                            <td class="gray-color text-end">{{ salaire.nbre_jrs_preste }}</td>
+                                            <td class="gray-color text-end"> 
+                                                {{ salaire.nbre_jrs_preste }}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="text-start">
@@ -173,7 +175,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>  
+                            </div>
                             <div class="table-responsive mb-10">
                                 <table class="table"> 
                                     <tbody>
@@ -189,17 +191,19 @@
                                             </td> 
                                            <td class="gray-color text-end">
                                             <input class="form-control" 
-                                            type="number" 
-                                               aria-label="Sizing example input" 
+                                                type="number" 
+                                               aria-label="Sizing example input"
+                                               [valueAsNumber]="salaire_base"
                                                aria-describedby="inputGroup-sizing-sm"
-                                               formControlName="salaire_base"
-                                               >  |
-                                            <span *ngIf="salaire.monnaie == 'USD'">
-                                                    {{ +salaire.personnel.salaire_base * +salaire.taux_dollard | numberFormat:'fr-FR' }}
+                                               formControlName="salaire_base"  
+                                               >
+                                            <!-- <span *ngIf="salaire.monnaie == 'USD'">
+                                                {{ +salaire.personnel.salaire_base * +salaire.taux_dollard | numberFormat:'fr-FR' }}
                                             </span>
                                             <span *ngIf="salaire.monnaie == 'CDF'">
                                                 {{ salaire.personnel.salaire_base | numberFormat:'fr-FR' }}
-                                            </span>  FC
+                                            </span>   -->
+                                            FC
                                            </td>
                                         </tr>
                                         <tr>
@@ -261,29 +265,15 @@
                                         <tr> 
                                             <td class="text-start">
                                                 Contre-valeur logement :
-                                            </td> 
-                                            <!-- <td class="gray-color text-end" *ngIf="(this.alloc_logement > this.alloc_logementPlafond)">
-                                                <input class="form-control" 
-                                                type="number"
-                                                   aria-label="Sizing example input" 
-                                                   aria-describedby="inputGroup-sizing-sm"
-                                                   formControlName="alloc_logement" 
-                                                   >
-                                                   / {{ alloc_logementPlafond | numberFormat:'fr-FR' }} FC
-                                              </td> -->
+                                            </td>  
                                               <td class="gray-color text-end">
                                                 <input class="form-control" 
                                                 type="number"
                                                    aria-label="Sizing example input" 
                                                    aria-describedby="inputGroup-sizing-sm"
                                                    formControlName="alloc_logement" 
-                                                   >
-                                                   / {{ alloc_logementPlafond | numberFormat:'fr-FR' }} FC
-                                              </td>
-                                            <!-- <td class="gray-color text-end" *ngIf="this.alloc_logement <= this.alloc_logementPlafond"
-                                              >{{ alloc_logement | numberFormat:'fr-FR' }} FC
-                                              / {{ alloc_logementPlafond | numberFormat:'fr-FR' }} FC
-                                          </td> -->
+                                                   > FC
+                                              </td> 
                                         </tr> 
                                         <tr>
                                             <td class="text-start">
@@ -295,23 +285,8 @@
                                                    aria-label="Sizing example input" 
                                                    aria-describedby="inputGroup-sizing-sm"
                                                    formControlName="alloc_transport"
-                                                   >
-                                                   / {{ alloc_transportPlafond | numberFormat:'fr-FR' }} FC
-                                              </td> 
-
-                                            <!-- <td class="gray-color text-end" *ngIf="this.alloc_transport > this.alloc_transportPlafond">
-                                                <input class="form-control" 
-                                                type="number"
-                                                   aria-label="Sizing example input" 
-                                                   aria-describedby="inputGroup-sizing-sm"
-                                                   formControlName="alloc_transport"
-                                                   >
-                                                   / {{ alloc_transportPlafond | numberFormat:'fr-FR' }} FC
-                                              </td> 
-                                              <td class="gray-color text-end" *ngIf="this.alloc_transport <= this.alloc_transportPlafond"
-                                              >{{ alloc_transport | numberFormat:'fr-FR' }} FC 
-                                              / {{ alloc_transportPlafond | numberFormat:'fr-FR' }} FC
-                                            </td>  -->
+                                                   >  FC
+                                              </td>  
                                         </tr>
                                         <tr>
                                             <td class="text-start">
@@ -323,23 +298,8 @@
                                                    aria-label="Sizing example input" 
                                                    aria-describedby="inputGroup-sizing-sm"
                                                    formControlName="alloc_familliale" 
-                                                   > 
-                                                   <!-- / {{ alloc_famillialePlafond | numberFormat:'fr-FR' }} FC -->
-                                              </td>
-
-                                            <!-- <td class="gray-color text-end"  *ngIf="this.alloc_familliale > this.alloc_famillialePlafond">
-                                                <input class="form-control" 
-                                                type="number"
-                                                   aria-label="Sizing example input" 
-                                                   aria-describedby="inputGroup-sizing-sm"
-                                                   formControlName="alloc_familliale" 
-                                                   > 
-                                                   / {{ alloc_famillialePlafond | numberFormat:'fr-FR' }} FC
-                                              </td>
-                                              <td class="gray-color text-end" *ngIf="this.alloc_familliale <= this.alloc_famillialePlafond"
-                                                >{{ alloc_familliale | numberFormat:'fr-FR' }} FC
-                                                / {{ alloc_famillialePlafond | numberFormat:'fr-FR' }} FC
-                                            </td>  -->
+                                                   >  FC
+                                              </td> 
                                         </tr>
                                         <tr>
                                             <td class="text-start">
@@ -352,38 +312,11 @@
                                                    aria-describedby="inputGroup-sizing-sm"
                                                    formControlName="soins_medicaux" 
                                                    > FC
-                                              </td>
-                                              <!-- <td class="gray-color text-end"
-                                                >{{ salaire.soins_medicaux | numberFormat:'fr-FR' }} FC
-                                            </td>  -->
+                                              </td> 
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                            <div class="table-responsive mb-10">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-start fontSize">
-                                                IMPÔT ÉLIDE
-                                            </td>
-                                            <td></td>
-                                        </tr> 
-                                        <tr>
-                                            <td class="text-start">
-                                                Redressement du RNI
-                                            </td>
-                                            <td class="gray-color text-end">{{ redressement | numberFormat:'fr-FR' }} FC</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-start">
-                                                Économie d'impôts
-                                            </td>
-                                            <td class="gray-color text-end">{{ impot_elide | numberFormat:'fr-FR' }} FC</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            </div> 
                             <div class="table-responsive mb-10">
                                 <table class="table">
                                     <tbody>
@@ -401,9 +334,27 @@
                                         </tr> 
                                         <tr>
                                             <td class="text-start">
+                                                Redressement du RNI
+                                            </td>
+                                            <td class="gray-color text-end">{{ redressement | numberFormat:'fr-FR' }} FC</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start">
                                                 Remunération Nette Imposable(RNI)
                                             </td>
                                             <td class="gray-color fontSize text-end">{{ rni | numberFormat:'fr-FR' }} FC</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-responsive mb-10">
+                                <table class="table">
+                                    <tbody> 
+                                        <tr>
+                                            <td class="text-start">
+                                                Impôts non déclarés
+                                            </td>
+                                            <td class="gray-color text-end">{{ impot_elide | numberFormat:'fr-FR' }} FC</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -425,7 +376,7 @@
                                         </tr>
                                         <tr>
                                             <td class="text-start">
-                                                Avances salaire
+                                                Avances sur salaire
                                             </td> 
                                             <td class="gray-color text-end">
                                                 <input class="form-control" 
@@ -433,8 +384,7 @@
                                                    aria-label="Sizing example input" 
                                                    aria-describedby="inputGroup-sizing-sm"
                                                    formControlName="avance_slaire" 
-                                                   > / 
-                                                {{ avance_slaire | numberFormat:'fr-FR' }} FC
+                                                   > FC
                                             </td>  
                                         </tr>
                                         <tr>
@@ -447,8 +397,7 @@
                                                    aria-label="Sizing example input" 
                                                    aria-describedby="inputGroup-sizing-sm"
                                                    formControlName="penalites" 
-                                                   > /
-                                                {{ penalites | numberFormat:'fr-FR' }} FC
+                                                   > FC
                                             </td> 
                                         </tr>
                                         <tr>
@@ -465,7 +414,7 @@
                                         </tr>
                                         <tr>
                                             <td class="text-start">
-                                                Pret entreprise
+                                                Prèt entreprise
                                             </td> 
                                             <td class="gray-color text-end">
                                                 
@@ -474,7 +423,7 @@
                                                    aria-label="Sizing example input" 
                                                    aria-describedby="inputGroup-sizing-sm"
                                                    formControlName="pres_entreprise" 
-                                                   > / {{ pres_entreprise | numberFormat:'fr-FR' }} FC
+                                                   > FC
                                             </td>  
                                         </tr>
                                     </tbody>
@@ -491,7 +440,7 @@
                         <div class="col-lg-6 col-md-12 col-sm-12 mt-25"> 
                             <mat-slide-toggle style="background: color= red;"
                                 [checked]="isPublie" (change)="toggle($event)"
-                            >Cocher la case pour rendre disponible!</mat-slide-toggle>
+                            >Cocher la case pour publié!</mat-slide-toggle>
                         </div>
                         <div class="d-flex align-items-center justify-content-center mt-25" 
                             *ngIf="currentUser.permission === 'U' || 
@@ -499,7 +448,7 @@
                             currentUser.permission === 'CRU' ||
                             currentUser.permission === 'RUD' ||
                             currentUser.permission === 'CRUD'">
-                            <button mat-flat-button class="tagus" *ngIf="isPublie">Disponible</button>
+                            <button mat-flat-button class="tagus" *ngIf="isPublie">Publier</button>
                             <p></p>
                             <button mat-stroked-button class="tagus" *ngIf="!isPublie">Brouillon</button>
                         </div>

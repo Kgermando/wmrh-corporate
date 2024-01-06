@@ -29,6 +29,9 @@ export interface PreferenceModel {
     montant_travailler_quadre : string;
     montant_travailler_non_quadre : string;
 
+    // Total jours prestés
+    total_jours_a_prester: number;
+
     // Jours feries
     new_year: Date;
     noel: Date;

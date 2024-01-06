@@ -285,9 +285,14 @@
 
 </div>  
 
+<!-- <div class="d-flex justify-content-center" *ngIf="isLoad">
+    <mat-spinner color="warn" [diameter]="30"></mat-spinner> <p class="ml-5 mr-5"> Patientez-svp...</p>
+</div> -->
+<div class="item" *ngIf="isLoad">
+    <ngx-skeleton-loader count="20" appearance="line"></ngx-skeleton-loader>
+</div>
 
-
-<div *ngIf="corporate">
+<div *ngIf="!isLoad && corporate">
     <div *ngIf="isSelectCategory == 'All'">
         <app-dash-all [corporate]="corporate"  [start_date]="start_date" [end_date]="end_date"></app-dash-all>
     </div>
@@ -296,7 +301,7 @@
     </div>
     <div *ngIf="isSelectCategory == 'Finances'">
         <app-finance-all [corporate]="corporate" [start_date]="start_date" [end_date]="end_date"></app-finance-all>
-    </div>    
+    </div>
 </div>
 
 

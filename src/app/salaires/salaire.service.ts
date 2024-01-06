@@ -84,7 +84,6 @@ export class SalaireService extends ApiService {
 
 
 
-
   getJrPrestE(code_entreprise: string, matricule: string, date_paie: string): Observable<any> {
     return this.http.get(`${this.endpoint}/get-jrs-preste/${code_entreprise}/${matricule}/${date_paie}`);
   }
@@ -93,22 +92,22 @@ export class SalaireService extends ApiService {
     return this.http.get(`${this.endpoint}/get-jrs-conge/${code_entreprise}/${matricule}/${date_paie}`);
   } 
 
-  nbrHeureSupp(code_entreprise: string, id: number, date_paie: string): Observable<any> {
-    return this.http.get(`${this.endpoint}/get-nbr-heures-supp/${code_entreprise}/${id}/${date_paie}`);
+  nbrHeureSupp(code_entreprise: string, id: number, date_paie: string, pris_en_compte_mois_plus_1: boolean): Observable<any> {
+    return this.http.get(`${this.endpoint}/get-nbr-heures-supp/${code_entreprise}/${id}/${date_paie}/${pris_en_compte_mois_plus_1}`);
   }
 
-  primeTotalCDF(code_entreprise: string, id: number, date_paie: string): Observable<any> {
-    return this.http.get(`${this.endpoint}/get-prime-total-cdf/${code_entreprise}/${id}/${date_paie}`);
+  primeTotalCDF(code_entreprise: string, id: number, date_paie: string, pris_en_compte_mois_plus_1: boolean): Observable<any> {
+    return this.http.get(`${this.endpoint}/get-prime-total-cdf/${code_entreprise}/${id}/${date_paie}/${pris_en_compte_mois_plus_1}`);
   }
-  primeTotalUSD(code_entreprise: string, id: number, date_paie: string): Observable<any> {
-    return this.http.get(`${this.endpoint}/get-prime-total-usd/${code_entreprise}/${id}/${date_paie}`);
+  primeTotalUSD(code_entreprise: string, id: number, date_paie: string, pris_en_compte_mois_plus_1: boolean): Observable<any> {
+    return this.http.get(`${this.endpoint}/get-prime-total-usd/${code_entreprise}/${id}/${date_paie}/${pris_en_compte_mois_plus_1}`);
   }
 
-  penaliteTotalCDF(code_entreprise: string, id: number, date_paie: string): Observable<any> {
-    return this.http.get(`${this.endpoint}/get-penalite-total-cdf/${code_entreprise}/${id}/${date_paie}`);
+  penaliteTotalCDF(code_entreprise: string, id: number, date_paie: string, pris_en_compte_mois_plus_1: boolean): Observable<any> {
+    return this.http.get(`${this.endpoint}/get-penalite-total-cdf/${code_entreprise}/${id}/${date_paie}/${pris_en_compte_mois_plus_1}`);
   }
-  penaliteTotalUSD(code_entreprise: string, id: number, date_paie: string): Observable<any> {
-    return this.http.get(`${this.endpoint}/get-penalite-total-usd/${code_entreprise}/${id}/${date_paie}`);
+  penaliteTotalUSD(code_entreprise: string, id: number, date_paie: string, pris_en_compte_mois_plus_1: boolean): Observable<any> {
+    return this.http.get(`${this.endpoint}/get-penalite-total-usd/${code_entreprise}/${id}/${date_paie}/${pris_en_compte_mois_plus_1}`);
   }
 
   avanceSalaireTotalCDF(code_entreprise: string, id: number, date_paie: string): Observable<any> {
@@ -136,5 +135,4 @@ export class SalaireService extends ApiService {
     return this.http.post(`${this.endpoint}/download-xlsx/${code_entreprise}/${start_date}/${end_date}`, {}, {responseType: 'blob'});
   } 
 }
-
 

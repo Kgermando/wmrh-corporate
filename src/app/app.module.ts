@@ -9,6 +9,7 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { QRCodeModule } from 'angularx-qrcode';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -405,7 +406,8 @@ import { PersonnelAddAdminComponent } from './personnels/personnel-add-admin/per
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }), 
-    NgxMaterialTimepickerModule.setOpts('fr-FR', 'latn')
+    NgxMaterialTimepickerModule.setOpts('fr-FR', 'latn'),
+    NgxSkeletonLoaderModule,
   ],
   providers: [
     DatePipe,

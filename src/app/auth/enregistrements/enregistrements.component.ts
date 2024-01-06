@@ -37,11 +37,11 @@ export class EnregistrementsComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this._formBuilder.group({
-      nom: ['', Validators.required],
-      postnom: ['', Validators.required],
-      prenom: ['', Validators.required],
-      email: [''],
-      telephone: ['', Validators.required],
+      nom: ['Support', Validators.required],
+      postnom: ['Support', Validators.required],
+      prenom: ['Support', Validators.required],
+      email: ['support@eventdrc.tech'],
+      telephone: ['+243813530838', Validators.required],
       sexe: ['', Validators.required],
       adresse: ['', Validators.required],
       // matricule: ['admin', Validators.required],

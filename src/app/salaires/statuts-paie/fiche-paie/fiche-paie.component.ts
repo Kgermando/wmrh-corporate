@@ -66,12 +66,7 @@ export class FichePaieComponent implements OnInit {
   prise_en_charge_frais_bancaire = 0; 
   pres_entreprise = 0;
   net_a_payer = 0;
-
-
-  // Condition pour verrouiller l'allocation input si negatif
-  alloc_logementPlafond = 0;
-  alloc_transportPlafond = 0;
-  alloc_famillialePlafond = 0;
+ 
   redressement = 0;
 
 
@@ -82,7 +77,6 @@ export class FichePaieComponent implements OnInit {
   dateYear = 0; 
 
   mois = '';
- 
 
   constructor(
     public themeService: CustomizerSettingsService,
@@ -95,7 +89,7 @@ export class FichePaieComponent implements OnInit {
     private personnelService: PersonnelService,
     public dialog: MatDialog,
     private toastr: ToastrService,
-    private notifyService: NotifyService
+    private notifyService: NotifyService, 
     // private notificationService: NotificationService
     ) {} 
 
@@ -104,31 +98,32 @@ export class FichePaieComponent implements OnInit {
     }
 
 
-    ngOnInit(): void { 
+    ngOnInit(): void {
+      this.isLoading = true;
       this.formGroup = this._formBuilder.group({
-        alloc_logement: ['', Validators.required],
-        alloc_transport: ['', Validators.required],
-        alloc_familliale: ['', Validators.required],
-        soins_medicaux: ['', Validators.required],
-        salaire_base: ['', Validators.required],
-        primes: ['', Validators.required],
-        prime_anciennete: ['', Validators.required],
-        heure_supplementaire_monnaie: ['', Validators.required],
-        rbi: ['', Validators.required],
-        rni: ['', Validators.required],
-        ipr: ['', Validators.required],
-        impot_elide: ['', Validators.required],
-        syndicat: ['', Validators.required],
-        cnss_qpo: ['', Validators.required],
-        penalites: ['', Validators.required],
-        avance_slaire: ['', Validators.required],
-        prise_en_charge_frais_bancaire: ['', Validators.required],
-        pres_entreprise: ['', Validators.required],
-        net_a_payer: ['', Validators.required],
+        alloc_logement: [''],
+        alloc_transport: [''],
+        alloc_familliale: [''],
+        soins_medicaux: [''],
+        salaire_base: [''],
+        primes: [''],
+        prime_anciennete: [''],
+        heure_supplementaire_monnaie: [''],
+        rbi: [''],
+        rni: [''],
+        ipr: [''],
+        impot_elide: [''],
+        syndicat: [''],
+        cnss_qpo: [''],
+        penalites: [''],
+        avance_slaire: [''],
+        prise_en_charge_frais_bancaire: [''],
+        pres_entreprise: [''],
+        net_a_payer: [''],
         statut: this.isPublie ? 'Disponible' : 'Traitement',  
       });
 
-      this.isLoading = true;
+      
       this.authService.user().subscribe({
         next: (user) => {
           this.currentUser = user;
@@ -213,6 +208,7 @@ export class FichePaieComponent implements OnInit {
       // Variables 
       this.salaire_base = +val.salaire_base;
       this.soins_medicaux = +val.soins_medicaux; 
+
       // Aciennetés 
       if(this.salaire.anciennete_nbr_age >5 && this.salaire.anciennete_nbr_age <= 10) {
         this.prime_anciennete = this.salaire_base * this.preference.prime_ancien_5 / 100; 
@@ -245,62 +241,27 @@ export class FichePaieComponent implements OnInit {
  
 
       // Avantages sociaux
-      this.alloc_familliale = +val.alloc_familliale;
-      this.alloc_transport = +val.alloc_transport;
       this.alloc_logement = +val.alloc_logement; 
+      this.alloc_transport = +val.alloc_transport;
+      this.alloc_familliale = +val.alloc_familliale;  
 
-
-      // L'allocation familliale
-      if (this.salaire.personnel.nbr_dependants > 0) {
-        this.alloc_famillialePlafond = (parseFloat(this.preference.smig) *  
-            this.salaire.personnel.nbr_dependants * this.salaire.nbre_jrs_preste);
-      } else if(this.salaire.personnel.nbr_dependants == 0) {
-        this.alloc_famillialePlafond = (parseFloat(this.preference.smig) * this.salaire.nbre_jrs_preste);
-      }
-      
-
-       var alloc_famillialeExces = 0;
-        if (this.alloc_familliale > this.alloc_famillialePlafond) {
-          alloc_famillialeExces = this.alloc_familliale - this.alloc_famillialePlafond;
-        } else if (this.alloc_famillialePlafond <= this.alloc_familliale) {
-          alloc_famillialeExces = 0;
+        // L'allocation logement à ne pas dépasser  
+        var rbi30 = this.rbi * 30 / 100;
+        var alloc_sur_plus = 0;
+        var alloc_logement_sur_plus = this.alloc_logement - rbi30; // Le logement ne depasse pas le 30% de rbi
+        if (alloc_logement_sur_plus > 0) {
+          alloc_sur_plus = alloc_logement_sur_plus;
         }
-
-        // L'allocation transport
-        if (this.salaire.personnel.category === 'Cadres supérieurs' ||
-            this.salaire.personnel.category === 'Cadres subalternes') {
-              this.alloc_transportPlafond = (this.preference.courses_transport * 
-                parseFloat(this.preference.montant_travailler_quadre) * this.salaire.nbre_jrs_preste);  
-        } else {
-          this.alloc_transportPlafond = (this.preference.courses_transport * 
-            parseFloat(this.preference.montant_travailler_non_quadre) * this.salaire.nbre_jrs_preste);  
-        }
-
-        var alloc_transportExces = 0;
-        if (this.alloc_transport > this.alloc_transportPlafond) {
-          alloc_transportExces = this.alloc_transport - this.alloc_transportPlafond;
-        } else if (this.alloc_transport <= this.alloc_transportPlafond) {
-          alloc_transportExces = 0;
-        } 
-
-        // L'allocation logement à ne pas dépasser
-        this.alloc_logementPlafond = this.rbi * 30 / 100; // Le logement ne depasse le 30% de rbi 
-        
-        var alloc_logementExces = 0;
-        if (this.alloc_logement > this.alloc_logementPlafond) {
-          alloc_logementExces = this.alloc_logement - this.alloc_logementPlafond;
-        } else if (this.alloc_logement <= this.alloc_logementPlafond) {
-          alloc_logementExces = 0;
-        } 
+   
       
       // Redressement de la base net imposable
-      this.redressement = (alloc_famillialeExces + alloc_transportExces + alloc_logementExces);
+      this.redressement = alloc_sur_plus;
 
       // NETTE IMPOSABELE
-      this.cnss_qpo = this.rbi * parseFloat(this.preference.cnss_qpo) / 100; // (RBI * CNSQPO)
+      this.cnss_qpo = this.rbi * parseFloat(this.preference.cnss_qpo) / 100;  
 
       // Remuneration Nette impôsable
-      this.rni = this.rbi - this.cnss_qpo + this.redressement; // RNI = RBI-(RBI * CNSQPO) 
+      this.rni = this.rbi - this.cnss_qpo + this.redressement;
 
       
 
@@ -361,8 +322,6 @@ export class FichePaieComponent implements OnInit {
       
       var deductions = this.ipr + this.penalites + this.avance_slaire + this.syndicat + this.pres_entreprise;
 
-      console.log('penalites', this.penalites)
-
       var avantageSocials = +this.alloc_logement + +this.alloc_familliale  +  +val.primes +
         +this.prime_anciennete + +this.heure_supplementaire_monnaie + 
           +this.prise_en_charge_frais_bancaire + +val.soins_medicaux;
@@ -373,8 +332,6 @@ export class FichePaieComponent implements OnInit {
         this.net_a_payer = parseFloat(net_a_payE.toFixed(2));
       });
     }
-
-        
   
 
     onSubmit() { 
@@ -398,6 +355,7 @@ export class FichePaieComponent implements OnInit {
           penalites: this.penalites,
           avance_slaire: this.avance_slaire,
           prise_en_charge_frais_bancaire: this.prise_en_charge_frais_bancaire,
+          pres_entreprise: this.pres_entreprise,
           net_a_payer: this.net_a_payer,
           statut: this.isPublie ? 'Disponible' : 'Traitement',
           signature: this.currentUser.matricule, 
@@ -407,7 +365,7 @@ export class FichePaieComponent implements OnInit {
         .subscribe({
           next: () => {
             var personnel = {  
-              statut_paie: 'Disponible',
+              statut_paie: this.isPublie ? 'Disponible' : 'Traitement',
               signature: this.currentUser.matricule,
               update_created: new Date(),
               entreprise: this.currentUser.entreprise,

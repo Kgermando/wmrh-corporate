@@ -153,7 +153,7 @@
 
             </table>
             <mat-paginator [pageSizeOptions]="[15, 30, 45]" showFirstLastButtons></mat-paginator>
-            <div *ngIf="isLoading" 
+            <div *ngIf="isLoad" 
                             style="display: flex; justify-content: center; align-items: center; background: white;">
                             <mat-progress-spinner [diameter]="30" 
                                 color="primary" 
