@@ -28,7 +28,9 @@ export class ReglagesComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private reglageService: ReglageService,
-    public dialog: MatDialog) {}
+    public dialog: MatDialog,
+    private toastr: ToastrService
+    ) {}
 
 
     ngOnInit(): void {
@@ -36,9 +38,17 @@ export class ReglagesComponent implements OnInit {
       this.authService.user().subscribe({
         next: (user) => {
           this.currentUser = user;
-          this.reglageService.preference(this.currentUser.code_entreprise).subscribe(res => {
-            this.preference = res; 
-            this.isLoading = false;
+          console.log('code_entreprise', this.currentUser.code_entreprise); 
+          this.reglageService.preference(this.currentUser.code_entreprise).subscribe({
+            next: res => {
+              this.preference = res; 
+              this.isLoading = false;
+            },
+            error: (err) => {
+              this.isLoading = false;
+              console.log('err', err);
+              this.toastr.error('Oups!', 'Pas de réglage pour cet utilisateur.'); 
+            }
           });
           
         },

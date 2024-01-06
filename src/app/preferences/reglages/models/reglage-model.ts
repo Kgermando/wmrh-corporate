@@ -1,10 +1,11 @@
-import { EntrepriseModel } from "src/app/admin/entreprise/models/entreprise.model";
+import { CorporateModel } from "../../corporates/models/corporate.model";
 
+ 
 export interface PreferenceModel {
     id: number;  
     
     // Infos entreprise
-    company: EntrepriseModel;
+    company: CorporateModel;
 
     // Date de paie
     date_paie : Date;

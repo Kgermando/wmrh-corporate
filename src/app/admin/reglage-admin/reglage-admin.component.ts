@@ -17,7 +17,6 @@ export class ReglageAdminComponent implements OnInit {
 
   preferenceList: PreferenceModel[] = [];
  
-
   constructor( 
       public themeService: CustomizerSettingsService,
       private reglageService: ReglageService,
@@ -32,9 +31,6 @@ export class ReglageAdminComponent implements OnInit {
       this.isLoading = false;
     });
   }
-
-
- 
 
   delete(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet enregistrement ?')) {

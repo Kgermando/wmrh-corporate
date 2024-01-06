@@ -4,7 +4,7 @@
 > 
     <mat-card class="mb-25 tagus-card">
         <mat-card-header>
-            <h4 class="mb-0">Liste des reglages</h4> 
+            <h4 class="mb-0">Liste des reglages corporate</h4> 
         </mat-card-header>
         <mat-card-content>
             <div class="table-responsive">
@@ -64,7 +64,7 @@
                     <tbody>
                         <tr *ngFor="let item of preferenceList">
                             <td class="gray-color pr-10">{{item.id}} </td> 
-                            <td class="gray-color pr-10" *ngIf="item.company">{{item.company.company_name}}</td> 
+                            <td class="gray-color pr-10" *ngIf="item.company">{{item.company.corporate_name}}</td> 
                             <td class="gray-color pr-10" *ngIf="!item.company">-</td>
                             <td class="gray-color pr-10" *ngIf="item.company">{{item.company.nbre_employe}}</td>
                             <td class="gray-color pr-10" *ngIf="!item.company">-</td>

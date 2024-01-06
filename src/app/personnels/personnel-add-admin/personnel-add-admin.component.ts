@@ -33,8 +33,7 @@ export class PersonnelAddAdminComponent implements OnInit {
 
   constructor(private router: Router,
     private _formBuilder: FormBuilder,
-    private authService: AuthService,
-    private route: ActivatedRoute,
+    private authService: AuthService, 
     private personnelService: PersonnelService, 
     private corporateService: CorporateService,
     private toastr: ToastrService) {}

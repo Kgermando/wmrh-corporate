@@ -183,7 +183,6 @@ import { UsersComponent } from './admin/users/users.component';
 import { UserViewComponent } from './admin/users/user-view/user-view.component';
 import { CoporateAddDialogBox, CorporateComponent } from './preferences/corporates/corporate/corporate.component';
 import { CorporateViewComponent, EditCorporateDialogBox } from './preferences/corporates/corporate-view/corporate-view.component';
-import { CorporateReglageComponent, EditCorporateReglageDialogBox } from './preferences/corporate-reglage/corporate-reglage.component';
 import { HoraireAddDialogBox, HoraireSidebarComponent } from './horaires/horaire-sidebar/horaire-sidebar.component';
 import { IndemniteEditComponent } from './salaires/indemnites/indemnite-edit/indemnite-edit.component';
 import { IndemniteViewComponent } from './salaires/indemnites/indemnite-view/indemnite-view.component';
@@ -370,8 +369,6 @@ import { PersonnelAddAdminComponent } from './personnels/personnel-add-admin/per
     CorporateViewComponent,
     EditCorporateDialogBox,
     CoporateAddDialogBox,
-    CorporateReglageComponent,
-    EditCorporateReglageDialogBox,
     HoraireSidebarComponent,
     HoraireInfoDialogBox,
     IndemniteEditComponent,

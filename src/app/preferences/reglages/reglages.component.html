@@ -39,15 +39,15 @@
                                 <img src="assets/img/user/user13.jpg" class="border-radius logo" *ngIf="preference.company.logo === '-'">
                                 <img [src]="preference.company.logo" class="border-radius logo" *ngIf="preference.company.logo != '-'">
                             </span> 
-                        </li>
+                        </li> 
                         <li>
                             <span class="fw-semibold">Code entreprise: </span>
-                            <span class="gray-color">{{ preference.company.code_entreprise }}</span> 
+                            <span class="gray-color">{{ preference.company.code_corporate }}</span> 
                         </li>
-                        <li>
+                        <li> 
                             <span class="fw-semibold">Nom de l'entreprise: </span>
-                            <span class="gray-color">{{ preference.company.company_name }}</span> 
-                        </li>
+                            <span class="gray-color">{{ preference.company.corporate_name }}</span> 
+                        </li> 
                         <li>
                             <span class="fw-semibold">Nombre d'employés: </span>
                             <span class="gray-color">{{ preference.company.nbre_employe }}</span> 

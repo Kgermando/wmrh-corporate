@@ -87,92 +87,41 @@ export class ReglageAdminAddComponent implements OnInit {
           };
           this.entrepriseService.create(data).subscribe({
             next: (company) => {
-              console.log('company', company.id);
+              var identifiant = `admin-${company.code_entreprise}`;
               var body = {
-                company: company.id,
-                date_paie: "2023-06-27 15:45:59.632",
-                cnss_qpp: "13",
-                inpp: "2",
-                onem: "0.2",
-                cotisation_syndicale: "1",
-                cnss_qpo: "5",
-                monnaie: "USD",
-                nbre_heure_travail: "45",
-                taux_dollard: "2300",
-                new_year: "2024-01-01 15:45:59.632",
-                noel: "2023-12-25 15:45:59.632",
-                martyr_day: "2024-01-04 15:45:59.632",
-                kabila_day: "2024-01-16 15:45:59.632",
-                lumumba_day: "2024-01-17 15:45:59.632",
-                labour_day: "2024-06-01 15:45:59.632",
-                liberation_day: "2024-05-17 15:45:59.632", 
-                indepence_day: "2024-06-30 15:45:59.632", 
-                parent_day: "2023-08-01 15:45:59.632",
-                kimbangu_day: "2024-05-06 15:45:59.632", 
-                prime_ancien_0: 0,
-                prime_ancien_5: 2,
-                prime_ancien_10: 4,
-                prime_ancien_15: 6,
-                prime_ancien_20: 8,
-                prime_ancien_25: 10,
-                categorie_mo: 10,
-                categorie_ts: 10,
-                categorie_tsq: 10,
-                categorie_tq: 10,
-                categorie_thq: 10,
-                smig: 267,
-                prise_en_charge_frais_bancaire: 0,
-                courses_transport: 6,
-                montant_travailler_quadre: 2000,
-                montant_travailler_non_quadre: 1500,
-                bareme_3: 162000,
-                bareme_15: 1800000,
-                bareme_30: 3600000,
-                nbr_course: 6,
-                contre_valeur_logement: 30,
+                nom: 'admin',
+                postnom: 'admin',
+                prenom: 'admin',
+                email: 'admin@admin.com',
+                telephone: '0000000000',
+                sexe: 'Homme',
+                adresse: '-', 
+                matricule: identifiant.toLowerCase(),
+                category: '-',
+                roles: this.roleList,
+                permission: 'CRUD',
+                monnaie: 'USD',
                 signature: this.currentUser.matricule,
-                created: "2023-07-19 08:45:59.632", 
-                update_created: "2023-10-05 08:45:59.632", 
+                created: new Date(),
+                update_created: new Date(),
+                password: '1234',
+                password_confirm: '1234',
                 entreprise: company.company_name,
-                code_entreprise: company.code_entreprise
+                code_entreprise: company.code_entreprise,
               };
-              this.reglageService.create(body).subscribe(reglage => {
-                var identifiant = `admin-${company.code_entreprise}`;
-                var body = { 
-                  nom: 'admin',
-                  postnom: 'admin',
-                  prenom: 'admin',
-                  email: 'admin@admin.com',
-                  telephone: '0000000000',
-                  sexe: 'Homme',
-                  adresse: '-', 
-                  matricule: identifiant.toLowerCase(),
-                  category: '-',
-                  roles: this.roleList,
-                  permission: 'CRUD',
-                  monnaie: 'USD',
-                  signature: this.currentUser.matricule,
-                  created: new Date(),
-                  update_created: new Date(),
-                  password: '1234',
-                  password_confirm: '1234',
-                  entreprise: company.company_name,
-                  code_entreprise: company.code_entreprise
-                };
-                this.authService.register(body).subscribe({
-                  next: () => {
-                    this.isLoadingFormGroup = false;
-                    this.formGroup.reset();
-                    this.toastr.success('Création de l\'entreprise reussi!', 'Success!');
-                    this.router.navigate(['/layouts/support/entreprises']);
-                  },
-                  error: (err) => {
-                    this.isLoadingFormGroup = false;
-                    this.toastr.error('Une erreur de création admin!', 'Oupss!');
-                    console.log(err);
-                  }
-                }); 
-              });
+              this.authService.register(body).subscribe({
+                next: () => {
+                  this.isLoadingFormGroup = false;
+                  this.formGroup.reset();
+                  this.toastr.success('Création de l\'entreprise reussi!', 'Success!');
+                  this.router.navigate(['/layouts/support/entreprises']);
+                },
+                error: (err) => {
+                  this.isLoadingFormGroup = false;
+                  this.toastr.error('Une erreur de création admin!', 'Oupss!');
+                  console.log(err);
+                }
+              }); 
             },
             error: (err) => {
               this.isLoadingFormGroup = false;

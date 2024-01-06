@@ -10,6 +10,8 @@ import { CorporateModel } from '../models/corporate.model';
 import { CorporateService } from '../corporate.service';
 import { ReglageService } from '../../reglages/reglage.service';
 import { PreferenceModel } from '../../reglages/models/reglage-model'; 
+import { EntrepriseService } from 'src/app/admin/entreprise/entreprise.service';
+import { EntrepriseModel } from 'src/app/admin/entreprise/models/entreprise.model';
 
 @Component({
   selector: 'app-corporate',
@@ -78,25 +80,13 @@ export class CorporateComponent implements OnInit {
       enterAnimationDuration,
       exitAnimationDuration,
     }); 
-  }
-
-  // openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, id: number): void {
-  //   this.dialog.open(EditCorporateDialogBox, {
-  //     width: '600px',
-  //     enterAnimationDuration,
-  //     exitAnimationDuration,
-  //     data: {
-  //       id: id
-  //     }
-  //   }); 
-  // } 
+  } 
 
 
   toggleTheme() {
       this.themeService.toggleTheme();
   }
 }
-
 
 
 @Component({
@@ -107,13 +97,13 @@ export class CoporateAddDialogBox implements OnInit {
   isLoading = false;
 
   formGroup!: FormGroup;
- 
 
   corporateList: CorporateModel[] = [];
+  entrepriseList: EntrepriseModel[] = [];
 
   currentUser: PersonnelModel | any;
-  
-  preference: PreferenceModel;
+
+  entreprise: EntrepriseModel;
 
   constructor( 
       public dialogRef: MatDialogRef<CoporateAddDialogBox>,
@@ -122,7 +112,8 @@ export class CoporateAddDialogBox implements OnInit {
       private authService: AuthService, 
       private toastr: ToastrService,
       private corporateService: CorporateService,
-      private reglageService: ReglageService
+      private reglageService: ReglageService,
+      private entrepriseService: EntrepriseService,
   ) {}
   
 
@@ -131,12 +122,14 @@ export class CoporateAddDialogBox implements OnInit {
     this.authService.user().subscribe({
       next: (user) => {
         this.currentUser = user;
-        this.reglageService.preference(this.currentUser.code_entreprise).subscribe(res => {
-          this.preference = res; 
-          this.corporateService.getAll(this.currentUser.code_entreprise).subscribe(res => {
-            this.corporateList = res; 
-            this.isLoading = false;
-          });
+        console.log('matricule', this.currentUser.matricule)
+        this.entrepriseService.getEntreprise().subscribe(res => {
+          this.entrepriseList = res; 
+          this.isLoading = false;
+        });
+        this.corporateService.getAll(this.currentUser.code_entreprise).subscribe(res => {
+          this.corporateList = res; 
+          this.isLoading = false;
         });
       },
       error: (error) => {
@@ -168,21 +161,20 @@ export class CoporateAddDialogBox implements OnInit {
         var code_corporate = '';
         var code = this.corporateList.length + 1;
         if (code <= 9) {
-          code_corporate = `${ this.preference.company.code_entreprise}-00${code}`;
-        } else if (code > 9 && code >= 99) {
-          code_corporate = `${ this.preference.company.code_entreprise}-0${code}`;
-        } else if (code > 99 && code >= 999) {
-          code_corporate = `${ this.preference.company.code_entreprise}-${code}`;
-        } 
+          code_corporate = `${this.currentUser.code_entreprise}-0${code}`;
+        } else if (code > 9 && code >= 999) {
+          code_corporate = `${this.currentUser.code_entreprise}-${code}`;
+        }
+        this.entreprise = this.entrepriseList.filter((v) => v.code_entreprise == this.currentUser.code_entreprise)[0];
         var body = {
-          entreprise_id: this.preference.company.id,
+          entreprise_id: this.entreprise.id,
           logo: '-',
           corporate_name: this.capitalizeText(this.formGroup.value.corporate_name), // Nom de la corporate 
           statut: true, // statut entreprise sous traitant
           code_corporate: code_corporate,
-          nbre_employe: this.formGroup.value.nbre_employe, 
-          rccm: this.formGroup.value.rccm, 
-          id_nat: this.formGroup.value.id_nat, 
+          nbre_employe: this.formGroup.value.nbre_employe,
+          rccm: this.formGroup.value.rccm,
+          id_nat: this.formGroup.value.id_nat,
           numero_impot: this.formGroup.value.numero_impot, 
           numero_cnss: this.formGroup.value.numero_cnss, 
           responsable: this.formGroup.value.responsable, 
@@ -195,11 +187,11 @@ export class CoporateAddDialogBox implements OnInit {
           entreprise: this.currentUser.entreprise,
           code_entreprise: this.currentUser.code_entreprise
         };
-        this.corporateService.create(body).subscribe({ 
-          next: (res) => { 
+        this.corporateService.create(body).subscribe({
+          next: (res) => {
             var body = {
               company: res.id,
-              date_paie: "2023-10-27 15:45:59.632",
+              date_paie: "2024-01-08 15:45:59.632",
               cnss_qpp: "13",
               inpp: "2",
               onem: "0.2",
@@ -242,14 +234,14 @@ export class CoporateAddDialogBox implements OnInit {
               signature: this.currentUser.matricule,
               created: "2023-10-12 08:45:59.632", 
               update_created: "2023-10-12 08:45:59.632", 
-              entreprise: this.currentUser.entreprise,
+              entreprise: res.entreprise,
               code_entreprise: res.code_corporate
             };
             this.reglageService.create(body).subscribe({
               next: (r) => {
                 this.isLoading = false;
                 this.formGroup.reset();
-                this.toastr.success('Success!', 'Ajouté avec succès!'); 
+                this.toastr.success('Ajouté avec succès!', 'Success!'); 
                 window.location.reload();
                 // this.close();
               }
