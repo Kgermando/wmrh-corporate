@@ -27,11 +27,6 @@
                                     {{ personne.prenom }}
                                 </span>
                             </li>
-                            <!-- <li>
-                                <span class="fw-semibold d-inline-block">Statut personnel: </span>
-                                <span class="gray-color" *ngIf="personne.statut_personnel">OUI</span>
-                                <span class="gray-color" *ngIf="!personne.statut_personnel">NON</span>
-                            </li> -->
                             <li>
                                 <span class="fw-semibold d-inline-block">Sexe: </span>
                                 <span class="gray-color">
@@ -43,11 +38,17 @@
                                 <span class="gray-color" *ngIf="personne.departements">
                                     {{ personne.departements.departement }}
                                 </span>
+                                <span class="gray-color" *ngIf="!personne.departements">
+                                   -
+                                </span>
                             </li>
                             <li>
                                 <span class="fw-semibold d-inline-block">Fonction: </span>
                                 <span class="gray-color" *ngIf="personne.fonctions">
                                     {{ personne.fonctions.fonction }}
+                                </span>
+                                <span class="gray-color" *ngIf="!personne.fonctions">
+                                    -
                                 </span>
                             </li>
                             <li>

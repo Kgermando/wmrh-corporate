@@ -69,7 +69,8 @@ export class CorporateViewComponent implements OnInit {
 
   openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, id: any): void {
     this.dialog.open(EditCorporateDialogBox, {
-      width: '600px', 
+      width: '600px',
+      height: '100%',
       enterAnimationDuration,
       exitAnimationDuration, 
       data: {
@@ -88,11 +89,10 @@ export class CorporateViewComponent implements OnInit {
   selector: 'edit-corporate-dialog',
   templateUrl: './corporate-edit.html',
 })
-export class EditCorporateDialogBox implements OnInit{
+export class EditCorporateDialogBox implements OnInit {
   isLoading = false;
 
   formGroup!: FormGroup;
- 
 
   currentUser: PersonnelModel | any;
 
@@ -106,8 +106,6 @@ export class EditCorporateDialogBox implements OnInit{
       private corporateService: CorporateService,
   ) {}
   
-
-
   ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
       logo: '',
@@ -129,8 +127,8 @@ export class EditCorporateDialogBox implements OnInit{
         this.corporateService.get(parseInt(this.data['id'])).subscribe(item => {
           this.formGroup.patchValue({
             logo: item.logo,
-            corporate_name: item.corporate_name, // Nom de la corporate  
-            nbre_employe: item.nbre_employe, 
+            corporate_name: item.corporate_name, // Nom de la corporate
+            nbre_employe: item.nbre_employe,
             rccm: item.rccm, 
             id_nat: item.id_nat, 
             numero_impot: item.numero_impot, 

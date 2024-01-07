@@ -9,6 +9,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EditEntrepriseDialogBox } from 'src/app/admin/entreprise/entreprise-view/entreprise-view.component';
+import { EditCorporateDialogBox } from '../corporates/corporate-view/corporate-view.component';
 
 @Component({
   selector: 'app-reglages',
@@ -62,7 +63,7 @@ export class ReglagesComponent implements OnInit {
 
 
     openEditEntrepriseDialog(enterAnimationDuration: string, exitAnimationDuration: string, id: number): void {
-      this.dialog.open(EditEntrepriseDialogBox, {
+      this.dialog.open(EditCorporateDialogBox, { 
         width: '600px',
         height: '100%',
         enterAnimationDuration,
